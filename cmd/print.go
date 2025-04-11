@@ -23,7 +23,27 @@ func print(cmd *cobra.Command, args []string) {
 		guessedTypes := dataset.ReadDatasetColumns(data)
 
 		for _, dt := range guessedTypes {
-			fmt.Printf("%T \n", dt)
+			displayColumn(dt, 5)
+		}
+	}
+}
+
+func displayColumn(column dataset.DataSetColumn, n int) {
+	switch v := column.(type) {
+	case dataset.Float:
+		fmt.Printf("%s (Float) \n", v.Name)
+		for i := range n {
+			fmt.Println(v.Data[i])
+		}
+	case dataset.String:
+		fmt.Printf("%s (String) \n", v.Name)
+		for i := range n {
+			fmt.Println(v.Data[i])
+		}
+	case dataset.Integer:
+		fmt.Printf("%s (Integer) \n", v.Name)
+		for i := range n {
+			fmt.Println(v.Data[i])
 		}
 	}
 }

@@ -1,18 +1,18 @@
 package dataset
 
 type String struct {
-	name string
-	data []string
+	Name string
+	Data []string
 }
 
 type Integer struct {
-	name string
-	data []int
+	Name string
+	Data []int
 }
 
 type Float struct {
-	name string
-	data []float32
+	Name string
+	Data []float32
 }
 
 func (s String) Parse() error {

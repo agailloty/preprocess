@@ -34,26 +34,26 @@ func guessColumnType(column []string, nrow int) DataSetColumn {
 	var typedColumn DataSetColumn
 
 	if stringCount > integerCount && stringCount > floatCount {
-		typedColumn = String{data: column}
+		typedColumn = String{Data: column, Name: column[0]}
 	}
 
 	if integerCount > stringCount && integerCount > floatCount {
 		var intColumn []int
-		for _, val := range column {
+		for _, val := range column[1:] {
 			parsedVal, _ := strconv.ParseInt(val, 10, 32)
 			intColumn = append(intColumn, int(parsedVal))
 		}
 
-		typedColumn = Integer{data: intColumn}
+		typedColumn = Integer{Data: intColumn, Name: column[0]}
 	}
 
 	if floatCount > stringCount && floatCount > integerCount {
 		var floatColumn []float32
-		for _, val := range column {
+		for _, val := range column[1:] {
 			parsedVal, _ := strconv.ParseFloat(val, 32)
 			floatColumn = append(floatColumn, float32(parsedVal))
 		}
-		typedColumn = Float{data: floatColumn}
+		typedColumn = Float{Data: floatColumn, Name: column[0]}
 	}
 
 	return typedColumn
