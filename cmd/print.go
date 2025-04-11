@@ -21,9 +21,9 @@ func print(cmd *cobra.Command, args []string) {
 	if len(args) > 0 {
 		data := dataset.ReadAllLines(args[0], ",")
 		guessedTypes := dataset.ReadDatasetColumns(data)
-
 		for _, dt := range guessedTypes {
-			displayColumn(dt, 5)
+			displayColumn(dt, 10)
+			println()
 		}
 	}
 }
@@ -33,17 +33,17 @@ func displayColumn(column dataset.DataSetColumn, n int) {
 	case dataset.Float:
 		fmt.Printf("%s (Float) \n", v.Name)
 		for i := range n {
-			fmt.Println(v.Data[i])
+			fmt.Printf("%.2f ", v.Data[i])
 		}
 	case dataset.String:
-		fmt.Printf("%s (String) \n", v.Name)
+		fmt.Printf("%s (Float)", v.Name)
 		for i := range n {
-			fmt.Println(v.Data[i])
+			fmt.Printf("%s", v.Data[i])
 		}
 	case dataset.Integer:
-		fmt.Printf("%s (Integer) \n", v.Name)
+		fmt.Printf("%s (Float)", v.Name)
 		for i := range n {
-			fmt.Println(v.Data[i])
+			fmt.Printf("%d", v.Data[i])
 		}
 	}
 }
