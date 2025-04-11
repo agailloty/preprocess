@@ -10,9 +10,9 @@ import (
 func main() {
 	cmd.Execute()
 	data := dataset.ReadAllLines("fifa_players_22.csv", ",")
-	guessedTypes := dataset.GuessTypes(data)
+	guessedTypes := dataset.ReadDatasetColumns(data)
 
 	for _, dt := range guessedTypes {
-		fmt.Println(dt)
+		fmt.Printf("%T \n", dt)
 	}
 }

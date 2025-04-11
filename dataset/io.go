@@ -4,10 +4,80 @@ import (
 	"bufio"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 )
 
-func GuessTypes(data [][]string) []DataSetColumn {
+func guessColumnType(column []string, nrow int) DataSetColumn {
+	stringCount := 0
+	integerCount := 0
+	floatCount := 0
+
+	if nrow > len(column) {
+		nrow = len(column) - 1
+	}
+
+	for i := range nrow {
+		isSuccess, _ := tryParseInt(column[i])
+		if isSuccess {
+			integerCount += 1
+			continue
+		}
+		isSuccess, _ = tryParseFloat(column[i])
+		if isSuccess {
+			floatCount += 1
+			continue
+		}
+		stringCount += 1
+	}
+
+	var typedColumn DataSetColumn
+
+	if stringCount > integerCount && stringCount > floatCount {
+		typedColumn = String{data: column}
+	}
+
+	if integerCount > stringCount && integerCount > floatCount {
+		var intColumn []int
+		for _, val := range column {
+			parsedVal, _ := strconv.ParseInt(val, 10, 32)
+			intColumn = append(intColumn, int(parsedVal))
+		}
+
+		typedColumn = Integer{data: intColumn}
+	}
+
+	if floatCount > stringCount && floatCount > integerCount {
+		var floatColumn []float32
+		for _, val := range column {
+			parsedVal, _ := strconv.ParseFloat(val, 32)
+			floatColumn = append(floatColumn, float32(parsedVal))
+		}
+		typedColumn = Float{data: floatColumn}
+	}
+
+	return typedColumn
+}
+
+func tryParseInt(val string) (bool, int64) {
+	isSuccess := false
+	value, err := strconv.ParseInt(val, 10, 32)
+	if err == nil {
+		isSuccess = true
+	}
+	return isSuccess, value
+}
+
+func tryParseFloat(val string) (bool, float64) {
+	isSuccess := false
+	value, err := strconv.ParseFloat(val, 32)
+	if err == nil {
+		isSuccess = true
+	}
+	return isSuccess, value
+}
+
+func ReadDatasetColumns(data [][]string) []DataSetColumn {
 	rowLength := len(data)
 	colLength := len(data[0])
 	var columns []DataSetColumn
@@ -16,8 +86,7 @@ func GuessTypes(data [][]string) []DataSetColumn {
 		for j := 0; j < rowLength; j++ {
 			column = append(column, data[j][i])
 		}
-		columns = append(columns, String{data: column, name: "user"})
-
+		columns = append(columns, guessColumnType(column, int(0.2*float64(rowLength))))
 	}
 
 	return columns
