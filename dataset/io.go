@@ -77,7 +77,7 @@ func tryParseFloat(val string) (bool, float64) {
 	return isSuccess, value
 }
 
-func ReadDatasetColumns(data [][]string) []DataSetColumn {
+func convertToTypedColumns(data [][]string) []DataSetColumn {
 	rowLength := len(data)
 	colLength := len(data[0])
 	var columns []DataSetColumn
@@ -92,7 +92,12 @@ func ReadDatasetColumns(data [][]string) []DataSetColumn {
 	return columns
 }
 
-func ReadAllLines(filepath string, sep string) [][]string {
+func ReadDatasetColumns(filename string, sep string) []DataSetColumn {
+	data := readAllLines(filename, sep)
+	return convertToTypedColumns(data)
+}
+
+func readAllLines(filepath string, sep string) [][]string {
 	file, err := os.Open(filepath)
 	if err != nil {
 		panic(err)
