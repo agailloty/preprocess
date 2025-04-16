@@ -15,14 +15,26 @@ type Float struct {
 	Data []float32
 }
 
-func (s String) Parse() error {
-	return nil
+func (s String) GetName() string {
+	return s.Name
 }
 
-func (i Integer) Parse() error {
-	return nil
+func (s String) GetType() string {
+	return "string"
 }
 
-func (f Float) Parse() error {
-	return nil
+func (f Float) GetName() string {
+	return f.Name
+}
+
+func (f Float) GetType() string {
+	return "float"
+}
+
+func (i Integer) GetName() string {
+	return i.Name
+}
+
+func (i Integer) GetType() string {
+	return "int"
 }
