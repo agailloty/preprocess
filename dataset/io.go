@@ -1,11 +1,10 @@
 package dataset
 
 import (
-	"bufio"
+	"encoding/csv"
 	"log"
 	"os"
 	"strconv"
-	"strings"
 )
 
 func guessColumnType(column []string, nrow int) DataSetColumn {
@@ -100,21 +99,22 @@ func ReadDatasetColumns(filename string, sep string) []DataSetColumn {
 func readAllLines(filepath string, sep string) [][]string {
 	file, err := os.Open(filepath)
 	if err != nil {
-		panic(err)
+		log.Fatalf("Error opening : %v", err)
 	}
 	defer file.Close()
 
-	var data [][]string
+	reader := csv.NewReader(file)
 
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		data = append(data, strings.Split(scanner.Text(), sep))
-
+	if len(sep) == 1 {
+		reader.Comma = rune(sep[0])
+	} else {
+		log.Fatalf("Separator must be a unique character")
 	}
 
-	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
+	records, err := reader.ReadAll()
+	if err != nil {
+		log.Fatalf("Error reading csv CSV : %v", err)
 	}
 
-	return data
+	return records
 }
