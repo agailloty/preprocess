@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/spf13/viper"
@@ -49,4 +50,20 @@ func InitDefaultConfig() Config {
 			},
 		},
 	}
+}
+
+func LoadConfig(path string) (*Config, error) {
+	viper.SetConfigFile(path)
+	viper.SetConfigType("toml")
+
+	if err := viper.ReadInConfig(); err != nil {
+		return nil, fmt.Errorf("Error reading Prepfile : %w", err)
+	}
+
+	var config Config
+	if err := viper.Unmarshal(&config); err != nil {
+		return nil, fmt.Errorf("A mapping error occured : %w", err)
+	}
+
+	return &config, nil
 }
