@@ -5,19 +5,19 @@ import "fmt"
 func DisplayColumn(column DataSetColumn, n int) {
 	switch v := column.(type) {
 	case Float:
-		fmt.Printf("%s (Float) \n", v.Name)
+		fmt.Printf("%s (float) \n", v.Name)
 		for i := range n {
-			fmt.Printf("%.2f\n", v.Data[i])
+			fmt.Printf("%.2f ", v.Data[i])
 		}
 	case String:
-		fmt.Printf("%s (Float)", v.Name)
+		fmt.Printf("%s (string) \n", v.Name)
 		for i := range n {
-			fmt.Printf("%s", v.Data[i])
+			fmt.Printf("%s ", v.Data[i])
 		}
 	case Integer:
-		fmt.Printf("%s (Float)", v.Name)
+		fmt.Printf("%s (int) \n", v.Name)
 		for i := range n {
-			fmt.Printf("%d", v.Data[i])
+			fmt.Printf("%d ", v.Data[i])
 		}
 	}
 }

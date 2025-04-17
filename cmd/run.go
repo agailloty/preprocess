@@ -25,7 +25,7 @@ func run(cmd *cobra.Command, args []string) {
 	}
 
 	df := dataset.ReadDatasetColumns(prepfile.Data.File, prepfile.Data.Separator)
-	fmt.Printf("Successfully read dataset %s", prepfile.Data.File)
+	fmt.Printf("Successfully read dataset %s \n", prepfile.Data.File)
 
 	for _, dt := range df {
 		dataset.DisplayColumn(dt, 5)
