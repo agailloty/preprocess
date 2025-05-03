@@ -23,32 +23,14 @@ func SetConfigFile() {
 }
 
 type Config struct {
-	Data DataConfig `toml:"data"`
-}
-
-type DataConfig struct {
-	File      string         `toml:"file"`
-	Separator string         `toml:"separator"`
-	Columns   []ColumnConfig `toml:"columns"`
-}
-
-type ColumnConfig struct {
-	Name string `toml:"name"`
-	Type string `toml:"type"`
+	Data        DataConfig        `toml:"data"`
+	PostProcess PostProcessConfig `toml:"postprocess"`
 }
 
 func InitDefaultConfig() Config {
 	return Config{
-		Data: DataConfig{
-			File:      "data.csv",
-			Separator: ",",
-			Columns: []ColumnConfig{
-				{Name: "id", Type: "int"},
-				{Name: "name", Type: "string"},
-				{Name: "price", Type: "float"},
-				{Name: "available", Type: "bool"},
-			},
-		},
+		Data:        dataDefautConfig,
+		PostProcess: postProcessDefaultConfig,
 	}
 }
 
@@ -57,12 +39,12 @@ func LoadConfig(path string) (*Config, error) {
 	viper.SetConfigType("toml")
 
 	if err := viper.ReadInConfig(); err != nil {
-		return nil, fmt.Errorf("Error reading Prepfile : %w", err)
+		return nil, fmt.Errorf("error reading Prepfile : %w", err)
 	}
 
 	var config Config
 	if err := viper.Unmarshal(&config); err != nil {
-		return nil, fmt.Errorf("A mapping error occured : %w", err)
+		return nil, fmt.Errorf("a mapping error occured : %w", err)
 	}
 
 	return &config, nil
