@@ -5,4 +5,5 @@ type DataSetColumn interface {
 	GetType() string
 	Length() int
 	ValueAt(i int) string
+	SetName(newName string)
 }
