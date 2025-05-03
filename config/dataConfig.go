@@ -7,8 +7,9 @@ type DataConfig struct {
 }
 
 type ColumnConfig struct {
-	Name string `toml:"name"`
-	Type string `toml:"type"`
+	Name    string `toml:"name"`
+	Type    string `toml:"type"`
+	NewName string `toml:"newName"`
 }
 
 var dataDefautConfig = DataConfig{
