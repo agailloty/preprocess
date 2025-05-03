@@ -15,26 +15,43 @@ type Float struct {
 	Data []float32
 }
 
-func (s String) GetName() string {
-	return s.Name
+// DataSetColumn.GetName()
+
+func (c String) GetName() string {
+	return c.Name
 }
 
-func (s String) GetType() string {
-	return "string"
+func (c Float) GetName() string {
+	return c.Name
 }
 
-func (f Float) GetName() string {
-	return f.Name
+func (c Integer) GetName() string {
+	return c.Name
 }
 
-func (f Float) GetType() string {
+// DataSetColumn.GetType()
+
+func (c Float) GetType() string {
 	return "float"
 }
 
-func (i Integer) GetName() string {
-	return i.Name
+func (c String) GetType() string {
+	return "string"
 }
 
-func (i Integer) GetType() string {
+func (c Integer) GetType() string {
 	return "int"
+}
+
+// DataSetColumn.Length()
+
+func (c Float) Length() int {
+	return len(c.Data)
+}
+
+func (c String) Length() int {
+	return len(c.Data)
+}
+func (c Integer) Length() int {
+	return len(c.Data)
 }

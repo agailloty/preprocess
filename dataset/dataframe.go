@@ -2,6 +2,12 @@ package dataset
 
 import "fmt"
 
+type DataFrame struct {
+	Columns      []DataSetColumn
+	RowsCount    int
+	ColumnsCount int
+}
+
 func DisplayColumn(column DataSetColumn, n int) {
 	switch v := column.(type) {
 	case Float:
@@ -19,5 +25,14 @@ func DisplayColumn(column DataSetColumn, n int) {
 		for i := range n {
 			fmt.Printf("%d ", v.Data[i])
 		}
+	}
+}
+
+func ReadDataFrame(filename string, sep string) DataFrame {
+	columns := ReadDatasetColumns(filename, sep)
+	return DataFrame{
+		Columns:      columns,
+		RowsCount:    columns[0].Length(),
+		ColumnsCount: len(columns),
 	}
 }
