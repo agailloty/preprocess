@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/agailloty/preprocess/config"
-	"github.com/agailloty/preprocess/dataset"
+	"github.com/agailloty/preprocess/operations"
 	"github.com/spf13/cobra"
 )
 
@@ -24,11 +24,5 @@ func run(cmd *cobra.Command, args []string) {
 		fmt.Printf("Prepfile.toml not found %s", err)
 	}
 
-	df := dataset.ReadDataFrame(prepfile.Data.File, prepfile.Data.Separator)
-	fmt.Printf("Successfully read dataset %s \n", prepfile.Data.File)
-
-	for _, dt := range df.Columns {
-		dataset.DisplayColumn(dt, 5)
-		println()
-	}
+	operations.DispatchOperations(prepfile)
 }

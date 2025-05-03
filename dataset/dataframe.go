@@ -4,9 +4,12 @@ import (
 	"encoding/csv"
 	"fmt"
 	"os"
+	"path/filepath"
+	"strings"
 )
 
 type DataFrame struct {
+	Name         string
 	Columns      []DataSetColumn
 	RowsCount    int
 	ColumnsCount int
@@ -34,7 +37,10 @@ func DisplayColumn(column DataSetColumn, n int) {
 
 func ReadDataFrame(filename string, sep string) DataFrame {
 	columns := readDatasetColumns(filename, sep)
+	ext := filepath.Ext(filename)
+	dfName := strings.TrimSuffix(filename, ext)
 	return DataFrame{
+		Name:         dfName,
 		Columns:      columns,
 		RowsCount:    columns[0].Length(),
 		ColumnsCount: len(columns),
