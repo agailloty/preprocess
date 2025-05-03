@@ -4,4 +4,5 @@ type DataSetColumn interface {
 	GetName() string
 	GetType() string
 	Length() int
+	ValueAt(i int) string
 }

@@ -91,7 +91,7 @@ func convertToTypedColumns(data [][]string) []DataSetColumn {
 	return columns
 }
 
-func ReadDatasetColumns(filename string, sep string) []DataSetColumn {
+func readDatasetColumns(filename string, sep string) []DataSetColumn {
 	data := readAllLines(filename, sep)
 	return convertToTypedColumns(data)
 }

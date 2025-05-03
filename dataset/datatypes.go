@@ -1,5 +1,10 @@
 package dataset
 
+import (
+	"fmt"
+	"strconv"
+)
+
 type String struct {
 	Name string
 	Data []string
@@ -54,4 +59,18 @@ func (c String) Length() int {
 }
 func (c Integer) Length() int {
 	return len(c.Data)
+}
+
+// DataSetColumn.ValueAt()
+
+func (c String) ValueAt(i int) string {
+	return c.Data[i]
+}
+
+func (c Integer) ValueAt(i int) string {
+	return strconv.Itoa(c.Data[i])
+}
+
+func (c Float) ValueAt(i int) string {
+	return fmt.Sprintf("%f", c.Data[i])
 }

@@ -1,6 +1,10 @@
 package dataset
 
-import "fmt"
+import (
+	"encoding/csv"
+	"fmt"
+	"os"
+)
 
 type DataFrame struct {
 	Columns      []DataSetColumn
@@ -29,10 +33,43 @@ func DisplayColumn(column DataSetColumn, n int) {
 }
 
 func ReadDataFrame(filename string, sep string) DataFrame {
-	columns := ReadDatasetColumns(filename, sep)
+	columns := readDatasetColumns(filename, sep)
 	return DataFrame{
 		Columns:      columns,
 		RowsCount:    columns[0].Length(),
 		ColumnsCount: len(columns),
 	}
+}
+
+func (d DataFrame) SaveToCSV(filepath string, sep string) error {
+	file, err := os.Create(filepath)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	writer := csv.NewWriter(file)
+	defer writer.Flush()
+
+	// Write header
+	var headers []string
+	for _, col := range d.Columns {
+		headers = append(headers, col.GetName())
+	}
+	if err := writer.Write(headers); err != nil {
+		return err
+	}
+
+	// Write rows
+	for i := 0; i < d.RowsCount; i++ {
+		var row []string
+		for _, col := range d.Columns {
+			row = append(row, col.ValueAt(i))
+		}
+		if err := writer.Write(row); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

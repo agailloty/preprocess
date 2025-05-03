@@ -29,9 +29,9 @@ func initConfig(cmd *cobra.Command, args []string) {
 		if len(args) >= 2 {
 			sep = args[1]
 		}
-		dataset := dataset.ReadDatasetColumns(filename, sep)
+		dataset := dataset.ReadDataFrame(filename, sep)
 		var configColumns []config.ColumnConfig
-		for _, col := range dataset {
+		for _, col := range dataset.Columns {
 			configColumns = append(configColumns,
 				config.ColumnConfig{Name: col.GetName(), Type: col.GetType()})
 		}

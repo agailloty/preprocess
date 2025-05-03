@@ -17,8 +17,8 @@ var printCmd = &cobra.Command{
 
 func print(cmd *cobra.Command, args []string) {
 	if len(args) > 0 {
-		guessedTypes := dataset.ReadDatasetColumns(args[0], ",")
-		for _, dt := range guessedTypes {
+		dataframe := dataset.ReadDataFrame(args[0], ",")
+		for _, dt := range dataframe.Columns {
 			dataset.DisplayColumn(dt, 5)
 			println()
 		}

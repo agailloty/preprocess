@@ -24,10 +24,10 @@ func run(cmd *cobra.Command, args []string) {
 		fmt.Printf("Prepfile.toml not found %s", err)
 	}
 
-	df := dataset.ReadDatasetColumns(prepfile.Data.File, prepfile.Data.Separator)
+	df := dataset.ReadDataFrame(prepfile.Data.File, prepfile.Data.Separator)
 	fmt.Printf("Successfully read dataset %s \n", prepfile.Data.File)
 
-	for _, dt := range df {
+	for _, dt := range df.Columns {
 		dataset.DisplayColumn(dt, 5)
 		println()
 	}
