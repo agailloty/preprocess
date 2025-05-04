@@ -15,5 +15,9 @@ func DispatchOperations(prepfile *config.Config) {
 		RenameColumn(col, prepfile.Data.Columns)
 	}
 
+	if prepfile.PostProcess.SortDataset != nil {
+		SortDatasetColumns(df, prepfile.PostProcess.SortDataset.Descending)
+	}
+
 	ExportCsv(df, prepfile)
 }
