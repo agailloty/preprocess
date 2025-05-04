@@ -19,5 +19,5 @@ func DispatchOperations(prepfile *config.Config) {
 		SortDatasetColumns(df, prepfile.PostProcess.SortDataset.Descending)
 	}
 
-	ExportCsv(df, prepfile)
+	ExportCsv(df, prepfile.PostProcess.Export)
 }
