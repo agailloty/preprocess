@@ -35,7 +35,7 @@ func guessColumnType(column []string, nrow int) DataSetColumn {
 	if stringCount > integerCount && stringCount > floatCount {
 		var stringColumn []Nullable[string]
 		for _, val := range column[1:] {
-			stringColumn = append(stringColumn, Nullable[string]{IsValid: true, Value: val})
+			stringColumn = append(stringColumn, Nullable[string]{IsValid: val != "", Value: val})
 		}
 		typedColumn = &String{Data: stringColumn, Name: column[0]}
 	}
@@ -43,8 +43,8 @@ func guessColumnType(column []string, nrow int) DataSetColumn {
 	if integerCount > stringCount && integerCount > floatCount {
 		var intColumn []Nullable[int]
 		for _, val := range column[1:] {
-			parsedVal, _ := strconv.ParseInt(val, 10, 32)
-			intColumn = append(intColumn, Nullable[int]{IsValid: true, Value: int(parsedVal)})
+			isValid, parsedVal := tryParseInt(val)
+			intColumn = append(intColumn, Nullable[int]{IsValid: isValid, Value: int(parsedVal)})
 		}
 
 		typedColumn = &Integer{Data: intColumn, Name: column[0]}
@@ -53,8 +53,8 @@ func guessColumnType(column []string, nrow int) DataSetColumn {
 	if floatCount > stringCount && floatCount > integerCount {
 		var floatColumn []Nullable[float32]
 		for _, val := range column[1:] {
-			parsedVal, _ := strconv.ParseFloat(val, 32)
-			floatColumn = append(floatColumn, Nullable[float32]{IsValid: true, Value: float32(parsedVal)})
+			isValid, parsedVal := tryParseFloat(val)
+			floatColumn = append(floatColumn, Nullable[float32]{IsValid: isValid, Value: float32(parsedVal)})
 		}
 		typedColumn = &Float{Data: floatColumn, Name: column[0]}
 	}
