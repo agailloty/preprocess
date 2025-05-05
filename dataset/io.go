@@ -33,26 +33,30 @@ func guessColumnType(column []string, nrow int) DataSetColumn {
 	var typedColumn DataSetColumn
 
 	if stringCount > integerCount && stringCount > floatCount {
-		typedColumn = &String{Data: &column, Name: column[0]}
+		var stringColumn []Nullable[string]
+		for _, val := range column[1:] {
+			stringColumn = append(stringColumn, Nullable[string]{IsValid: true, Value: val})
+		}
+		typedColumn = &String{Data: stringColumn, Name: column[0]}
 	}
 
 	if integerCount > stringCount && integerCount > floatCount {
-		var intColumn []int
+		var intColumn []Nullable[int]
 		for _, val := range column[1:] {
 			parsedVal, _ := strconv.ParseInt(val, 10, 32)
-			intColumn = append(intColumn, int(parsedVal))
+			intColumn = append(intColumn, Nullable[int]{IsValid: true, Value: int(parsedVal)})
 		}
 
-		typedColumn = &Integer{Data: &intColumn, Name: column[0]}
+		typedColumn = &Integer{Data: intColumn, Name: column[0]}
 	}
 
 	if floatCount > stringCount && floatCount > integerCount {
-		var floatColumn []float32
+		var floatColumn []Nullable[float32]
 		for _, val := range column[1:] {
 			parsedVal, _ := strconv.ParseFloat(val, 32)
-			floatColumn = append(floatColumn, float32(parsedVal))
+			floatColumn = append(floatColumn, Nullable[float32]{IsValid: true, Value: float32(parsedVal)})
 		}
-		typedColumn = &Float{Data: &floatColumn, Name: column[0]}
+		typedColumn = &Float{Data: floatColumn, Name: column[0]}
 	}
 
 	return typedColumn

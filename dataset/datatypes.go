@@ -1,16 +1,21 @@
 package dataset
 
+type Nullable[T any] struct {
+	IsValid bool
+	Value   T
+}
+
 type String struct {
 	Name string
-	Data *[]string
+	Data []Nullable[string]
 }
 
 type Integer struct {
 	Name string
-	Data *[]int
+	Data []Nullable[int]
 }
 
 type Float struct {
 	Name string
-	Data *[]float32
+	Data []Nullable[float32]
 }

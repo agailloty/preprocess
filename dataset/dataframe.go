@@ -20,17 +20,17 @@ func DisplayColumn(column DataSetColumn, n int) {
 	case *Float:
 		fmt.Printf("%s (float) \n", v.Name)
 		for i := range n {
-			fmt.Printf("%.2f ", (*v.Data)[i])
+			fmt.Printf("%.2f ", (v.Data)[i].Value)
 		}
 	case *String:
 		fmt.Printf("%s (string) \n", v.Name)
 		for i := range n {
-			fmt.Printf("%s ", (*v.Data)[i])
+			fmt.Printf("%s ", (v.Data)[i].Value)
 		}
 	case *Integer:
 		fmt.Printf("%s (int) \n", v.Name)
 		for i := range n {
-			fmt.Printf("%d ", (*v.Data)[i])
+			fmt.Printf("%d ", (v.Data)[i].Value)
 		}
 	}
 }
