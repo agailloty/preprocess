@@ -36,28 +36,28 @@ func (c *Integer) GetType() string {
 // DataSetColumn.Length()
 
 func (c *Float) Length() int {
-	return len(c.Data)
+	return len(*c.Data)
 }
 
 func (c *String) Length() int {
-	return len(c.Data)
+	return len(*c.Data)
 }
 func (c *Integer) Length() int {
-	return len(c.Data)
+	return len(*c.Data)
 }
 
 // DataSetColumn.ValueAt()
 
 func (c *String) ValueAt(i int) string {
-	return c.Data[i]
+	return (*c.Data)[i]
 }
 
 func (c *Integer) ValueAt(i int) string {
-	return strconv.Itoa(c.Data[i])
+	return strconv.Itoa((*c.Data)[i])
 }
 
 func (c *Float) ValueAt(i int) string {
-	return fmt.Sprintf("%f", c.Data[i])
+	return fmt.Sprintf("%f", (*c.Data)[i])
 }
 
 // DataSetColumn.SetName()

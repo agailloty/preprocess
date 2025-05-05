@@ -2,15 +2,15 @@ package dataset
 
 type String struct {
 	Name string
-	Data []string
+	Data *[]string
 }
 
 type Integer struct {
 	Name string
-	Data []int
+	Data *[]int
 }
 
 type Float struct {
 	Name string
-	Data []float32
+	Data *[]float32
 }
