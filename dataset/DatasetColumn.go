@@ -5,6 +5,14 @@ import (
 	"strconv"
 )
 
+type DataSetColumn interface {
+	GetName() string
+	GetType() string
+	Length() int
+	ValueAt(i int) string
+	SetName(newName string)
+}
+
 // DataSetColumn.GetName()
 
 func (c *String) GetName() string {
@@ -49,6 +57,7 @@ func (c *Integer) Length() int {
 // DataSetColumn.ValueAt()
 
 func (c *String) ValueAt(i int) string {
+
 	return (c.Data)[i].Value
 }
 

@@ -44,7 +44,7 @@ func guessColumnType(column []string, nrow int) DataSetColumn {
 		var intColumn []Nullable[int]
 		for _, val := range column[1:] {
 			isValid, parsedVal := tryParseInt(val)
-			intColumn = append(intColumn, Nullable[int]{IsValid: isValid, Value: int(parsedVal)})
+			intColumn = append(intColumn, Nullable[int]{IsValid: isValid && val != "", Value: int(parsedVal)})
 		}
 
 		typedColumn = &Integer{Data: intColumn, Name: column[0]}
@@ -54,7 +54,7 @@ func guessColumnType(column []string, nrow int) DataSetColumn {
 		var floatColumn []Nullable[float32]
 		for _, val := range column[1:] {
 			isValid, parsedVal := tryParseFloat(val)
-			floatColumn = append(floatColumn, Nullable[float32]{IsValid: isValid, Value: float32(parsedVal)})
+			floatColumn = append(floatColumn, Nullable[float32]{IsValid: isValid && val != "", Value: float32(parsedVal)})
 		}
 		typedColumn = &Float{Data: floatColumn, Name: column[0]}
 	}

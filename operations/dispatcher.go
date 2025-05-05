@@ -12,6 +12,20 @@ func DispatchOperations(prepfile *config.Config) {
 	fmt.Printf("Successfully read dataset %s \n", prepfile.Data.File)
 
 	for _, col := range df.Columns {
+
+		found, columnConfig := findColumnConfig(prepfile.Data.Columns, col.GetName())
+		if found {
+			preprocessOps := columnConfig.Preprocess
+			if preprocessOps != nil {
+				for _, prep := range *preprocessOps {
+					if prep.Op == "fillna" {
+						replaceMissingValues(col, prep.Value)
+					}
+				}
+
+			}
+			//replaceMissingValues("fillna", col, columnConfig)
+		}
 		RenameColumn(col, prepfile.Data.Columns)
 	}
 
@@ -20,4 +34,15 @@ func DispatchOperations(prepfile *config.Config) {
 	}
 
 	ExportCsv(df, prepfile.PostProcess.Export)
+}
+
+func findColumnConfig(columns []config.ColumnConfig, name string) (found bool, result config.ColumnConfig) {
+	for _, value := range columns {
+		if value.Name == name {
+			found = true
+			result = value
+			break
+		}
+	}
+	return found, result
 }
