@@ -18,14 +18,3 @@ type ColumnConfig struct {
 	NewName    string          `toml:"newName"`
 	Preprocess *[]PreprocessOp `toml:"preprocess,omitempty"`
 }
-
-var dataDefautConfig = DataConfig{
-	File:      "data.csv",
-	Separator: ",",
-	Columns: []ColumnConfig{
-		{Name: "id", Type: "int"},
-		{Name: "name", Type: "string"},
-		{Name: "price", Type: "float"},
-		{Name: "available", Type: "bool"},
-	},
-}

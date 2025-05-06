@@ -8,17 +8,17 @@ import (
 )
 
 func SetConfigFile() {
-	viper.SetConfigName("config") // sans extension
+	viper.SetConfigName("config")
 	viper.SetConfigType("toml")
-	viper.AddConfigPath(".") // ou un chemin spécifique
+	viper.AddConfigPath(".")
 
 	if err := viper.ReadInConfig(); err != nil {
-		log.Fatalf("Erreur lors de la lecture du fichier de config : %v", err)
+		log.Fatalf("error reading config Prepfile : %v", err)
 	}
 
 	var config Config
 	if err := viper.Unmarshal(&config); err != nil {
-		log.Fatalf("Erreur lors du mapping de la configuration : %v", err)
+		log.Fatalf("error unmarshalling Prepfile : %v", err)
 	}
 }
 

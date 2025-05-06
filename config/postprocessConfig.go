@@ -1,23 +1,16 @@
 package config
 
 type PostProcessConfig struct {
-	Export         ExportConfig        `toml:"export"`
-	SummaryStats   bool                `toml:"summarystats"`
-	CountMissing   bool                `toml:"countmissing"`
-	ValidateSchema bool                `toml:"validateschema"`
-	SortBy         *SortConfig         `toml:"sortby,omitempty"`
-	DropColumns    []DropColumnEntry   `toml:"dropcolumns,omitempty"`
-	SortDataset    *SortDatasetColumns `toml:"sortdataset,omitempty"`
+	Export       ExportConfig        `toml:"export"`
+	SummaryStats bool                `toml:"summarystats"`
+	CountMissing bool                `toml:"countmissing"`
+	DropColumns  []DropColumnEntry   `toml:"dropcolumns,omitempty"`
+	SortDataset  *SortDatasetColumns `toml:"sortdataset,omitempty"`
 }
 
 type ExportConfig struct {
 	Format string `toml:"format"`
 	Path   string `toml:"path"`
-}
-
-type SortConfig struct {
-	Columns    []string `toml:"columns"`
-	Descending bool     `toml:"descending"`
 }
 
 type DropColumnEntry struct {

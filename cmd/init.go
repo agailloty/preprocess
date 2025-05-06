@@ -1,64 +1,36 @@
 package cmd
 
 import (
-	"fmt"
-	"log"
-	"os"
-
-	"github.com/BurntSushi/toml"
 	"github.com/agailloty/preprocess/config"
-	"github.com/agailloty/preprocess/dataset"
 	"github.com/spf13/cobra"
 )
+
+var datafilename string
+var separator string
+var output string
+var templateOnly bool
 
 // Commande Cobra pour générer le fichier config.toml
 var initCmd = &cobra.Command{
 	Use:   "init",
-	Short: "Init a preprocess config file",
-	Run:   initConfig,
+	Short: "Generate a Prepfile",
+	Args:  cobra.NoArgs,
 }
 
 func initConfig(cmd *cobra.Command, args []string) {
-	var configFile config.Config
-
-	if len(args) == 0 {
-		configFile = config.InitDefaultConfig()
-	} else {
-		filename := args[0]
-		sep := ","
-		if len(args) >= 2 {
-			sep = args[1]
-		}
-		dataset := dataset.ReadDataFrame(filename, sep)
-		var configColumns []config.ColumnConfig
-		for _, col := range dataset.Columns {
-			configColumns = append(configColumns,
-				config.ColumnConfig{Name: col.GetName(), Type: col.GetType()})
-		}
-
-		configFile = config.Config{
-			Data: config.DataConfig{
-				File:      filename,
-				Separator: sep,
-				Columns:   configColumns,
-			},
-		}
-
+	if initCmd.Flags().NFlag() == 0 {
+		initCmd.Help()
+		return
 	}
-	file, err := os.Create("Prepfile.toml")
-	if err != nil {
-		log.Fatalf("Error generating Prefile.toml : %v", err)
-	}
-	defer file.Close()
-
-	encoder := toml.NewEncoder(file)
-	if err := encoder.Encode(configFile); err != nil {
-		log.Fatalf("An error occured during TOML enconding : %v", err)
-	}
-
-	fmt.Println("File successfully generated.")
+	config.InitializePrepfile(datafilename, separator, output, templateOnly)
 }
 
 func init() {
 	rootCmd.AddCommand(initCmd)
+	rootCmd.AddCommand(initCmd)
+	initCmd.Run = initConfig
+	initCmd.Flags().StringVarP(&datafilename, "file", "f", "", "Path to the dataset")
+	initCmd.Flags().StringVarP(&separator, "sep", "s", ",", "Separator for csv file")
+	initCmd.Flags().StringVarP(&output, "output", "o", "Prepfile.toml", "Output name for Prepfile")
+	initCmd.Flags().BoolVarP(&templateOnly, "template", "t", false, "Generate example Prepfile.toml template")
 }
