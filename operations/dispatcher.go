@@ -18,8 +18,10 @@ func DispatchOperations(prepfile *config.Config) {
 			preprocessOps := columnConfig.Preprocess
 			if preprocessOps != nil {
 				for _, prep := range *preprocessOps {
-					if prep.Op == "fillna" {
+					if prep.Op == "fillna" && prep.Method == "" && prep.Value != "" {
 						replaceMissingValues(col, prep.Value)
+					} else if prep.Op == "fillna" && prep.Method != "" {
+						replaceMissingWithStats(col, prep.Method)
 					}
 				}
 
