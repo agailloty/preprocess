@@ -8,20 +8,25 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var prepfilePath string
+
 func init() {
 	rootCmd.AddCommand(runCmd)
+
+	runCmd.Flags().StringVarP(&prepfilePath, "file", "f", "Prepfile.toml", "Path to the configuration file")
 }
 
 var runCmd = &cobra.Command{
 	Use:   "run",
-	Short: "Run operations using Prefile",
+	Short: "Run operations using Prepfile",
 	Run:   run,
 }
 
 func run(cmd *cobra.Command, args []string) {
-	prepfile, err := config.LoadConfig("Prepfile.toml")
+	prepfile, err := config.LoadConfig(prepfilePath)
 	if err != nil {
-		fmt.Printf("Prepfile.toml not found %s", err)
+		fmt.Printf("Failed to load config file '%s': %s\n", prepfilePath, err)
+		return
 	}
 
 	operations.DispatchOperations(prepfile)
