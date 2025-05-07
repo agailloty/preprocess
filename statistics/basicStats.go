@@ -40,7 +40,6 @@ func Median[T Number](values []T) float64 {
 	if len(values) == 0 {
 		return 0
 	}
-	// Copier et trier pour ne pas modifier la slice d'origine
 	sorted := make([]float64, len(values))
 	for i, v := range values {
 		sorted[i] = float64(v)

@@ -23,10 +23,15 @@ func DispatchOperations(prepfile *config.Config) {
 					} else if prep.Op == "fillna" && prep.Method != "" {
 						replaceMissingWithStats(col, prep.Method)
 					}
+
+					// Transform operation come after filling missing values
+					if prep.Op == "normalize" && prep.Method == "zscore" {
+						applyZScoreToEveryElement(col)
+					}
+
 				}
 
 			}
-			//replaceMissingValues("fillna", col, columnConfig)
 		}
 		RenameColumn(col, prepfile.Data.Columns)
 	}
