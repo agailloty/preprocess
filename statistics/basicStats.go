@@ -52,3 +52,16 @@ func Median[T Number](values []T) float64 {
 	}
 	return sorted[mid]
 }
+
+func MinMax[T Number](values []T) (min, max T) {
+	min, max = values[0], values[0]
+	for _, v := range values[1:] {
+		if v < min {
+			min = v
+		}
+		if v > max {
+			max = v
+		}
+	}
+	return min, max
+}

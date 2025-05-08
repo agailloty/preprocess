@@ -25,8 +25,13 @@ func DispatchOperations(prepfile *config.Config) {
 					}
 
 					// Transform operation come after filling missing values
-					if prep.Op == "normalize" && prep.Method == "zscore" {
-						applyZScoreToEveryElement(col)
+					if prep.Op == "normalize" {
+						if prep.Method == "zscore" {
+							applyZScoreToEveryElement(col)
+						} else if prep.Method == "minmax" {
+							applyMinMaxScoreToEveryElement(col)
+						}
+
 					}
 
 				}
