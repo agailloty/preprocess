@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/agailloty/preprocess/config"
 	"github.com/agailloty/preprocess/operations"
@@ -32,7 +33,10 @@ var runCmd = &cobra.Command{
 }
 
 func run(cmd *cobra.Command, args []string) {
+	start := time.Now()
 	validateFlags()
+	elapsed := time.Since(start)
+	fmt.Printf("Finished preprocessing in : %s\n", elapsed)
 }
 
 func validateFlags() {
