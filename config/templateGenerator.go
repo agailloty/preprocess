@@ -4,10 +4,9 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"path/filepath"
-	"strings"
 
 	"github.com/agailloty/preprocess/dataset"
+	"github.com/agailloty/preprocess/utils"
 	"github.com/pelletier/go-toml/v2"
 )
 
@@ -23,9 +22,7 @@ func InitializePrepfile(filename string, sep string, output string, templateOnly
 			ColumnConfig{Name: col.GetName(), Type: col.GetType()})
 	}
 
-	ext := filepath.Ext(filename)
-	base := strings.TrimSuffix(filepath.Base(filename), ext)
-	newName := base + "_cleaned" + ext
+	newName := utils.AppendPrefixOrSuffix(filename, "", "cleaned")
 
 	configFile := Config{
 		Data: DataConfig{

@@ -1,9 +1,12 @@
 package config
 
 import (
+	"errors"
 	"fmt"
 	"log"
+	"strings"
 
+	"github.com/agailloty/preprocess/utils"
 	"github.com/spf13/viper"
 )
 
@@ -34,7 +37,7 @@ func InitDefaultConfig() Config {
 	}
 }
 
-func LoadConfig(path string) (*Config, error) {
+func LoadConfigFromPrepfile(path string) (*Config, error) {
 	viper.SetConfigFile(path)
 	viper.SetConfigType("toml")
 
@@ -48,4 +51,67 @@ func LoadConfig(path string) (*Config, error) {
 	}
 
 	return &config, nil
+}
+
+func MakeConfigFromCommandsArgs(datapath string, sep string, columnList []string, operationList []string) *Config {
+
+	// I assume there is strict association between --column and --op
+	nCol := len(columnList)
+	if len(columnList) != len(operationList) {
+		nCol = min(len(columnList), len(operationList))
+	}
+
+	//var config Config
+
+	prepColumns := make([]ColumnConfig, nCol)
+
+	for i := range nCol {
+		prepColumns = append(prepColumns, makeColumnConfigFromArgs(columnList[i], operationList[i]))
+	}
+	newName := utils.AppendPrefixOrSuffix(datapath, "", "_cleaned")
+	return &Config{
+		Data:        DataConfig{File: datapath, Separator: sep, Columns: prepColumns},
+		PostProcess: PostProcessConfig{Export: ExportConfig{Format: "csv", Path: newName}},
+	}
+
+}
+
+func parseOperationFromArgs(operation string) (PreprocessOp, error) {
+	providedOp := strings.Split(operation, ":")
+	if len(providedOp) < 2 {
+		return PreprocessOp{}, errors.New("not enough parameters")
+	}
+	opName, paramKvp := providedOp[0], providedOp[1]
+	args := strings.Split(paramKvp, "=")
+
+	if len(args) < 2 {
+		return PreprocessOp{}, errors.New("no argument provided")
+	}
+
+	result := PreprocessOp{Op: opName}
+
+	qualifier, value := string(args[0]), string(args[1])
+	if qualifier == "method" {
+		result.Method = value
+	} else {
+		result.Value = value
+	}
+
+	return result, nil
+}
+
+func makeColumnConfigFromArgs(columnName string, operation string) ColumnConfig {
+
+	columnConfig := ColumnConfig{
+		Name: columnName,
+	}
+
+	preprocessOp := make([]PreprocessOp, 1)
+	op, err := parseOperationFromArgs(operation)
+	if err == nil {
+		preprocessOp = append(preprocessOp, op)
+		columnConfig.Preprocess = &preprocessOp
+	}
+
+	return columnConfig
 }
