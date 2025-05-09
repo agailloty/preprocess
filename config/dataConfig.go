@@ -7,9 +7,10 @@ type DataConfig struct {
 }
 
 type PreprocessOp struct {
-	Op     string `toml:"op"`
-	Value  any    `toml:"value,omitempty"`
-	Method string `toml:"method,omitempty"`
+	Op      string        `toml:"op"`
+	Value   any           `toml:"value,omitempty"`
+	Method  string        `toml:"method,omitempty"`
+	BinSpec *BinningSpecs `toml:"binSpecs"`
 }
 
 type ColumnConfig struct {
