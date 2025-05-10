@@ -57,13 +57,13 @@ jobs:
             --gc \
             --minify \
             --source docs \
-            --destination ../public \
+            --destination public \
             --baseURL "${{ steps.pages.outputs.base_url }}/"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./public
+          path: public
           name: github-pages  # Explicit name for artifact
 
   deploy:
