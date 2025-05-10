@@ -31,7 +31,10 @@ func DispatchOperations(prepfile *config.Config) {
 						} else if prep.Method == "minmax" {
 							applyMinMaxScoreToEveryElement(col)
 						}
+					}
 
+					if prep.Op == "discretize" && prep.Method == "binning" {
+						makeBinsFromNumericColumns(col, *prep.BinSpec, &df)
 					}
 
 				}
