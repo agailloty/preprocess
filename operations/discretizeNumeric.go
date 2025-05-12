@@ -23,25 +23,40 @@ func makeBinsFromNumericColumns(column dataset.DataSetColumn, binSpec config.Bin
 				}
 			}
 		}
-		columnName := binSpec.NewColumn
-		overrideExistingColumn := false
-		if binSpec.NewColumn == "" {
-			columnName = column.GetName()
-			overrideExistingColumn = true
-		}
-		binnedColumn := dataset.String{
-			Name: columnName,
-			Data: binData,
-		}
-
-		if overrideExistingColumn {
-			for i := range df.Columns {
-				if df.Columns[i].GetName() == columnName {
-					df.Columns[i] = &binnedColumn
+	case *dataset.Integer:
+		for i, val := range v.Data {
+			binFound := false
+			for _, bin := range binSpec.Bins {
+				if float32(val.Value) >= bin.Lower && float32(val.Value) <= bin.Upper {
+					binData[i] = dataset.Nullable[string]{IsValid: true, Value: bin.Label}
+					binFound = true
+					break
+				}
+				if !binFound {
+					binData[i] = dataset.Nullable[string]{IsValid: true, Value: column.ValueAt(i)}
 				}
 			}
-		} else {
-			df.Columns = append(df.Columns, &binnedColumn)
 		}
+	}
+
+	columnName := binSpec.NewColumn
+	overrideExistingColumn := false
+	if binSpec.NewColumn == "" {
+		columnName = column.GetName()
+		overrideExistingColumn = true
+	}
+	binnedColumn := dataset.String{
+		Name: columnName,
+		Data: binData,
+	}
+
+	if overrideExistingColumn {
+		for i := range df.Columns {
+			if df.Columns[i].GetName() == columnName {
+				df.Columns[i] = &binnedColumn
+			}
+		}
+	} else {
+		df.Columns = append(df.Columns, &binnedColumn)
 	}
 }
