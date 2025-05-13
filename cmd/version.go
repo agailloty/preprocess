@@ -14,6 +14,6 @@ var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Print the version number of Preprocess",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Preprocess v0.0.1")
+		fmt.Println("preprocess v0.1.0")
 	},
 }
