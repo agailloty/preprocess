@@ -1,13 +1,13 @@
 ---
 weight: 101
-date: "2025-05-13T13:15"
+date: "2025-05-13T13:15:40+02:00"
 draft: false
 author: "Axel-Cleris Gailloty"
 title: "Quickstart"
 icon: "rocket_launch"
 toc: true
 description: "A quickstart guide to install preprocess"
-publishdate: "2025-05-13T13:15"
+publishdate: "2025-05-13T13:15:40+02:00"
 tags: ["Beginners"]
 ---
 

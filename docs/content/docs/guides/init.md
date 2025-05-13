@@ -2,8 +2,8 @@
 weight: 100
 title: "preprocess init"
 icon: "article"
-date: "2025-05-13T19:56"
-lastmod: "2025-05-13T19:56"
+date: "2025-05-13T19:56:40+02:00"
+lastmod: "2025-05-13T19:56:40+02:00"
 description: "Generate Prefile"
 draft: false
 toc: true
