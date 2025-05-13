@@ -16,6 +16,6 @@ type PreprocessOp struct {
 type ColumnConfig struct {
 	Name       string          `toml:"name"`
 	Type       string          `toml:"type"`
-	NewName    string          `toml:"newName"`
+	NewName    string          `toml:"newName,omitempty"`
 	Preprocess *[]PreprocessOp `toml:"preprocess,omitempty"`
 }

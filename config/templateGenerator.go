@@ -22,7 +22,7 @@ func InitializePrepfile(filename string, sep string, output string, templateOnly
 			ColumnConfig{Name: col.GetName(), Type: col.GetType()})
 	}
 
-	newName := utils.AppendPrefixOrSuffix(filename, "", "cleaned")
+	newName := utils.AppendPrefixOrSuffix(filename, "", "_cleaned")
 
 	configFile := Config{
 		Data: DataConfig{
