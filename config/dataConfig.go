@@ -4,8 +4,8 @@ type DataConfig struct {
 	File              string             `toml:"file"`
 	Separator         string             `toml:"separator"`
 	Columns           []ColumnConfig     `toml:"columns"`
-	NumericOperations *DatasetOperations `toml:"numericColumns,omitempty"`
-	TextOperations    *DatasetOperations `toml:"textColumns,omitempty"`
+	NumericOperations *DatasetOperations `mapstructure:"numericColumns,omitempty"`
+	TextOperations    *DatasetOperations `mapstructure:"textColumns,omitempty"`
 }
 
 type PreprocessOp struct {
