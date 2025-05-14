@@ -54,13 +54,13 @@ func applyOperationsOnColumn(preprocessOps *[]config.PreprocessOp, col dataset.D
 			// Transform operation come after filling missing values
 			if prep.Op == "normalize" {
 				if prep.Method == "zscore" {
-					applyZScoreToEveryElement(col)
+					applyZScoreToEveryElement(col, df)
 				} else if prep.Method == "minmax" {
 					applyMinMaxScoreToEveryElement(col)
 				}
 			}
 
-			if prep.Op == "discretize" && prep.Method == "binning" {
+			if prep.Op == "discretize" && prep.Method == "binning" && prep.BinSpec != nil {
 				makeBinsFromNumericColumns(col, *prep.BinSpec, df)
 			}
 		}

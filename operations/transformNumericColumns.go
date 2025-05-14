@@ -3,18 +3,23 @@ package operations
 import (
 	"github.com/agailloty/preprocess/dataset"
 	"github.com/agailloty/preprocess/statistics"
+	"github.com/agailloty/preprocess/utils"
 )
 
-func applyZScoreToEveryElement(column dataset.DataSetColumn) {
+func applyZScoreToEveryElement(column dataset.DataSetColumn, df *dataset.DataFrame) {
 	switch v := column.(type) {
 	case *dataset.Integer:
+		// Convert into to float32
 		validData := extractIntsWithDefault(v.Data, 0)
 		mu := statistics.Mean(validData)
 		sigma := statistics.StdDev(validData)
+		zScores := make([]dataset.Nullable[float32], column.Length())
 		for i := range v.Data {
 			zScore := statistics.ComputeZScore(float32(v.Data[i].Value), float32(mu), float32(sigma))
-			v.Data[i] = dataset.Nullable[int]{IsValid: true, Value: int(zScore)}
+			zScores[i] = dataset.Nullable[float32]{IsValid: true, Value: zScore}
 		}
+		newColumn := dataset.Float{Name: column.GetName(), Data: zScores}
+		utils.OverrideDataFrameColumn(df, column.GetName(), &newColumn)
 
 	case *dataset.Float:
 		validData := extractFloatsWithDefault(v.Data, 0)
