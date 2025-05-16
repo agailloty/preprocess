@@ -8,7 +8,7 @@ import (
 func applyOperationsOnNumericColumns(df *dataset.DataFrame, operations *[]config.PreprocessOp) {
 	for _, column := range df.Columns {
 		if column.GetType() == "int" || column.GetType() == "float" {
-			applyOperationsOnColumn(operations, column, df)
+			applyNumericOperationsOnColumn(operations, column, df)
 		}
 	}
 }

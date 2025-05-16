@@ -19,7 +19,11 @@ func DispatchOperations(prepfile *config.Config) {
 		found, columnConfig := findColumnConfig(prepfile.Data.Columns, col.GetName())
 		if found {
 			preprocessOps := columnConfig.Preprocess
-			applyOperationsOnColumn(preprocessOps, col, &df)
+			if col.GetType() == "int" || col.GetType() == "float" {
+				applyNumericOperationsOnColumn(preprocessOps, col, &df)
+			} else if col.GetType() == "string" {
+				applyTextOperationsOnColumn(preprocessOps, col, &df)
+			}
 		}
 		RenameColumn(col, prepfile.Data.Columns)
 	}
@@ -42,7 +46,7 @@ func findColumnConfig(columns []config.ColumnConfig, name string) (found bool, r
 	return found, result
 }
 
-func applyOperationsOnColumn(preprocessOps *[]config.PreprocessOp, col dataset.DataSetColumn, df *dataset.DataFrame) {
+func applyNumericOperationsOnColumn(preprocessOps *[]config.PreprocessOp, col dataset.DataSetColumn, df *dataset.DataFrame) {
 	if preprocessOps != nil {
 		for _, prep := range *preprocessOps {
 			if prep.Op == "fillna" && prep.Method == "" && prep.Value != "" {
@@ -62,6 +66,16 @@ func applyOperationsOnColumn(preprocessOps *[]config.PreprocessOp, col dataset.D
 
 			if prep.Op == "discretize" && prep.Method == "binning" && prep.BinSpec != nil {
 				makeBinsFromNumericColumns(col, *prep.BinSpec, df)
+			}
+		}
+	}
+}
+
+func applyTextOperationsOnColumn(preprocessOps *[]config.PreprocessOp, col dataset.DataSetColumn, df *dataset.DataFrame) {
+	if preprocessOps != nil {
+		for _, prep := range *preprocessOps {
+			if prep.Op == "fillna" && prep.Method == "" && prep.Value != "" {
+				replaceMissingValues(col, prep.Value)
 			}
 		}
 	}
