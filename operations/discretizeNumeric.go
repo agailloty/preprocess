@@ -5,14 +5,14 @@ import (
 	"github.com/agailloty/preprocess/dataset"
 )
 
-func makeBinsFromNumericColumns(column dataset.DataSetColumn, binSpec config.BinningSpecs, df *dataset.DataFrame) {
+func makeBinsFromNumericColumns(column dataset.DataSetColumn, bins []config.BinningOperation, df *dataset.DataFrame, overrideColumn bool) {
 	binData := make([]dataset.Nullable[string], column.Length())
 
 	switch v := column.(type) {
 	case *dataset.Float:
 		for i, val := range v.Data {
 			binFound := false
-			for _, bin := range binSpec.Bins {
+			for _, bin := range bins {
 				if val.Value >= bin.Lower && val.Value <= bin.Upper {
 					binData[i] = dataset.Nullable[string]{IsValid: true, Value: bin.Label}
 					binFound = true
@@ -26,7 +26,7 @@ func makeBinsFromNumericColumns(column dataset.DataSetColumn, binSpec config.Bin
 	case *dataset.Integer:
 		for i, val := range v.Data {
 			binFound := false
-			for _, bin := range binSpec.Bins {
+			for _, bin := range bins {
 				if float32(val.Value) >= bin.Lower && float32(val.Value) <= bin.Upper {
 					binData[i] = dataset.Nullable[string]{IsValid: true, Value: bin.Label}
 					binFound = true
@@ -39,18 +39,16 @@ func makeBinsFromNumericColumns(column dataset.DataSetColumn, binSpec config.Bin
 		}
 	}
 
-	columnName := binSpec.NewColumn
-	overrideExistingColumn := false
-	if binSpec.NewColumn == "" {
-		columnName = column.GetName()
-		overrideExistingColumn = true
+	columnName := column.GetName()
+	if !overrideColumn {
+		columnName = columnName + "_C"
 	}
 	binnedColumn := dataset.String{
 		Name: columnName,
 		Data: binData,
 	}
 
-	if overrideExistingColumn {
+	if overrideColumn {
 		for i := range df.Columns {
 			if df.Columns[i].GetName() == columnName {
 				df.Columns[i] = &binnedColumn

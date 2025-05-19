@@ -4,15 +4,15 @@ type DataConfig struct {
 	File              string             `toml:"file"`
 	Separator         string             `toml:"separator"`
 	Columns           []ColumnConfig     `toml:"columns"`
-	NumericOperations *DatasetOperations `mapstructure:"numericColumns,omitempty"`
-	TextOperations    *DatasetOperations `mapstructure:"textColumns,omitempty"`
+	NumericOperations *DatasetOperations `mapstructure:"numerics,omitempty"`
+	TextOperations    *DatasetOperations `mapstructure:"texts,omitempty"`
 }
 
 type PreprocessOp struct {
-	Op      string        `toml:"op"`
-	Value   any           `toml:"value,omitempty"`
-	Method  string        `toml:"method,omitempty"`
-	BinSpec *BinningSpecs `toml:"binSpecs"`
+	Op     string             `toml:"op"`
+	Value  any                `toml:"value,omitempty"`
+	Method string             `toml:"method,omitempty"`
+	Bins   []BinningOperation `toml:"bins"`
 }
 
 type ColumnConfig struct {

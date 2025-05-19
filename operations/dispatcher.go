@@ -64,8 +64,8 @@ func applyNumericOperationsOnColumn(preprocessOps *[]config.PreprocessOp, col da
 				}
 			}
 
-			if prep.Op == "discretize" && prep.Method == "binning" && prep.BinSpec != nil {
-				makeBinsFromNumericColumns(col, *prep.BinSpec, df)
+			if prep.Op == "discretize" && prep.Method == "binning" && prep.Bins != nil {
+				makeBinsFromNumericColumns(col, prep.Bins, df, true)
 			}
 		}
 	}
