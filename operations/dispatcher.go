@@ -32,7 +32,7 @@ func DispatchOperations(prepfile *config.Config) {
 		SortDatasetColumns(df, prepfile.PostProcess.SortDataset.Descending)
 	}
 
-	ExportCsv(df, prepfile.PostProcess.Export)
+	ExportCsv(df, prepfile.PostProcess.ExportFilename)
 }
 
 func findColumnConfig(columns []config.ColumnConfig, name string) (found bool, result config.ColumnConfig) {

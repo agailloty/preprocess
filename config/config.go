@@ -71,7 +71,7 @@ func MakeConfigFromCommandsArgs(datapath string, sep string, columnList []string
 	newName := utils.AppendPrefixOrSuffix(datapath, "", "_cleaned")
 	return &Config{
 		Data:        DataConfig{File: datapath, Separator: sep, Columns: prepColumns},
-		PostProcess: PostProcessConfig{Export: ExportConfig{Format: "csv", Path: newName}},
+		PostProcess: PostProcessConfig{ExportFormat: "csv", ExportFilename: newName},
 	}
 
 }

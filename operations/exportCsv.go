@@ -1,14 +1,13 @@
 package operations
 
 import (
-	"github.com/agailloty/preprocess/config"
 	"github.com/agailloty/preprocess/dataset"
 )
 
-func ExportCsv(df dataset.DataFrame, exportConf config.ExportConfig) {
+func ExportCsv(df dataset.DataFrame, filename string) {
 	fileName := df.Name + "_EXPORT.csv"
-	if exportConf.Path != "" {
-		fileName = exportConf.Path
+	if filename != "" {
+		fileName = filename
 	}
 
 	df.SaveToCSV(fileName, ",")
