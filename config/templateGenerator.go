@@ -31,7 +31,7 @@ func InitializePrepfile(filename string, sep string, output string, templateOnly
 			Columns:   configColumns,
 		},
 		PostProcess: PostProcessConfig{
-			ExportFormat: "csv", ExportFilename: newName,
+			Format: "csv", FileName: newName,
 		},
 	}
 

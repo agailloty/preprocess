@@ -1,12 +1,12 @@
 package config
 
 type PostProcessConfig struct {
-	SummaryStats   bool                `toml:"summarystats"`
-	CountMissing   bool                `toml:"countmissing"`
-	DropColumns    []DropColumnEntry   `toml:"dropcolumns,omitempty"`
-	SortDataset    *SortDatasetColumns `toml:"sortdataset,omitempty"`
-	ExportFormat   string              `mapstructure:"format"`
-	ExportFilename string              `mapstructure:"filename"`
+	SummaryStats bool                `toml:"summarystats"`
+	CountMissing bool                `toml:"countmissing"`
+	DropColumns  []DropColumnEntry   `toml:"dropcolumns,omitempty"`
+	SortDataset  *SortDatasetColumns `toml:"sortdataset,omitempty"`
+	Format       string              `toml:"format"`
+	FileName     string              `toml:"filename"`
 }
 
 type DropColumnEntry struct {
