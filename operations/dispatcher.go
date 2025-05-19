@@ -2,6 +2,7 @@ package operations
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/agailloty/preprocess/config"
 	"github.com/agailloty/preprocess/dataset"
@@ -72,11 +73,26 @@ func applyNumericOperationsOnColumn(preprocessOps *[]config.PreprocessOp, col da
 }
 
 func applyTextOperationsOnColumn(preprocessOps *[]config.PreprocessOp, col dataset.DataSetColumn, df *dataset.DataFrame) {
-	if preprocessOps != nil {
-		for _, prep := range *preprocessOps {
-			if prep.Op == "fillna" && prep.Method == "" && prep.Value != "" {
-				replaceMissingValues(col, prep.Value)
+	if preprocessOps == nil {
+		return
+	}
+
+	for _, prep := range *preprocessOps {
+		if prep.Op == "fillna" && prep.Method == "" && prep.Value != "" {
+			replaceMissingValues(col, prep.Value)
+		}
+		var stringOps []stringFuction
+		if prep.Op == "clean" {
+			if prep.Method == "trimws" {
+				stringOps = append(stringOps, trimWhitespace)
+			}
+			if prep.Method == "upper" {
+				stringOps = append(stringOps, strings.ToUpper)
+			}
+			if prep.Method == "lower" {
+				stringOps = append(stringOps, strings.ToLower)
 			}
 		}
+		applyStringOperation(col, stringOps)
 	}
 }

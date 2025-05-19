@@ -8,10 +8,13 @@ import (
 
 type stringFuction func(value string) string
 
-func applyStringOperation(column *dataset.String, operations []stringFuction) {
-	for i := range column.Data {
-		for _, stringFunc := range operations {
-			column.Data[i].Value = stringFunc(column.Data[i].Value)
+func applyStringOperation(column dataset.DataSetColumn, operations []stringFuction) {
+	switch v := column.(type) {
+	case *dataset.String:
+		for i := range v.Data {
+			for _, stringFunc := range operations {
+				v.Data[i].Value = stringFunc(v.Data[i].Value)
+			}
 		}
 	}
 }
