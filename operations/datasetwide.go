@@ -23,3 +23,12 @@ func compareColumnNamesAsc(colA dataset.DataSetColumn, colB dataset.DataSetColum
 func compareColumnNamesDesc(colA dataset.DataSetColumn, colB dataset.DataSetColumn) int {
 	return -1 * cmp.Compare(colA.GetName(), colB.GetName())
 }
+
+func ExportCsv(df dataset.DataFrame, filename string) {
+	fileName := df.Name + "_EXPORT.csv"
+	if filename != "" {
+		fileName = filename
+	}
+
+	df.SaveToCSV(fileName, ",")
+}
