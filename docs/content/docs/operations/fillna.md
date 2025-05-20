@@ -1,6 +1,6 @@
 ---
 weight: 100
-title: "fillna"
+title: "Filling missing values"
 icon: "article"
 date: "2025-05-13T20:41:40+02:00"
 lastmod: "2025-05-13T20:41:40+02:00"
@@ -8,9 +8,6 @@ description: "Filling missing values"
 draft: false
 toc: true
 ---
-
-# Fill missing with value
-
 
 ## Text column
 
