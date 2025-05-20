@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 )
 
@@ -78,4 +79,44 @@ func (d DataFrame) SaveToCSV(filepath string, sep string) error {
 	}
 
 	return nil
+}
+
+func (d *DataFrame) DeleteColumn(column DataSetColumn) {
+	found, index := findIndex(d.Columns, column)
+	if found {
+		d.Columns = slices.Delete(d.Columns, index, index+1)
+	}
+
+}
+
+func (d *DataFrame) DeleteColumnByName(columnName string) {
+	found, index := findFirstIndexByName(d.Columns, columnName)
+	if found {
+		d.Columns = slices.Delete(d.Columns, index, index+1)
+	}
+
+}
+
+func findIndex(columns []DataSetColumn, colToFind DataSetColumn) (found bool, index int) {
+	index = -1
+	for i, column := range columns {
+		if colToFind == column {
+			index = i
+			found = true
+			break
+		}
+	}
+	return found, index
+}
+
+func findFirstIndexByName(columns []DataSetColumn, colName string) (found bool, index int) {
+	index = -1
+	for i, column := range columns {
+		if column.GetName() == colName {
+			index = i
+			found = true
+			break
+		}
+	}
+	return found, index
 }

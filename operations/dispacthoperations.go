@@ -28,6 +28,12 @@ func DispatchOperations(prepfile *config.Config) {
 		RenameColumn(col, prepfile.Data.Columns)
 	}
 
+	if prepfile.PostProcess.DropColumns != nil {
+		for _, columnToDelete := range *prepfile.PostProcess.DropColumns {
+			df.DeleteColumnByName(columnToDelete)
+		}
+	}
+
 	if prepfile.PostProcess.SortDataset != nil {
 		SortDatasetColumns(df, prepfile.PostProcess.SortDataset.Descending)
 	}
