@@ -48,14 +48,10 @@ func summarizeStringColumn(column *dataset.String) ColumnSummary {
 	}
 
 	uniqueValueCount := len(summary)
-	keys := make([]string, 0, len(summary))
-
-	for k := range summary {
-		keys = append(keys, k)
-	}
 
 	uniqueValuesSummary := slices.Collect(maps.Values(summary))
-	missingCount := utils.CountMissing(&column.Data)
+	keys := slices.Collect(maps.Keys(summary))
+	missingCount := column.CountMissing()
 
 	return ColumnSummary{
 		Name:                column.Name,
@@ -63,33 +59,33 @@ func summarizeStringColumn(column *dataset.String) ColumnSummary {
 		UniqueValueCount:    uniqueValueCount,
 		UniqueValues:        keys,
 		UniqueValuesSummary: uniqueValuesSummary,
-		MissingCount:        missingCount}
+		Missing:             missingCount}
 }
 
 func summarizeFloatColumn(column *dataset.Float) ColumnSummary {
 	validData := utils.ExtractNonNullFloats(column.Data)
 	mean := statistics.Mean(validData)
 	median := statistics.Median(validData)
-	missingCount := utils.CountMissing(&column.Data)
+	missingCount := column.CountMissing()
 
 	return ColumnSummary{
-		Name:         column.Name,
-		RowCount:     column.Length(),
-		Mean:         mean,
-		Median:       median,
-		MissingCount: missingCount}
+		Name:     column.Name,
+		RowCount: column.Length(),
+		Mean:     mean,
+		Median:   median,
+		Missing:  missingCount}
 }
 
 func summarizeIntColumn(column *dataset.Integer) ColumnSummary {
 	validData := utils.ExtractNonNullInts(column.Data)
 	mean := statistics.Mean(validData)
 	median := statistics.Median(validData)
-	missingCount := utils.CountMissing(&column.Data)
+	missingCount := column.CountMissing()
 
 	return ColumnSummary{
-		Name:         column.Name,
-		RowCount:     column.Length(),
-		Mean:         mean,
-		Median:       median,
-		MissingCount: missingCount}
+		Name:     column.Name,
+		RowCount: column.Length(),
+		Mean:     mean,
+		Median:   median,
+		Missing:  missingCount}
 }

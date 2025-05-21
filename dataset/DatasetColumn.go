@@ -10,6 +10,7 @@ type DataSetColumn interface {
 	Length() int
 	ValueAt(i int) string
 	SetName(newName string)
+	CountMissing() int
 }
 
 // DataSetColumn.GetName()
@@ -91,4 +92,29 @@ func (c *Integer) SetName(newName string) {
 
 func (c *Float) SetName(newName string) {
 	c.Name = newName
+}
+
+// DataSetColumn.SetName()
+
+func (c *String) CountMissing() int {
+	return countMissing(&c.Data)
+}
+
+func (c *Integer) CountMissing() int {
+	return countMissing(&c.Data)
+}
+
+func (c *Float) CountMissing() int {
+	return countMissing(&c.Data)
+}
+
+func countMissing[T any](data *[]Nullable[T]) int {
+	var count int
+
+	for _, val := range *data {
+		if !val.IsValid {
+			count++
+		}
+	}
+	return count
 }

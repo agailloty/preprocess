@@ -11,11 +11,11 @@ type ColumnSummary struct {
 	UniqueValues        []string        `toml:"UniqueValues,omitempty"`
 	UniqueValuesSummary []ValueKeyCount `toml:"UniqueValuesSummary,inline,omitempty"`
 
-	Min          float64 `toml:"Min,omitempty"`
-	Mean         float64 `toml:"Mean,omitempty"`
-	Median       float64 `toml:"Median,omitempty"`
-	Max          float64 `toml:"Max,omitempty"`
-	MissingCount int     `toml:"MissingCount"`
+	Min     float64 `toml:"Min,omitempty"`
+	Mean    float64 `toml:"Mean,omitempty"`
+	Median  float64 `toml:"Median,omitempty"`
+	Max     float64 `toml:"Max,omitempty"`
+	Missing int     `toml:"Missing"`
 }
 
 type ValueKeyCount struct {
