@@ -1,7 +1,6 @@
 package dataset
 
 import (
-	"fmt"
 	"strconv"
 )
 
@@ -73,7 +72,7 @@ func (c *Integer) ValueAt(i int) string {
 }
 
 func (c *Float) ValueAt(i int) string {
-	value := fmt.Sprintf("%f", (c.Data)[i].Value)
+	value := strconv.FormatFloat((c.Data)[i].Value, 'g', -1, 64)
 	if !c.Data[i].IsValid {
 		value = ""
 	}

@@ -17,5 +17,5 @@ type Integer struct {
 
 type Float struct {
 	Name string
-	Data []Nullable[float32]
+	Data []Nullable[float64]
 }

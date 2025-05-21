@@ -6,7 +6,7 @@ type BinningSpecs struct {
 }
 
 type BinningOperation struct {
-	Lower float32 `toml:"lower"`
-	Upper float32 `toml:"upper"`
+	Lower float64 `toml:"lower"`
+	Upper float64 `toml:"upper"`
 	Label string  `toml:"label"`
 }

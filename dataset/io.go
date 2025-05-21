@@ -51,10 +51,10 @@ func guessColumnType(column []string, nrow int) DataSetColumn {
 	}
 
 	if floatCount > stringCount && floatCount > integerCount {
-		var floatColumn []Nullable[float32]
+		var floatColumn []Nullable[float64]
 		for _, val := range column[1:] {
 			isValid, parsedVal := tryParseFloat(val)
-			floatColumn = append(floatColumn, Nullable[float32]{IsValid: isValid && val != "", Value: float32(parsedVal)})
+			floatColumn = append(floatColumn, Nullable[float64]{IsValid: isValid && val != "", Value: float64(parsedVal)})
 		}
 		typedColumn = &Float{Data: floatColumn, Name: column[0]}
 	}

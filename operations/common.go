@@ -29,7 +29,7 @@ func replaceMissingValues(column dataset.DataSetColumn, value any) {
 	case *dataset.Float:
 		val, ok := value.(float64)
 		if ok {
-			fillMissingFloatWithValue(v, float32(val))
+			fillMissingFloatWithValue(v, float64(val))
 		}
 	}
 }
@@ -50,7 +50,7 @@ func fillMissingIntegerWithValue(column *dataset.Integer, newValue int) {
 	}
 }
 
-func fillMissingFloatWithValue(column *dataset.Float, newValue float32) {
+func fillMissingFloatWithValue(column *dataset.Float, newValue float64) {
 	for i := range column.Data {
 		if !column.Data[i].IsValid {
 			column.Data[i].Value = newValue
