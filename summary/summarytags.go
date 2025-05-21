@@ -5,11 +5,17 @@ type SummaryFile struct {
 }
 
 type ColumnSummary struct {
-	Name                string          `toml:"name"`
-	RowCount            int             `toml:"RowCount"`
-	UniqueValueCount    int             `toml:"UniqueValueCount"`
-	UniqueValues        []string        `toml:"UniqueValues"`
-	UniqueValuesSummary []ValueKeyCount `toml:"UniqueValuesSummary,inline"`
+	Name                string          `toml:"name,omitempty"`
+	RowCount            int             `toml:"RowCount,omitempty"`
+	UniqueValueCount    int             `toml:"UniqueValueCount,omitempty"`
+	UniqueValues        []string        `toml:"UniqueValues,omitempty"`
+	UniqueValuesSummary []ValueKeyCount `toml:"UniqueValuesSummary,inline,omitempty"`
+
+	Min          float64 `toml:"Min,omitempty"`
+	Mean         float64 `toml:"Mean,omitempty"`
+	Median       float64 `toml:"Median,omitempty"`
+	Max          float64 `toml:"Max,omitempty"`
+	MissingCount int     `toml:"MissingCount"`
 }
 
 type ValueKeyCount struct {

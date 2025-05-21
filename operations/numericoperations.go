@@ -146,7 +146,7 @@ func applyZScoreToEveryElement(column dataset.DataSetColumn, df *dataset.DataFra
 	switch v := column.(type) {
 	case *dataset.Integer:
 		// Convert into to float64
-		validData := extractNonNullInts(v.Data)
+		validData := utils.ExtractNonNullInts(v.Data)
 		mu := statistics.Mean(validData)
 		sigma := statistics.StdDev(validData)
 		zScores := make([]dataset.Nullable[float64], column.Length())
@@ -158,7 +158,7 @@ func applyZScoreToEveryElement(column dataset.DataSetColumn, df *dataset.DataFra
 		utils.OverrideDataFrameColumn(df, column.GetName(), &newColumn)
 
 	case *dataset.Float:
-		validData := extractNonNullFloats(v.Data)
+		validData := utils.ExtractNonNullFloats(v.Data)
 		mu := statistics.Mean(validData)
 		sigma := statistics.StdDev(validData)
 		for i := range v.Data {
@@ -171,7 +171,7 @@ func applyZScoreToEveryElement(column dataset.DataSetColumn, df *dataset.DataFra
 func applyMinMaxScoreToEveryElement(column dataset.DataSetColumn) {
 	switch v := column.(type) {
 	case *dataset.Integer:
-		validData := extractNonNullInts(v.Data)
+		validData := utils.ExtractNonNullInts(v.Data)
 		min, max := statistics.MinMax(validData)
 		for i := range v.Data {
 			zScore := statistics.ComputeMinMaxScore(float64(v.Data[i].Value), float64(min), float64(max))
@@ -179,7 +179,7 @@ func applyMinMaxScoreToEveryElement(column dataset.DataSetColumn) {
 		}
 
 	case *dataset.Float:
-		validData := extractNonNullFloats(v.Data)
+		validData := utils.ExtractNonNullFloats(v.Data)
 		mu := statistics.Mean(validData)
 		sigma := statistics.StdDev(validData)
 		for i := range v.Data {
@@ -187,24 +187,4 @@ func applyMinMaxScoreToEveryElement(column dataset.DataSetColumn) {
 			v.Data[i] = dataset.Nullable[float64]{IsValid: v.Data[i].IsValid, Value: zScore}
 		}
 	}
-}
-
-func extractNonNullInts(data []dataset.Nullable[int]) []int {
-	result := make([]int, len(data))
-	for i, item := range data {
-		if item.IsValid {
-			result[i] = item.Value
-		}
-	}
-	return result
-}
-
-func extractNonNullFloats(data []dataset.Nullable[float64]) []float64 {
-	result := make([]float64, len(data))
-	for i, item := range data {
-		if item.IsValid {
-			result[i] = item.Value
-		}
-	}
-	return result
 }

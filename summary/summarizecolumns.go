@@ -5,6 +5,7 @@ import (
 	"slices"
 
 	"github.com/agailloty/preprocess/dataset"
+	"github.com/agailloty/preprocess/statistics"
 	"github.com/agailloty/preprocess/utils"
 )
 
@@ -14,6 +15,10 @@ func Summarize(df dataset.DataFrame, filename string) {
 		switch v := col.(type) {
 		case *dataset.String:
 			colSummaries[i] = summarizeStringColumn(v)
+		case *dataset.Float:
+			colSummaries[i] = summarizeFloatColumn(v)
+		case *dataset.Integer:
+			colSummaries[i] = summarizeIntColumn(v)
 		}
 	}
 
@@ -24,7 +29,6 @@ func Summarize(df dataset.DataFrame, filename string) {
 
 func summarizeStringColumn(column *dataset.String) ColumnSummary {
 	summary := make(map[string]ValueKeyCount)
-
 	for _, value := range column.Data {
 		var modality ValueKeyCount
 		var ok bool
@@ -51,11 +55,41 @@ func summarizeStringColumn(column *dataset.String) ColumnSummary {
 	}
 
 	uniqueValuesSummary := slices.Collect(maps.Values(summary))
+	missingCount := utils.CountMissing(&column.Data)
 
 	return ColumnSummary{
 		Name:                column.Name,
 		RowCount:            column.Length(),
 		UniqueValueCount:    uniqueValueCount,
 		UniqueValues:        keys,
-		UniqueValuesSummary: uniqueValuesSummary}
+		UniqueValuesSummary: uniqueValuesSummary,
+		MissingCount:        missingCount}
+}
+
+func summarizeFloatColumn(column *dataset.Float) ColumnSummary {
+	validData := utils.ExtractNonNullFloats(column.Data)
+	mean := statistics.Mean(validData)
+	median := statistics.Median(validData)
+	missingCount := utils.CountMissing(&column.Data)
+
+	return ColumnSummary{
+		Name:         column.Name,
+		RowCount:     column.Length(),
+		Mean:         mean,
+		Median:       median,
+		MissingCount: missingCount}
+}
+
+func summarizeIntColumn(column *dataset.Integer) ColumnSummary {
+	validData := utils.ExtractNonNullInts(column.Data)
+	mean := statistics.Mean(validData)
+	median := statistics.Median(validData)
+	missingCount := utils.CountMissing(&column.Data)
+
+	return ColumnSummary{
+		Name:         column.Name,
+		RowCount:     column.Length(),
+		Mean:         mean,
+		Median:       median,
+		MissingCount: missingCount}
 }

@@ -41,3 +41,34 @@ func SerializeStruct(content interface{}, filename string) {
 	}
 	fmt.Printf("Template %s successfully generated.", filename)
 }
+
+func ExtractNonNullInts(data []dataset.Nullable[int]) []int {
+	result := make([]int, len(data))
+	for i, item := range data {
+		if item.IsValid {
+			result[i] = item.Value
+		}
+	}
+	return result
+}
+
+func ExtractNonNullFloats(data []dataset.Nullable[float64]) []float64 {
+	result := make([]float64, len(data))
+	for i, item := range data {
+		if item.IsValid {
+			result[i] = item.Value
+		}
+	}
+	return result
+}
+
+func CountMissing[T any](data *[]dataset.Nullable[T]) int {
+	count := 0
+
+	for _, val := range *data {
+		if !val.IsValid {
+			count++
+		}
+	}
+	return count
+}
