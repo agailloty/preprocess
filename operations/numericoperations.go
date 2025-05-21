@@ -146,24 +146,24 @@ func applyZScoreToEveryElement(column dataset.DataSetColumn, df *dataset.DataFra
 	switch v := column.(type) {
 	case *dataset.Integer:
 		// Convert into to float32
-		validData := extractIntsWithDefault(v.Data, 0)
+		validData := extractNonNullInts(v.Data)
 		mu := statistics.Mean(validData)
 		sigma := statistics.StdDev(validData)
 		zScores := make([]dataset.Nullable[float32], column.Length())
 		for i := range v.Data {
 			zScore := statistics.ComputeZScore(float32(v.Data[i].Value), float32(mu), float32(sigma))
-			zScores[i] = dataset.Nullable[float32]{IsValid: true, Value: zScore}
+			zScores[i] = dataset.Nullable[float32]{IsValid: v.Data[i].IsValid, Value: zScore}
 		}
 		newColumn := dataset.Float{Name: column.GetName(), Data: zScores}
 		utils.OverrideDataFrameColumn(df, column.GetName(), &newColumn)
 
 	case *dataset.Float:
-		validData := extractFloatsWithDefault(v.Data, 0)
+		validData := extractNonNullFloats(v.Data)
 		mu := statistics.Mean(validData)
 		sigma := statistics.StdDev(validData)
 		for i := range v.Data {
 			zScore := statistics.ComputeZScore(float32(v.Data[i].Value), float32(mu), float32(sigma))
-			v.Data[i] = dataset.Nullable[float32]{IsValid: true, Value: zScore}
+			v.Data[i] = dataset.Nullable[float32]{IsValid: v.Data[i].IsValid, Value: zScore}
 		}
 	}
 }
@@ -171,43 +171,39 @@ func applyZScoreToEveryElement(column dataset.DataSetColumn, df *dataset.DataFra
 func applyMinMaxScoreToEveryElement(column dataset.DataSetColumn) {
 	switch v := column.(type) {
 	case *dataset.Integer:
-		validData := extractIntsWithDefault(v.Data, 0)
+		validData := extractNonNullInts(v.Data)
 		min, max := statistics.MinMax(validData)
 		for i := range v.Data {
 			zScore := statistics.ComputeMinMaxScore(float32(v.Data[i].Value), float32(min), float32(max))
-			v.Data[i] = dataset.Nullable[int]{IsValid: true, Value: int(zScore)}
+			v.Data[i] = dataset.Nullable[int]{IsValid: v.Data[i].IsValid, Value: int(zScore)}
 		}
 
 	case *dataset.Float:
-		validData := extractFloatsWithDefault(v.Data, 0)
+		validData := extractNonNullFloats(v.Data)
 		mu := statistics.Mean(validData)
 		sigma := statistics.StdDev(validData)
 		for i := range v.Data {
 			zScore := statistics.ComputeZScore(float32(v.Data[i].Value), float32(mu), float32(sigma))
-			v.Data[i] = dataset.Nullable[float32]{IsValid: true, Value: zScore}
+			v.Data[i] = dataset.Nullable[float32]{IsValid: v.Data[i].IsValid, Value: zScore}
 		}
 	}
 }
 
-func extractIntsWithDefault(data []dataset.Nullable[int], defaultValue int) []int {
+func extractNonNullInts(data []dataset.Nullable[int]) []int {
 	result := make([]int, len(data))
 	for i, item := range data {
 		if item.IsValid {
 			result[i] = item.Value
-		} else {
-			result[i] = defaultValue
 		}
 	}
 	return result
 }
 
-func extractFloatsWithDefault(data []dataset.Nullable[float32], defaultValue float32) []float32 {
+func extractNonNullFloats(data []dataset.Nullable[float32]) []float32 {
 	result := make([]float32, len(data))
 	for i, item := range data {
 		if item.IsValid {
 			result[i] = item.Value
-		} else {
-			result[i] = defaultValue
 		}
 	}
 	return result

@@ -57,16 +57,27 @@ func (c *Integer) Length() int {
 // DataSetColumn.ValueAt()
 
 func (c *String) ValueAt(i int) string {
-
-	return (c.Data)[i].Value
+	value := (c.Data)[i].Value
+	if !c.Data[i].IsValid {
+		value = ""
+	}
+	return value
 }
 
 func (c *Integer) ValueAt(i int) string {
-	return strconv.Itoa((c.Data)[i].Value)
+	value := strconv.Itoa((c.Data)[i].Value)
+	if !c.Data[i].IsValid {
+		value = ""
+	}
+	return value
 }
 
 func (c *Float) ValueAt(i int) string {
-	return fmt.Sprintf("%f", (c.Data)[i].Value)
+	value := fmt.Sprintf("%f", (c.Data)[i].Value)
+	if !c.Data[i].IsValid {
+		value = ""
+	}
+	return value
 }
 
 // DataSetColumn.SetName()
