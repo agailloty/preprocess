@@ -51,15 +51,5 @@ func InitializePrepfile(filename string, sep string, output string, templateOnly
 
 func InitializeDefaultPrepfile(output string) {
 	configFile := InitDefaultConfig()
-	file, err := os.Create(output)
-	if err != nil {
-		log.Fatalf("Error generating Prefile.toml : %v", err)
-	}
-	defer file.Close()
-
-	encoder := toml.NewEncoder(file)
-	if err := encoder.Encode(configFile); err != nil {
-		log.Fatalf("An error occured during TOML enconding : %v", err)
-	}
-	fmt.Printf("Template %s successfully generated.", output)
+	utils.SerializeStruct(configFile, output)
 }
