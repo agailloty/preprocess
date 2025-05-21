@@ -29,7 +29,7 @@ func initConfig(cmd *cobra.Command, args []string) {
 func init() {
 	rootCmd.AddCommand(initCmd)
 	initCmd.Run = initConfig
-	initCmd.Flags().StringVarP(&datafilename, "file", "f", "", "Path to the dataset")
+	initCmd.Flags().StringVarP(&datafilename, "data", "d", "", "Path to the dataset")
 	initCmd.Flags().StringVarP(&separator, "sep", "s", ",", "Separator for csv file")
 	initCmd.Flags().StringVarP(&decimalSeparator, "dsep", "m", ",", "Decimal separator")
 	initCmd.Flags().StringVarP(&output, "output", "o", "Prepfile.toml", "Output name for Prepfile")
