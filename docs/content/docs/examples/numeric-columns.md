@@ -25,3 +25,20 @@ dropcolumns = ["preferred_foot", "body_type"]
 format = 'csv'
 filename = 'fifa_players_22_cleaned.csv'
 ```
+
+```toml
+[data]
+file = '.\indicators_numerics.csv'
+separator = ','
+
+[data.numerics]
+preprocess = [
+    {op = "normalize", method = "zscore"}
+]
+
+[postprocess]
+dropcolumns = ["BALANCE","SURFACE_AREA","EXPORTS_GOOD_SERVICES"]
+format = 'csv'
+sortdataset = {descending = false}
+filename = 'indicators_numerics_cleaned.csv'
+```
