@@ -36,8 +36,8 @@ func DisplayColumn(column DataSetColumn, n int) {
 	}
 }
 
-func ReadDataFrame(filename string, sep string) DataFrame {
-	columns := readDatasetColumns(filename, sep)
+func ReadDataFrame(filename string, sep string, decimalSep string) DataFrame {
+	columns := readDatasetColumns(filename, sep, decimalSep)
 	ext := filepath.Ext(filename)
 	dfName := strings.TrimSuffix(filename, ext)
 	return DataFrame{

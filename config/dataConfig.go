@@ -3,6 +3,7 @@ package config
 type DataConfig struct {
 	File              string             `toml:"file"`
 	Separator         string             `toml:"separator"`
+	DecimalSeparator  string             `toml:"decimalSeparator"`
 	Columns           []ColumnConfig     `toml:"columns"`
 	NumericOperations *DatasetOperations `mapstructure:"numerics,omitempty"`
 	TextOperations    *DatasetOperations `mapstructure:"texts,omitempty"`

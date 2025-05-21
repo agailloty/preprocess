@@ -9,6 +9,7 @@ import (
 var datasetSummary string
 var separatorSummary string
 var outputSummary string
+var decimalSeparatorSummary string
 
 var summaryCmd = &cobra.Command{
 	Use:   "summary",
@@ -17,7 +18,10 @@ var summaryCmd = &cobra.Command{
 }
 
 func summarizeDataset(cmd *cobra.Command, args []string) {
-	dataframe := dataset.ReadDataFrame(datasetSummary, separatorSummary)
+	if decimalSeparatorSummary == "" {
+		decimalSeparatorSummary = ","
+	}
+	dataframe := dataset.ReadDataFrame(datasetSummary, separatorSummary, decimalSeparatorSummary)
 	if outputSummary == "" {
 		outputSummary = "Summaryfile.toml"
 	}
@@ -29,5 +33,6 @@ func init() {
 	summaryCmd.Run = summarizeDataset
 	summaryCmd.Flags().StringVarP(&datasetSummary, "data", "d", "", "Path to the dataset")
 	summaryCmd.Flags().StringVarP(&separatorSummary, "sep", "s", ",", "Separator for csv file")
+	summaryCmd.Flags().StringVarP(&decimalSeparatorSummary, "dsep", "m", ",", "Decimal separator")
 	summaryCmd.Flags().StringVarP(&outputSummary, "output", "o", "Summaryfile.toml", "Output name for Summaryfile")
 }
