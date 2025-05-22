@@ -10,19 +10,30 @@ import (
 )
 
 func Summarize(df dataset.DataFrame, filename string) {
+	numericColumnCount := 0
+	stringColumnCount := 0
+
 	colSummaries := make([]ColumnSummary, df.ColumnsCount)
 	for i, col := range df.Columns {
 		switch v := col.(type) {
 		case *dataset.String:
 			colSummaries[i] = summarizeStringColumn(v)
+			stringColumnCount++
 		case *dataset.Float:
 			colSummaries[i] = summarizeFloatColumn(v)
+			numericColumnCount++
 		case *dataset.Integer:
 			colSummaries[i] = summarizeIntColumn(v)
+			numericColumnCount++
 		}
 	}
 
-	summaryFile := SummaryFile{Columns: colSummaries}
+	summaryFile := SummaryFile{Filename: df.Name,
+		RowCount:       df.RowsCount,
+		NumericColumns: numericColumnCount,
+		StringColumns:  stringColumnCount,
+		ColumnCount:    numericColumnCount + stringColumnCount,
+		Columns:        colSummaries}
 
 	utils.SerializeStruct(summaryFile, filename)
 }

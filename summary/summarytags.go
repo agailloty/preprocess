@@ -1,21 +1,26 @@
 package summary
 
 type SummaryFile struct {
-	Columns []ColumnSummary `toml:"columns"`
+	Filename       string          `toml:"filename"`
+	RowCount       int             `toml:"rowscount"`
+	ColumnCount    int             `toml:"columnscount"`
+	NumericColumns int             `toml:"numericcolumns"`
+	StringColumns  int             `toml:"stringcolumns"`
+	Columns        []ColumnSummary `toml:"columns"`
 }
 
 type ColumnSummary struct {
 	Name                string          `toml:"name,omitempty"`
-	RowCount            int             `toml:"RowCount,omitempty"`
-	UniqueValueCount    int             `toml:"UniqueValueCount,omitempty"`
-	UniqueValues        []string        `toml:"UniqueValues,omitempty"`
-	UniqueValuesSummary []ValueKeyCount `toml:"UniqueValuesSummary,inline,omitempty"`
+	RowCount            int             `toml:"rowscount,omitempty"`
+	UniqueValueCount    int             `toml:"uniquevaluescount,omitempty"`
+	UniqueValues        []string        `toml:"uniquevalues,omitempty"`
+	UniqueValuesSummary []ValueKeyCount `toml:"summary,inline,omitempty"`
 
-	Min     float64 `toml:"Min,omitempty"`
-	Mean    float64 `toml:"Mean,omitempty"`
-	Median  float64 `toml:"Median,omitempty"`
-	Max     float64 `toml:"Max,omitempty"`
-	Missing int     `toml:"Missing"`
+	Min     float64 `toml:"min,omitempty"`
+	Mean    float64 `toml:"mean,omitempty"`
+	Median  float64 `toml:"median,omitempty"`
+	Max     float64 `toml:"max,omitempty"`
+	Missing int     `toml:"missing"`
 }
 
 type ValueKeyCount struct {
