@@ -8,6 +8,7 @@ import (
 var datafilename string
 var separator string
 var decimalSeparator string
+var encoding string
 var output string
 var templateOnly bool
 
@@ -23,7 +24,7 @@ func initConfig(cmd *cobra.Command, args []string) {
 		initCmd.Help()
 		return
 	}
-	config.InitializePrepfile(datafilename, separator, decimalSeparator, output, templateOnly)
+	config.InitializePrepfile(datafilename, separator, decimalSeparator, encoding, output, templateOnly)
 }
 
 func init() {
@@ -32,6 +33,7 @@ func init() {
 	initCmd.Flags().StringVarP(&datafilename, "data", "d", "", "Path to the dataset")
 	initCmd.Flags().StringVarP(&separator, "sep", "s", ",", "Separator for csv file")
 	initCmd.Flags().StringVarP(&decimalSeparator, "dsep", "m", ",", "Decimal separator")
+	initCmd.Flags().StringVarP(&encoding, "enc", "e", "utf-8", "Character encoding")
 	initCmd.Flags().StringVarP(&output, "output", "o", "Prepfile.toml", "Output name for Prepfile")
 	initCmd.Flags().BoolVarP(&templateOnly, "template", "t", false, "Generate example Prepfile.toml template")
 }

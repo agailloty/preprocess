@@ -10,12 +10,12 @@ import (
 	"github.com/pelletier/go-toml/v2"
 )
 
-func InitializePrepfile(filename string, sep string, decimalSep string, output string, templateOnly bool) {
+func InitializePrepfile(filename string, sep string, decimalSep string, encoding string, output string, templateOnly bool) {
 	if filename == "" || templateOnly {
 		InitializeDefaultPrepfile(output)
 		return
 	}
-	dataset := dataset.ReadDataFrame(filename, sep, decimalSep)
+	dataset := dataset.ReadDataFrame(filename, sep, decimalSep, encoding)
 	var configColumns []ColumnConfig
 	for _, col := range dataset.Columns {
 		configColumns = append(configColumns,

@@ -6,6 +6,9 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	"golang.org/x/text/encoding/charmap"
+	"golang.org/x/text/transform"
 )
 
 func guessColumnType(column []string, nrow int, decimalSep string) DataSetColumn {
@@ -97,19 +100,19 @@ func convertToTypedColumns(data [][]string, decimalSep string) []DataSetColumn {
 	return columns
 }
 
-func readDatasetColumns(filename string, sep string, decimalSep string) []DataSetColumn {
-	data := readAllLines(filename, sep)
+func readDatasetColumns(filename string, sep string, decimalSep string, encoding string) []DataSetColumn {
+	data := readAllLines(filename, sep, encoding)
 	return convertToTypedColumns(data, decimalSep)
 }
 
-func readAllLines(filepath string, sep string) [][]string {
+func readAllLines(filepath string, sep string, encoding string) [][]string {
 	file, err := os.Open(filepath)
 	if err != nil {
 		log.Fatalf("Error opening : %v", err)
 	}
 	defer file.Close()
 
-	reader := csv.NewReader(file)
+	reader := readerWithEncoding(file, encoding)
 
 	if len(sep) == 1 {
 		reader.Comma = rune(sep[0])
@@ -123,4 +126,28 @@ func readAllLines(filepath string, sep string) [][]string {
 	}
 
 	return records
+}
+
+func readerWithEncoding(file *os.File, encoding string) *csv.Reader {
+	reader := csv.NewReader(file)
+	if encoding != "utf8" {
+		charEncoding := mapEncoding(encoding)
+		reader = csv.NewReader(transform.NewReader(file, charEncoding.NewDecoder()))
+	}
+
+	return reader
+}
+
+func mapEncoding(encoding string) *charmap.Charmap {
+	var charEncoding *charmap.Charmap
+	encoding = formatEncoding(encoding)
+	if encoding == formatEncoding("ISO 8859-1") {
+		charEncoding = charmap.ISO8859_1
+	}
+
+	return charEncoding
+}
+
+func formatEncoding(encoding string) string {
+	return strings.ToLower(strings.ReplaceAll(encoding, " ", ""))
 }

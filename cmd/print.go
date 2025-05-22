@@ -5,10 +5,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func init() {
-	rootCmd.AddCommand(printCmd)
-}
-
 var printCmd = &cobra.Command{
 	Use:   "print",
 	Short: "Display all or part of the dataset on the console",
@@ -16,11 +12,18 @@ var printCmd = &cobra.Command{
 }
 
 func print(cmd *cobra.Command, args []string) {
-	if len(args) > 0 {
-		dataframe := dataset.ReadDataFrame(args[0], ",", ",")
-		for _, dt := range dataframe.Columns {
-			dataset.DisplayColumn(dt, 5)
-			println()
-		}
+	dataframe := dataset.ReadDataFrame(datafilename, separator, decimalSeparator, encoding)
+	for _, dt := range dataframe.Columns {
+		dataset.DisplayColumn(dt, 5)
+		println()
 	}
+}
+
+func init() {
+	rootCmd.AddCommand(printCmd)
+	printCmd.Run = print
+	printCmd.Flags().StringVarP(&datafilename, "data", "d", "", "Path to the dataset")
+	printCmd.Flags().StringVarP(&separator, "sep", "s", ",", "Separator for csv file")
+	printCmd.Flags().StringVarP(&decimalSeparator, "dsep", "m", ",", "Decimal separator")
+	printCmd.Flags().StringVarP(&encoding, "encoding", "e", "utf-8", "Character encoding")
 }

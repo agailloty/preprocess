@@ -8,7 +8,7 @@ import (
 )
 
 func DispatchOperations(prepfile *config.Config) {
-	df := dataset.ReadDataFrame(prepfile.Data.File, prepfile.Data.Separator, prepfile.Data.DecimalSeparator)
+	df := dataset.ReadDataFrame(prepfile.Data.File, prepfile.Data.Separator, prepfile.Data.DecimalSeparator, prepfile.Data.Encoding)
 	fmt.Printf("Successfully read dataset %s \n", prepfile.Data.File)
 
 	for _, col := range df.Columns {
