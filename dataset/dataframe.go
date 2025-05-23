@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 	"slices"
 	"strings"
+
+	"github.com/agailloty/preprocess/common"
 )
 
 type DataFrame struct {
@@ -36,10 +38,10 @@ func DisplayColumn(column DataSetColumn, n int) {
 	}
 }
 
-func ReadDataFrame(filename string, sep string, decimalSep string, encoding string) DataFrame {
-	columns := readDatasetColumns(filename, sep, decimalSep, encoding)
-	ext := filepath.Ext(filename)
-	dfName := strings.TrimSuffix(filename, ext)
+func ReadDataFrame(dfSpec common.DataSpecs) DataFrame {
+	columns := readDatasetColumns(dfSpec)
+	ext := filepath.Ext(dfSpec.Filename)
+	dfName := strings.TrimSuffix(dfSpec.Filename, ext)
 	return DataFrame{
 		Name:         dfName,
 		Columns:      columns,

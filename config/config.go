@@ -6,6 +6,7 @@ import (
 	"log"
 	"strings"
 
+	"github.com/agailloty/preprocess/common"
 	"github.com/agailloty/preprocess/utils"
 	"github.com/spf13/viper"
 )
@@ -53,7 +54,7 @@ func LoadConfigFromPrepfile(path string) (*Config, error) {
 	return &config, nil
 }
 
-func MakeConfigFromCommandsArgs(datapath string, sep string, columnList []string, operationList []string) *Config {
+func MakeConfigFromCommandsArgs(dfSepc common.DataSpecs, columnList []string, operationList []string) *Config {
 
 	// I assume there is strict association between --column and --op
 	nCol := len(columnList)
@@ -68,9 +69,11 @@ func MakeConfigFromCommandsArgs(datapath string, sep string, columnList []string
 	for i := range nCol {
 		prepColumns = append(prepColumns, makeColumnConfigFromArgs(columnList[i], operationList[i]))
 	}
-	newName := utils.AppendPrefixOrSuffix(datapath, "", "_cleaned")
+	newName := utils.AppendPrefixOrSuffix(dfSepc.Filename, "", "_cleaned")
 	return &Config{
-		Data:        DataConfig{File: datapath, Separator: sep, Columns: prepColumns},
+		Data: DataConfig{
+			DataSpecs: dfSepc,
+			Columns:   prepColumns},
 		PostProcess: PostProcessConfig{Format: "csv", FileName: newName},
 	}
 

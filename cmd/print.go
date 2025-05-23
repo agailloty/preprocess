@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/agailloty/preprocess/common"
 	"github.com/agailloty/preprocess/dataset"
 	"github.com/spf13/cobra"
 )
@@ -12,7 +13,13 @@ var printCmd = &cobra.Command{
 }
 
 func print(cmd *cobra.Command, args []string) {
-	dataframe := dataset.ReadDataFrame(datafilename, separator, decimalSeparator, encoding)
+	dfSpecs := common.DataSpecs{
+		Filename:         datafilename,
+		CsvSeparator:     csvseparator,
+		DecimalSeparator: decimalSeparator,
+		Encoding:         encoding,
+	}
+	dataframe := dataset.ReadDataFrame(dfSpecs)
 	for _, dt := range dataframe.Columns {
 		dataset.DisplayColumn(dt, 5)
 		println()
@@ -22,8 +29,5 @@ func print(cmd *cobra.Command, args []string) {
 func init() {
 	rootCmd.AddCommand(printCmd)
 	printCmd.Run = print
-	printCmd.Flags().StringVarP(&datafilename, "data", "d", "", "Path to the dataset")
-	printCmd.Flags().StringVarP(&separator, "sep", "s", ",", "Separator for csv file")
-	printCmd.Flags().StringVarP(&decimalSeparator, "dsep", "m", ",", "Decimal separator")
-	printCmd.Flags().StringVarP(&encoding, "encoding", "e", "utf-8", "Character encoding")
+	setDataSpecFlags(printCmd)
 }

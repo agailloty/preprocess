@@ -5,29 +5,29 @@ import (
 	"log"
 	"os"
 
+	"github.com/agailloty/preprocess/common"
 	"github.com/agailloty/preprocess/dataset"
 	"github.com/agailloty/preprocess/utils"
 	"github.com/pelletier/go-toml/v2"
 )
 
-func InitializePrepfile(filename string, sep string, decimalSep string, encoding string, output string, templateOnly bool) {
-	if filename == "" || templateOnly {
+func InitializePrepfile(dfSpec common.DataSpecs, output string, templateOnly bool) {
+	if dfSpec.Filename == "" || templateOnly {
 		InitializeDefaultPrepfile(output)
 		return
 	}
-	dataset := dataset.ReadDataFrame(filename, sep, decimalSep, encoding)
+	dataset := dataset.ReadDataFrame(dfSpec)
 	var configColumns []ColumnConfig
 	for _, col := range dataset.Columns {
 		configColumns = append(configColumns,
 			ColumnConfig{Name: col.GetName(), Type: col.GetType()})
 	}
 
-	newName := utils.AppendPrefixOrSuffix(filename, "", "_cleaned")
+	newName := utils.AppendPrefixOrSuffix(dfSpec.Filename, "", "_cleaned")
 
 	configFile := Config{
 		Data: DataConfig{
-			File:      filename,
-			Separator: sep,
+			DataSpecs: dfSpec,
 			Columns:   configColumns,
 		},
 		PostProcess: PostProcessConfig{

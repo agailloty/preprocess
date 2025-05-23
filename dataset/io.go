@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/agailloty/preprocess/common"
 	"golang.org/x/text/encoding/charmap"
 	"golang.org/x/text/transform"
 )
@@ -100,22 +101,22 @@ func convertToTypedColumns(data [][]string, decimalSep string) []DataSetColumn {
 	return columns
 }
 
-func readDatasetColumns(filename string, sep string, decimalSep string, encoding string) []DataSetColumn {
-	data := readAllLines(filename, sep, encoding)
-	return convertToTypedColumns(data, decimalSep)
+func readDatasetColumns(dfSpec common.DataSpecs) []DataSetColumn {
+	data := readAllLines(dfSpec)
+	return convertToTypedColumns(data, dfSpec.DecimalSeparator)
 }
 
-func readAllLines(filepath string, sep string, encoding string) [][]string {
-	file, err := os.Open(filepath)
+func readAllLines(dfSpec common.DataSpecs) [][]string {
+	file, err := os.Open(dfSpec.Filename)
 	if err != nil {
 		log.Fatalf("Error opening : %v", err)
 	}
 	defer file.Close()
 
-	reader := readerWithEncoding(file, encoding)
+	reader := readerWithEncoding(file, dfSpec.Encoding)
 
-	if len(sep) == 1 {
-		reader.Comma = rune(sep[0])
+	if len(dfSpec.CsvSeparator) == 1 {
+		reader.Comma = rune(dfSpec.CsvSeparator[0])
 	} else {
 		log.Fatalf("Separator must be a unique character")
 	}

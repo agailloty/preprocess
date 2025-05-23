@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/agailloty/preprocess/common"
 	"github.com/agailloty/preprocess/config"
 	"github.com/agailloty/preprocess/operations"
 	"github.com/spf13/cobra"
@@ -19,9 +20,8 @@ var numerics bool
 func init() {
 	rootCmd.AddCommand(runCmd)
 	runCmd.Run = run
+	setDataSpecFlags(runCmd)
 	runCmd.Flags().StringVarP(&prepfilePath, "file", "f", "Prepfile.toml", "Path to the configuration file")
-	runCmd.Flags().StringVarP(&datasetPath, "data", "d", "", "Path to the dataset file")
-	runCmd.Flags().StringVarP(&sep, "sep", "s", ",", "Csv separator")
 	runCmd.Flags().StringArrayVar(&columnList, "column", []string{}, "Target column(s) for preprocessing")
 	runCmd.Flags().StringArrayVar(&operationList, "op", []string{}, "Preprocessing operation(s) (e.g., fillna:method=mean)")
 	runCmd.Flags().BoolVar(&numerics, "numerics", false, "Apply operations only on numeric columns")
@@ -62,7 +62,8 @@ func validateFlags() {
 	}
 
 	if isDataProvided && isColumnListProvided && isOperationListProvided {
-		prepfile := config.MakeConfigFromCommandsArgs(datasetPath, sep, columnList, operationList)
+		dfSpecs := common.DataSpecs{Filename: datasetPath, CsvSeparator: sep, DecimalSeparator: decimalSeparator, Encoding: encoding}
+		prepfile := config.MakeConfigFromCommandsArgs(dfSpecs, columnList, operationList)
 		operations.DispatchOperations(prepfile)
 	}
 

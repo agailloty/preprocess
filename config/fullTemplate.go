@@ -1,8 +1,12 @@
 package config
 
+import "github.com/agailloty/preprocess/common"
+
 var dataDefautConfig = DataConfig{
-	File:      "data.csv",
-	Separator: ",",
+	DataSpecs: common.DataSpecs{Filename: "data.csv",
+		CsvSeparator:     ",",
+		DecimalSeparator: ".",
+		Encoding:         "utf8"},
 	Columns: []ColumnConfig{
 		{Name: "id", Type: "int"},
 		{Name: "name", Type: "string"},

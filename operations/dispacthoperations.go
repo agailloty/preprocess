@@ -8,8 +8,8 @@ import (
 )
 
 func DispatchOperations(prepfile *config.Config) {
-	df := dataset.ReadDataFrame(prepfile.Data.File, prepfile.Data.Separator, prepfile.Data.DecimalSeparator, prepfile.Data.Encoding)
-	fmt.Printf("Successfully read dataset %s \n", prepfile.Data.File)
+	df := dataset.ReadDataFrame(prepfile.Data.DataSpecs)
+	fmt.Printf("Successfully read dataset %s \n", prepfile.Data.DataSpecs.Filename)
 
 	for _, col := range df.Columns {
 		if prepfile.Data.NumericOperations != nil {

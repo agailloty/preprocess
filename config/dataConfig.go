@@ -1,10 +1,9 @@
 package config
 
+import "github.com/agailloty/preprocess/common"
+
 type DataConfig struct {
-	File              string             `toml:"file"`
-	Separator         string             `toml:"separator"`
-	DecimalSeparator  string             `toml:"decimalSeparator"`
-	Encoding          string             `toml:"encoding"`
+	common.DataSpecs
 	Columns           []ColumnConfig     `toml:"columns"`
 	NumericOperations *DatasetOperations `mapstructure:"numerics,omitempty"`
 	TextOperations    *DatasetOperations `mapstructure:"texts,omitempty"`
