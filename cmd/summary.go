@@ -26,7 +26,7 @@ func summarizeDataset(cmd *cobra.Command, args []string) {
 	}
 
 	if prepfile != nil {
-		dataframe := dataset.ReadDataFrame(prepfile.Data.DataSpecs)
+		dataframe := dataset.ReadDataFrame(prepfile.Data)
 
 		summary.Summarize(dataframe, output)
 	} else {

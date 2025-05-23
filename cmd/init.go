@@ -21,6 +21,13 @@ func initConfig(cmd *cobra.Command, args []string) {
 		initCmd.Help()
 		return
 	}
+	if decimalSeparator == "" {
+		decimalSeparator = "."
+	}
+
+	if encoding == "" {
+		encoding = "utf-8"
+	}
 	dfSpec := common.DataSpecs{
 		Filename:         datafilename,
 		CsvSeparator:     csvseparator,

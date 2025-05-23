@@ -1,9 +1,6 @@
 package config
 
-import "github.com/agailloty/preprocess/common"
-
-type DataConfig struct {
-	common.DataSpecs
+type PreprocessConfig struct {
 	Columns           []ColumnConfig     `toml:"columns"`
 	NumericOperations *DatasetOperations `mapstructure:"numerics,omitempty"`
 	TextOperations    *DatasetOperations `mapstructure:"texts,omitempty"`

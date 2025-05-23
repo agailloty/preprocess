@@ -27,13 +27,15 @@ func SetConfigFile() {
 }
 
 type Prepfile struct {
-	Data        DataConfig        `toml:"data"`
+	Data        common.DataSpecs  `toml:"data"`
+	Preprocess  PreprocessConfig  `toml:"preprocess"`
 	PostProcess PostProcessConfig `toml:"postprocess"`
 }
 
 func InitDefaultPrepfile() Prepfile {
 	return Prepfile{
-		Data:        dataDefautConfig,
+		Data:        defaultDataSpec,
+		Preprocess:  defaultPreprocessOps,
 		PostProcess: postProcessDefaultConfig,
 	}
 }
@@ -71,9 +73,9 @@ func MakeConfigFromCommandsArgs(dfSepc common.DataSpecs, columnList []string, op
 	}
 	newName := utils.AppendPrefixOrSuffix(dfSepc.Filename, "", "_cleaned")
 	return &Prepfile{
-		Data: DataConfig{
-			DataSpecs: dfSepc,
-			Columns:   prepColumns},
+		Data: dfSepc,
+		Preprocess: PreprocessConfig{
+			Columns: prepColumns},
 		PostProcess: PostProcessConfig{Format: "csv", FileName: newName},
 	}
 

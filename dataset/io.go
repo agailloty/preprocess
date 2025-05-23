@@ -131,9 +131,11 @@ func readAllLines(dfSpec common.DataSpecs) [][]string {
 
 func readerWithEncoding(file *os.File, encoding string) *csv.Reader {
 	reader := csv.NewReader(file)
-	if encoding != "utf8" || encoding == "" {
+	if encoding != "utf-8" || encoding == "" {
 		charEncoding := mapEncoding(encoding)
-		reader = csv.NewReader(transform.NewReader(file, charEncoding.NewDecoder()))
+		if charEncoding != nil {
+			reader = csv.NewReader(transform.NewReader(file, charEncoding.NewDecoder()))
+		}
 	}
 
 	return reader

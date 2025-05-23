@@ -26,9 +26,9 @@ func InitializePrepfile(dfSpec common.DataSpecs, output string, templateOnly boo
 	newName := utils.AppendPrefixOrSuffix(dfSpec.Filename, "", "_cleaned")
 
 	configFile := Prepfile{
-		Data: DataConfig{
-			DataSpecs: dfSpec,
-			Columns:   configColumns,
+		Data: dfSpec,
+		Preprocess: PreprocessConfig{
+			Columns: configColumns,
 		},
 		PostProcess: PostProcessConfig{
 			Format: "csv", FileName: newName,

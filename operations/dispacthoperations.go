@@ -8,15 +8,15 @@ import (
 )
 
 func DispatchOperations(prepfile *config.Prepfile) {
-	df := dataset.ReadDataFrame(prepfile.Data.DataSpecs)
-	fmt.Printf("Successfully read dataset %s \n", prepfile.Data.DataSpecs.Filename)
+	df := dataset.ReadDataFrame(prepfile.Data)
+	fmt.Printf("Successfully read dataset %s \n", prepfile.Data.Filename)
 
 	for _, col := range df.Columns {
-		if prepfile.Data.NumericOperations != nil {
-			applyOperationsOnNumericColumns(&df, prepfile.Data.NumericOperations.Preprocess)
+		if prepfile.Preprocess.NumericOperations != nil {
+			applyOperationsOnNumericColumns(&df, prepfile.Preprocess.NumericOperations.Preprocess)
 		}
 		// If there are column specific operation
-		found, columnConfig := findColumnConfig(prepfile.Data.Columns, col.GetName())
+		found, columnConfig := findColumnConfig(prepfile.Preprocess.Columns, col.GetName())
 		if found {
 			preprocessOps := columnConfig.Preprocess
 			if col.GetType() == "int" || col.GetType() == "float" {
@@ -25,7 +25,7 @@ func DispatchOperations(prepfile *config.Prepfile) {
 				applyTextOperationsOnColumn(preprocessOps, col)
 			}
 		}
-		RenameColumn(col, prepfile.Data.Columns)
+		RenameColumn(col, prepfile.Preprocess.Columns)
 	}
 
 	if prepfile.PostProcess.DropColumns != nil {
