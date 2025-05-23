@@ -1,12 +1,10 @@
 package config
 
 type PostProcessConfig struct {
-	SummaryStats bool                `toml:"summarystats"`
-	CountMissing bool                `toml:"countmissing"`
-	DropColumns  *[]string           `toml:"dropcolumns,omitempty"`
-	SortDataset  *SortDatasetColumns `toml:"sortdataset,omitempty"`
-	Format       string              `toml:"format"`
-	FileName     string              `toml:"filename"`
+	DropColumns *[]string           `toml:"dropcolumns,omitempty"`
+	SortDataset *SortDatasetColumns `toml:"sortdataset,omitempty"`
+	Format      string              `toml:"format"`
+	FileName    string              `toml:"filename"`
 }
 
 type SortDatasetColumns struct {
@@ -14,7 +12,7 @@ type SortDatasetColumns struct {
 }
 
 var postProcessDefaultConfig = PostProcessConfig{
-	SummaryStats: false,
-	CountMissing: false,
-	DropColumns:  nil,
+	Format:      "csv",
+	FileName:    "data_cleaned.csv",
+	DropColumns: nil,
 }
