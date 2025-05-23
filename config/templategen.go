@@ -25,7 +25,7 @@ func InitializePrepfile(dfSpec common.DataSpecs, output string, templateOnly boo
 
 	newName := utils.AppendPrefixOrSuffix(dfSpec.Filename, "", "_cleaned")
 
-	configFile := Config{
+	configFile := Prepfile{
 		Data: DataConfig{
 			DataSpecs: dfSpec,
 			Columns:   configColumns,
@@ -50,6 +50,6 @@ func InitializePrepfile(dfSpec common.DataSpecs, output string, templateOnly boo
 }
 
 func InitializeDefaultPrepfile(output string) {
-	configFile := InitDefaultConfig()
-	utils.SerializeStruct(configFile, output)
+	prepfile := InitDefaultPrepfile()
+	utils.SerializeStruct(prepfile, output)
 }

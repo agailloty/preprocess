@@ -7,7 +7,7 @@ import (
 	"github.com/agailloty/preprocess/dataset"
 )
 
-func DispatchOperations(prepfile *config.Config) {
+func DispatchOperations(prepfile *config.Prepfile) {
 	df := dataset.ReadDataFrame(prepfile.Data.DataSpecs)
 	fmt.Printf("Successfully read dataset %s \n", prepfile.Data.DataSpecs.Filename)
 

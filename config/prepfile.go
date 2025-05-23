@@ -20,25 +20,25 @@ func SetConfigFile() {
 		log.Fatalf("error reading config Prepfile : %v", err)
 	}
 
-	var config Config
+	var config Prepfile
 	if err := viper.Unmarshal(&config); err != nil {
 		log.Fatalf("error unmarshalling Prepfile : %v", err)
 	}
 }
 
-type Config struct {
+type Prepfile struct {
 	Data        DataConfig        `toml:"data"`
 	PostProcess PostProcessConfig `toml:"postprocess"`
 }
 
-func InitDefaultConfig() Config {
-	return Config{
+func InitDefaultPrepfile() Prepfile {
+	return Prepfile{
 		Data:        dataDefautConfig,
 		PostProcess: postProcessDefaultConfig,
 	}
 }
 
-func LoadConfigFromPrepfile(path string) (*Config, error) {
+func LoadConfigFromPrepfile(path string) (*Prepfile, error) {
 	viper.SetConfigFile(path)
 	viper.SetConfigType("toml")
 
@@ -46,7 +46,7 @@ func LoadConfigFromPrepfile(path string) (*Config, error) {
 		return nil, fmt.Errorf("error reading Prepfile : %w", err)
 	}
 
-	var config Config
+	var config Prepfile
 	if err := viper.Unmarshal(&config); err != nil {
 		return nil, fmt.Errorf("a mapping error occured : %w", err)
 	}
@@ -54,7 +54,7 @@ func LoadConfigFromPrepfile(path string) (*Config, error) {
 	return &config, nil
 }
 
-func MakeConfigFromCommandsArgs(dfSepc common.DataSpecs, columnList []string, operationList []string) *Config {
+func MakeConfigFromCommandsArgs(dfSepc common.DataSpecs, columnList []string, operationList []string) *Prepfile {
 
 	// I assume there is strict association between --column and --op
 	nCol := len(columnList)
@@ -70,7 +70,7 @@ func MakeConfigFromCommandsArgs(dfSepc common.DataSpecs, columnList []string, op
 		prepColumns = append(prepColumns, makeColumnConfigFromArgs(columnList[i], operationList[i]))
 	}
 	newName := utils.AppendPrefixOrSuffix(dfSepc.Filename, "", "_cleaned")
-	return &Config{
+	return &Prepfile{
 		Data: DataConfig{
 			DataSpecs: dfSepc,
 			Columns:   prepColumns},
