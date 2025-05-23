@@ -1,12 +1,18 @@
 package summary
 
+import "github.com/agailloty/preprocess/common"
+
 type SummaryFile struct {
-	Filename       string          `toml:"filename"`
-	RowCount       int             `toml:"rowscount"`
-	ColumnCount    int             `toml:"columnscount"`
-	NumericColumns int             `toml:"numericcolumns"`
-	StringColumns  int             `toml:"stringcolumns"`
-	Columns        []ColumnSummary `toml:"columns"`
+	Data        common.DataSpecs `toml:"data"`
+	DataSummary DatasetSummary   `toml:"datasummary"`
+	Columns     []ColumnSummary  `toml:"columns"`
+}
+
+type DatasetSummary struct {
+	RowCount       int `toml:"rowscount"`
+	ColumnCount    int `toml:"columnscount"`
+	NumericColumns int `toml:"numericcolumns"`
+	StringColumns  int `toml:"stringcolumns"`
 }
 
 type ColumnSummary struct {

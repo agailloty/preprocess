@@ -28,7 +28,7 @@ func summarizeDataset(cmd *cobra.Command, args []string) {
 	if prepfile != nil {
 		dataframe := dataset.ReadDataFrame(prepfile.Data)
 
-		summary.Summarize(dataframe, output)
+		summary.Summarize(dataframe, summaryOutput)
 	} else {
 		if decimalSeparator == "" {
 			decimalSeparator = ","
@@ -40,10 +40,10 @@ func summarizeDataset(cmd *cobra.Command, args []string) {
 			Encoding:         encoding,
 		}
 		dataframe := dataset.ReadDataFrame(dataSpec)
-		if output == "" {
-			output = "Summaryfile.toml"
+		if summaryOutput == "" {
+			summaryOutput = "Summaryfile.toml"
 		}
-		summary.Summarize(dataframe, output)
+		summary.Summarize(dataframe, summaryOutput)
 	}
 }
 

@@ -115,7 +115,7 @@ func makeColumnConfigFromArgs(columnName string, operation string) ColumnConfig 
 	op, err := parseOperationFromArgs(operation)
 	if err == nil {
 		preprocessOp = append(preprocessOp, op)
-		columnConfig.Preprocess = &preprocessOp
+		columnConfig.Operations = &preprocessOp
 	}
 
 	return columnConfig

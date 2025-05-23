@@ -18,7 +18,7 @@ func DispatchOperations(prepfile *config.Prepfile) {
 		// If there are column specific operation
 		found, columnConfig := findColumnConfig(prepfile.Preprocess.Columns, col.GetName())
 		if found {
-			preprocessOps := columnConfig.Preprocess
+			preprocessOps := columnConfig.Operations
 			if col.GetType() == "int" || col.GetType() == "float" {
 				applyNumericOperationsOnColumn(preprocessOps, col, &df)
 			} else if col.GetType() == "string" {

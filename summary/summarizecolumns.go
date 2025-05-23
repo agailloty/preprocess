@@ -28,12 +28,14 @@ func Summarize(df dataset.DataFrame, filename string) {
 		}
 	}
 
-	summaryFile := SummaryFile{Filename: df.Name,
-		RowCount:       df.RowsCount,
-		NumericColumns: numericColumnCount,
-		StringColumns:  stringColumnCount,
-		ColumnCount:    numericColumnCount + stringColumnCount,
-		Columns:        colSummaries}
+	summaryFile := SummaryFile{Data: df.DataSpecs,
+		DataSummary: DatasetSummary{
+			RowCount:       df.RowsCount,
+			NumericColumns: numericColumnCount,
+			StringColumns:  stringColumnCount,
+			ColumnCount:    numericColumnCount + stringColumnCount,
+		},
+		Columns: colSummaries}
 
 	utils.SerializeStruct(summaryFile, filename)
 }
@@ -43,18 +45,12 @@ func summarizeStringColumn(column *dataset.String) ColumnSummary {
 	for _, value := range column.Data {
 		var modality ValueKeyCount
 		var ok bool
-		if !value.IsValid {
-			modality = summary["NA"]
+		modality, ok = summary[value.Value]
+		if !ok {
+			summary[value.Value] = ValueKeyCount{Key: value.Value, Count: 1}
+		} else {
 			modality.Count++
 			summary[value.Value] = modality
-		} else {
-			modality, ok = summary[value.Value]
-			if !ok {
-				summary[value.Value] = ValueKeyCount{Key: value.Value, Count: 1}
-			} else {
-				modality.Count++
-				summary[value.Value] = modality
-			}
 		}
 	}
 
