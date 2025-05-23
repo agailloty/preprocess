@@ -17,7 +17,7 @@ type ColumnConfig struct {
 	Name       string          `toml:"name"`
 	Type       string          `toml:"type"`
 	NewName    string          `toml:"newName,omitempty"`
-	Preprocess *[]PreprocessOp `toml:"preprocess,omitempty"`
+	Operations *[]PreprocessOp `toml:"operations,omitempty"`
 }
 
 type DatasetOperations struct {
