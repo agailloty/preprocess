@@ -2,7 +2,7 @@ package common
 
 type DataSpecs struct {
 	Filename         string `toml:"filename"`
-	CsvSeparator     string `toml:"separator"`
+	CsvSeparator     string `toml:"csvseparator"`
 	DecimalSeparator string `toml:"decimalseparator"`
 	Encoding         string `toml:"encoding"`
 }

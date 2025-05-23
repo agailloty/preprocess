@@ -11,8 +11,6 @@ import (
 )
 
 var prepfilePath string
-var datasetPath string
-var sep string
 var columnList []string
 var operationList []string
 var numerics bool
@@ -62,7 +60,7 @@ func validateFlags() {
 	}
 
 	if isDataProvided && isColumnListProvided && isOperationListProvided {
-		dfSpecs := common.DataSpecs{Filename: datasetPath, CsvSeparator: sep, DecimalSeparator: decimalSeparator, Encoding: encoding}
+		dfSpecs := common.DataSpecs{Filename: datafilename, CsvSeparator: csvseparator, DecimalSeparator: decimalSeparator, Encoding: encoding}
 		prepfile := config.MakeConfigFromCommandsArgs(dfSpecs, columnList, operationList)
 		operations.DispatchOperations(prepfile)
 	}

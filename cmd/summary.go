@@ -34,7 +34,7 @@ func summarizeDataset(cmd *cobra.Command, args []string) {
 			decimalSeparator = ","
 		}
 		dataSpec := common.DataSpecs{
-			Filename:         datasetPath,
+			Filename:         datafilename,
 			CsvSeparator:     csvseparator,
 			DecimalSeparator: decimalSeparator,
 			Encoding:         encoding,

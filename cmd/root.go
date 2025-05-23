@@ -31,6 +31,6 @@ func Execute() {
 func setDataSpecFlags(cmd *cobra.Command) {
 	cmd.Flags().StringVarP(&datafilename, "data", "d", "", "Path to the dataset")
 	cmd.Flags().StringVarP(&csvseparator, "sep", "s", ",", "Separator for csv file")
-	cmd.Flags().StringVarP(&decimalSeparator, "dsep", "m", ",", "Decimal separator")
+	cmd.Flags().StringVarP(&decimalSeparator, "dsep", "m", ".", "Decimal separator")
 	cmd.Flags().StringVarP(&encoding, "encoding", "e", "utf-8", "Character encoding")
 }
