@@ -17,6 +17,7 @@ type DatasetSummary struct {
 
 type ColumnSummary struct {
 	Name                string          `toml:"name,omitempty"`
+	Type                string          `toml:"type"`
 	RowCount            int             `toml:"rowscount,omitempty"`
 	UniqueValueCount    int             `toml:"uniquevaluescount,omitempty"`
 	UniqueValues        []string        `toml:"uniquevalues,omitempty"`

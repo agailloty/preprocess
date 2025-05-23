@@ -7,10 +7,12 @@ import (
 	"github.com/agailloty/preprocess/config"
 	"github.com/agailloty/preprocess/dataset"
 	"github.com/agailloty/preprocess/summary"
+	"github.com/agailloty/preprocess/utils"
 	"github.com/spf13/cobra"
 )
 
 var summaryOutput string
+var makeHtml bool
 
 var summaryCmd = &cobra.Command{
 	Use:   "summary",
@@ -25,10 +27,12 @@ func summarizeDataset(cmd *cobra.Command, args []string) {
 		return
 	}
 
+	var summaryFile summary.SummaryFile
+
 	if prepfile != nil {
 		dataframe := dataset.ReadDataFrame(prepfile.Data)
 
-		summary.Summarize(dataframe, summaryOutput)
+		summaryFile = summary.GetSummaryFile(dataframe)
 	} else {
 		if decimalSeparator == "" {
 			decimalSeparator = ","
@@ -43,7 +47,12 @@ func summarizeDataset(cmd *cobra.Command, args []string) {
 		if summaryOutput == "" {
 			summaryOutput = "Summaryfile.toml"
 		}
-		summary.Summarize(dataframe, summaryOutput)
+		summaryFile = summary.GetSummaryFile(dataframe)
+	}
+
+	utils.SerializeStruct(summaryFile, summaryOutput)
+	if makeHtml {
+		summary.SummaryHtml(summaryFile, "report.html")
 	}
 }
 
@@ -52,4 +61,5 @@ func init() {
 	summaryCmd.Run = summarizeDataset
 	setDataSpecFlags(summaryCmd)
 	summaryCmd.Flags().StringVarP(&summaryOutput, "output", "o", "Summaryfile.toml", "Output name for Summaryfile")
+	summaryCmd.Flags().BoolVarP(&makeHtml, "html", "t", false, "Generate HTML file")
 }

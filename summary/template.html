@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Résumé CSV</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <style>
+        body { font-family: sans-serif; margin: 2em; }
+        .modalite { margin-top: 2em; }
+        .modalite-col { margin-bottom: 1em; padding: 1em; border: 1px solid #ccc; border-radius: 6px; background: #f9f9f9; }
+        .modalite-item { margin-left: 1em; }
+    </style>
+</head>
+<body>
+
+    <h1>Résumé du fichier CSV</h1>
+
+    <p><strong>Lignes :</strong> {{.DataSummary.RowCount}} |
+       <strong>Colonnes :</strong> {{.DataSummary.ColumnCount}} |
+       <strong>Numériques :</strong> {{.DataSummary.NumericColumns}} |
+       <strong>Textuelles :</strong> {{.DataSummary.StringColumns}}</p>
+
+    <h2>Colonnes numériques</h2>
+    <table id="numericTable" class="display">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Lignes</th>
+                <th>Manquants</th>
+                <th>Moyenne</th>
+                <th>Médiane</th>
+                <th>Min</th>
+                <th>Max</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{range .Columns}}
+            {{if eq .Type "number"}}
+            <tr>
+                <td>{{.Name}}</td>
+                <td>{{.RowCount}}</td>
+                <td>{{.Missing}}</td>
+                <td>{{printf "%.2f" .Mean}}</td>
+                <td>{{printf "%.2f" .Median}}</td>
+                <td>{{printf "%.2f" .Min}}</td>
+                <td>{{printf "%.2f" .Max}}</td>
+            </tr>
+            {{end}}
+            {{end}}
+        </tbody>
+    </table>
+
+    <h2>Colonnes catégorielles</h2>
+    <label for="columnSelect">Sélectionnez une ou plusieurs colonnes :</label><br/>
+    <select id="columnSelect" multiple size="6" style="min-width: 300px; margin-top: 0.5em;">
+        {{range .Columns}}
+        {{if eq .Type "string"}}
+        <option value="{{.Name}}">{{.Name}}</option>
+        {{end}}
+        {{end}}
+    </select>
+
+    <div id="modaliteDetails" class="modalite"></div>
+
+    <script>
+        $(document).ready(function() {
+            $('#numericTable').DataTable();
+
+            const columnData = {{ .StringColumnsJson }};
+
+            $('#columnSelect').on('change', function() {
+                const selected = $(this).val();
+                const target = $('#modaliteDetails');
+                target.empty();
+
+                if (selected && selected.length > 0) {
+                    selected.forEach(col => {
+                        const summary = columnData[col];
+                        target.append('<div class="modalite-col"><strong>' + col + '</strong><br/>');
+                        if (summary && summary.length > 0) {
+                            summary.forEach(item => {
+                                target.append('<div class="modalite-item">' + item.modality + ' : ' + item.count + '</div>');
+                            });
+                        } else {
+                            target.append('<div class="modalite-item"><em>(aucune modalité disponible)</em></div>');
+                        }
+                        target.append('</div>');
+                    });
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

@@ -10,6 +10,11 @@ import (
 )
 
 func Summarize(df dataset.DataFrame, filename string) {
+	summaryFile := GetSummaryFile(df)
+	utils.SerializeStruct(summaryFile, filename)
+}
+
+func GetSummaryFile(df dataset.DataFrame) SummaryFile {
 	numericColumnCount := 0
 	stringColumnCount := 0
 
@@ -37,7 +42,7 @@ func Summarize(df dataset.DataFrame, filename string) {
 		},
 		Columns: colSummaries}
 
-	utils.SerializeStruct(summaryFile, filename)
+	return summaryFile
 }
 
 func summarizeStringColumn(column *dataset.String) ColumnSummary {
@@ -62,6 +67,7 @@ func summarizeStringColumn(column *dataset.String) ColumnSummary {
 
 	return ColumnSummary{
 		Name:                column.Name,
+		Type:                column.GetType(),
 		RowCount:            column.Length(),
 		UniqueValueCount:    uniqueValueCount,
 		UniqueValues:        keys,
@@ -77,6 +83,7 @@ func summarizeFloatColumn(column *dataset.Float) ColumnSummary {
 
 	return ColumnSummary{
 		Name:     column.Name,
+		Type:     "numeric",
 		RowCount: column.Length(),
 		Mean:     mean,
 		Median:   median,
@@ -91,6 +98,7 @@ func summarizeIntColumn(column *dataset.Integer) ColumnSummary {
 
 	return ColumnSummary{
 		Name:     column.Name,
+		Type:     "numeric",
 		RowCount: column.Length(),
 		Mean:     mean,
 		Median:   median,
