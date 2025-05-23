@@ -144,7 +144,9 @@ func readerWithEncoding(file *os.File, encoding string) *csv.Reader {
 func mapEncoding(encoding string) *charmap.Charmap {
 	var charEncoding *charmap.Charmap
 	encoding = formatEncoding(encoding)
-	if encoding == formatEncoding("ISO 8859-1") {
+	if formatEncoding(encoding) == formatEncoding("ISO 8859-1") || encoding == formatEncoding("latin-1") {
+		charEncoding = charmap.ISO8859_1
+	} else if encoding == formatEncoding("ISO 8859-1") {
 		charEncoding = charmap.ISO8859_1
 	}
 
@@ -152,5 +154,6 @@ func mapEncoding(encoding string) *charmap.Charmap {
 }
 
 func formatEncoding(encoding string) string {
+	encoding = strings.ReplaceAll(encoding, "-", "")
 	return strings.ToLower(strings.ReplaceAll(encoding, " ", ""))
 }
