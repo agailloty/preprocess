@@ -12,6 +12,7 @@ import (
 )
 
 type DataFrame struct {
+	common.DataSpecs
 	Name         string
 	Columns      []DataSetColumn
 	RowsCount    int
@@ -43,6 +44,7 @@ func ReadDataFrame(dfSpec common.DataSpecs) DataFrame {
 	ext := filepath.Ext(dfSpec.Filename)
 	dfName := strings.TrimSuffix(dfSpec.Filename, ext)
 	return DataFrame{
+		DataSpecs:    dfSpec,
 		Name:         dfName,
 		Columns:      columns,
 		RowsCount:    columns[0].Length(),
