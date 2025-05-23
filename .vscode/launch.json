@@ -17,13 +17,29 @@
         "program": "${workspaceFolder}/main.go",
         "args": ["run", "--data", "indicator_cleaned.csv", "--column", "GDP_CAPITA", "--op", "normalize:method=zscore"]
       },
-            {
+      {
         "name": "preprocess summary",
         "type": "go",
         "request": "launch",
         "mode": "debug",
         "program": "${workspaceFolder}/main.go",
         "args": ["summary", "--data", "barometre-du-numerique-2024.csv", "--sep", ";"]
+      },
+      {
+        "name": "preprocess summary no args",
+        "type": "go",
+        "request": "launch",
+        "mode": "debug",
+        "program": "${workspaceFolder}/main.go",
+        "args": ["summary"]
+      },
+      {
+        "name": "preprocess init",
+        "type": "go",
+        "request": "launch",
+        "mode": "debug",
+        "program": "${workspaceFolder}/main.go",
+        "args": ["init", "--data", "barometre-du-numerique-2024.csv", "--sep", ";", "--dsep", ",", "--enc", "utf8"]
       }
     ]
   }

@@ -130,7 +130,7 @@ func readAllLines(filepath string, sep string, encoding string) [][]string {
 
 func readerWithEncoding(file *os.File, encoding string) *csv.Reader {
 	reader := csv.NewReader(file)
-	if encoding != "utf8" {
+	if encoding != "utf8" || encoding == "" {
 		charEncoding := mapEncoding(encoding)
 		reader = csv.NewReader(transform.NewReader(file, charEncoding.NewDecoder()))
 	}
