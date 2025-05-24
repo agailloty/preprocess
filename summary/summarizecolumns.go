@@ -3,6 +3,7 @@ package summary
 import (
 	"maps"
 	"slices"
+	"sort"
 
 	"github.com/agailloty/preprocess/dataset"
 	"github.com/agailloty/preprocess/statistics"
@@ -64,6 +65,10 @@ func summarizeStringColumn(column *dataset.String) ColumnSummary {
 	uniqueValuesSummary := slices.Collect(maps.Values(summary))
 	keys := slices.Collect(maps.Keys(summary))
 	missingCount := column.CountMissing()
+
+	sort.Slice(uniqueValuesSummary, func(i, j int) bool {
+		return uniqueValuesSummary[i].Count > uniqueValuesSummary[j].Count
+	})
 
 	return ColumnSummary{
 		Name:                column.Name,
