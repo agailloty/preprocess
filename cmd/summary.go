@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/agailloty/preprocess/common"
 	"github.com/agailloty/preprocess/config"
@@ -19,6 +20,7 @@ var summaryCmd = &cobra.Command{
 }
 
 func summarizeDataset(cmd *cobra.Command, args []string) {
+	start := time.Now()
 	prepfile, err := config.LoadConfigFromPrepfile(prepfilePath)
 	if err != nil {
 		fmt.Printf("Failed to load config file '%s': %s\n", prepfilePath, err)
@@ -45,6 +47,9 @@ func summarizeDataset(cmd *cobra.Command, args []string) {
 		}
 		summary.Summarize(dataframe, summaryOutput)
 	}
+
+	elapsed := time.Since(start)
+	fmt.Printf("Finished in : %s\n", elapsed)
 }
 
 func init() {
