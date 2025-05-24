@@ -2,7 +2,6 @@
 package summary
 
 import (
-	"embed"
 	"encoding/json"
 	"html/template"
 	"os"
@@ -15,7 +14,7 @@ func SummaryHtml(summary SummaryFile, filename string) {
 			a, _ := json.Marshal(v)
 			return template.JS(a)
 		},
-	}).ParseFS(templateFS, "template.html"))
+	}).Parse(htmlTemplate))
 
 	f, err := os.Create("rapport.html")
 	if err != nil {
@@ -31,6 +30,3 @@ func ToJSON(v interface{}) template.JS {
 	a, _ := json.Marshal(v)
 	return template.JS(a)
 }
-
-//go:embed template.html
-var templateFS embed.FS
