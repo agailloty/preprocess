@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/agailloty/preprocess/common"
 	"github.com/agailloty/preprocess/config"
 	"github.com/spf13/cobra"
@@ -17,6 +20,7 @@ var initCmd = &cobra.Command{
 }
 
 func initConfig(cmd *cobra.Command, args []string) {
+	start := time.Now()
 	if initCmd.Flags().NFlag() == 0 {
 		initCmd.Help()
 		return
@@ -35,6 +39,9 @@ func initConfig(cmd *cobra.Command, args []string) {
 		Encoding:         encoding,
 	}
 	config.InitializePrepfile(dfSpec, output, templateOnly)
+
+	elapsed := time.Since(start)
+	fmt.Printf("Finished in : %s\n", elapsed)
 }
 
 func init() {

@@ -46,7 +46,7 @@ func InitializePrepfile(dfSpec common.DataSpecs, output string, templateOnly boo
 		log.Fatalf("An error occured during TOML enconding : %v", err)
 	}
 
-	fmt.Printf("%s successfully generated.", output)
+	fmt.Printf("%s successfully generated.\n", output)
 }
 
 func InitializeDefaultPrepfile(output string) {

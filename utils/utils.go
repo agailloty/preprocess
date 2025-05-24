@@ -39,7 +39,7 @@ func SerializeStruct(content interface{}, filename string) {
 	if err := encoder.Encode(configFile); err != nil {
 		log.Fatalf("An error occured during TOML enconding : %v", err)
 	}
-	fmt.Printf("Template %s successfully generated.", filename)
+	fmt.Printf("%s successfully generated.\n", filename)
 }
 
 func ExtractNonNullInts(data []dataset.Nullable[int]) []int {
