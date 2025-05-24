@@ -81,10 +81,14 @@ func summarizeFloatColumn(column *dataset.Float) ColumnSummary {
 	median := statistics.Median(validData)
 	missingCount := column.CountMissing()
 
+	min, max := statistics.MinMax(validData)
+
 	return ColumnSummary{
 		Name:     column.Name,
 		Type:     "numeric",
 		RowCount: column.Length(),
+		Min:      min,
+		Max:      max,
 		Mean:     mean,
 		Median:   median,
 		Missing:  missingCount}
@@ -96,10 +100,14 @@ func summarizeIntColumn(column *dataset.Integer) ColumnSummary {
 	median := statistics.Median(validData)
 	missingCount := column.CountMissing()
 
+	min, max := statistics.MinMax(validData)
+
 	return ColumnSummary{
 		Name:     column.Name,
 		Type:     "numeric",
 		RowCount: column.Length(),
+		Min:      float64(min),
+		Max:      float64(max),
 		Mean:     mean,
 		Median:   median,
 		Missing:  missingCount}
