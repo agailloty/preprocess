@@ -3,6 +3,7 @@ package summary
 import (
 	"maps"
 	"slices"
+	"sort"
 
 	"github.com/agailloty/preprocess/dataset"
 	"github.com/agailloty/preprocess/statistics"
@@ -10,6 +11,11 @@ import (
 )
 
 func Summarize(df dataset.DataFrame, filename string) {
+	summaryFile := GetSummaryFile(df)
+	utils.SerializeStruct(summaryFile, filename)
+}
+
+func GetSummaryFile(df dataset.DataFrame) SummaryFile {
 	numericColumnCount := 0
 	stringColumnCount := 0
 
@@ -37,7 +43,7 @@ func Summarize(df dataset.DataFrame, filename string) {
 		},
 		Columns: colSummaries}
 
-	utils.SerializeStruct(summaryFile, filename)
+	return summaryFile
 }
 
 func summarizeStringColumn(column *dataset.String) ColumnSummary {
@@ -60,8 +66,13 @@ func summarizeStringColumn(column *dataset.String) ColumnSummary {
 	keys := slices.Collect(maps.Keys(summary))
 	missingCount := column.CountMissing()
 
+	sort.Slice(uniqueValuesSummary, func(i, j int) bool {
+		return uniqueValuesSummary[i].Count > uniqueValuesSummary[j].Count
+	})
+
 	return ColumnSummary{
 		Name:                column.Name,
+		Type:                column.GetType(),
 		RowCount:            column.Length(),
 		UniqueValueCount:    uniqueValueCount,
 		UniqueValues:        keys,
@@ -75,9 +86,14 @@ func summarizeFloatColumn(column *dataset.Float) ColumnSummary {
 	median := statistics.Median(validData)
 	missingCount := column.CountMissing()
 
+	min, max := statistics.MinMax(validData)
+
 	return ColumnSummary{
 		Name:     column.Name,
+		Type:     "numeric",
 		RowCount: column.Length(),
+		Min:      min,
+		Max:      max,
 		Mean:     mean,
 		Median:   median,
 		Missing:  missingCount}
@@ -89,9 +105,14 @@ func summarizeIntColumn(column *dataset.Integer) ColumnSummary {
 	median := statistics.Median(validData)
 	missingCount := column.CountMissing()
 
+	min, max := statistics.MinMax(validData)
+
 	return ColumnSummary{
 		Name:     column.Name,
+		Type:     "numeric",
 		RowCount: column.Length(),
+		Min:      float64(min),
+		Max:      float64(max),
 		Mean:     mean,
 		Median:   median,
 		Missing:  missingCount}

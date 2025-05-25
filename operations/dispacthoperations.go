@@ -15,6 +15,9 @@ func DispatchOperations(prepfile *config.Prepfile) {
 		if prepfile.Preprocess.NumericOperations != nil {
 			applyOperationsOnNumericColumns(&df, prepfile.Preprocess.NumericOperations.Preprocess)
 		}
+		if prepfile.Preprocess.TextOperations != nil {
+			applyOperationsOnTextColumns(&df, prepfile.Preprocess.TextOperations.Preprocess)
+		}
 		// If there are column specific operation
 		found, columnConfig := findColumnConfig(prepfile.Preprocess.Columns, col.GetName())
 		if found {
