@@ -38,6 +38,7 @@ func fillMissingStringWithValue(column *dataset.String, newValue string) {
 	for i := range column.Data {
 		if !column.Data[i].IsValid {
 			column.Data[i].Value = newValue
+			column.Data[i].IsValid = true
 		}
 	}
 }
@@ -46,6 +47,7 @@ func fillMissingIntegerWithValue(column *dataset.Integer, newValue int) {
 	for i := range column.Data {
 		if !column.Data[i].IsValid {
 			column.Data[i].Value = newValue
+			column.Data[i].IsValid = true
 		}
 	}
 }
@@ -54,6 +56,7 @@ func fillMissingFloatWithValue(column *dataset.Float, newValue float64) {
 	for i := range column.Data {
 		if !column.Data[i].IsValid {
 			column.Data[i].Value = newValue
+			column.Data[i].IsValid = true
 		}
 	}
 }

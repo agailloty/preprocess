@@ -7,6 +7,14 @@ import (
 	"github.com/agailloty/preprocess/dataset"
 )
 
+func applyOperationsOnTextColumns(df *dataset.DataFrame, operations *[]config.PreprocessOp) {
+	for _, column := range df.Columns {
+		if column.GetType() == "string" {
+			applyTextOperationsOnColumn(operations, column)
+		}
+	}
+}
+
 func applyTextOperationsOnColumn(preprocessOps *[]config.PreprocessOp, col dataset.DataSetColumn) {
 	if preprocessOps == nil {
 		return

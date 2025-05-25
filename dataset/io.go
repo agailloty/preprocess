@@ -12,7 +12,7 @@ import (
 	"golang.org/x/text/transform"
 )
 
-func guessColumnType(column []string, nrow int, decimalSep string) DataSetColumn {
+func guessColumnType(column []string, nrow int, dfSpec common.DataSpecs) DataSetColumn {
 	stringCount := 0
 	integerCount := 0
 	floatCount := 0
@@ -27,7 +27,7 @@ func guessColumnType(column []string, nrow int, decimalSep string) DataSetColumn
 			integerCount += 1
 			continue
 		}
-		isSuccess, _ = tryParseFloat(column[i], decimalSep)
+		isSuccess, _ = tryParseFloat(column[i], dfSpec.DecimalSeparator)
 		if isSuccess {
 			floatCount += 1
 			continue
@@ -40,7 +40,7 @@ func guessColumnType(column []string, nrow int, decimalSep string) DataSetColumn
 	if stringCount > integerCount && stringCount > floatCount {
 		var stringColumn []Nullable[string]
 		for _, val := range column[1:] {
-			stringColumn = append(stringColumn, Nullable[string]{IsValid: val != "", Value: val})
+			stringColumn = append(stringColumn, Nullable[string]{IsValid: val != dfSpec.MissingIdentifier, Value: val})
 		}
 		typedColumn = &String{Data: stringColumn, Name: column[0]}
 	}
@@ -49,7 +49,7 @@ func guessColumnType(column []string, nrow int, decimalSep string) DataSetColumn
 		var intColumn []Nullable[int]
 		for _, val := range column[1:] {
 			isValid, parsedVal := tryParseInt(val)
-			intColumn = append(intColumn, Nullable[int]{IsValid: isValid && val != "", Value: int(parsedVal)})
+			intColumn = append(intColumn, Nullable[int]{IsValid: isValid && val != dfSpec.MissingIdentifier, Value: int(parsedVal)})
 		}
 
 		typedColumn = &Integer{Data: intColumn, Name: column[0]}
@@ -58,8 +58,8 @@ func guessColumnType(column []string, nrow int, decimalSep string) DataSetColumn
 	if floatCount > stringCount && floatCount > integerCount {
 		var floatColumn []Nullable[float64]
 		for _, val := range column[1:] {
-			isValid, parsedVal := tryParseFloat(val, decimalSep)
-			floatColumn = append(floatColumn, Nullable[float64]{IsValid: isValid && val != "", Value: float64(parsedVal)})
+			isValid, parsedVal := tryParseFloat(val, dfSpec.DecimalSeparator)
+			floatColumn = append(floatColumn, Nullable[float64]{IsValid: isValid && val != dfSpec.MissingIdentifier, Value: float64(parsedVal)})
 		}
 		typedColumn = &Float{Data: floatColumn, Name: column[0]}
 	}
@@ -86,7 +86,7 @@ func tryParseFloat(val string, decimalSep string) (bool, float64) {
 	return isSuccess, value
 }
 
-func convertToTypedColumns(data [][]string, decimalSep string) []DataSetColumn {
+func convertToTypedColumns(data [][]string, dfSpec common.DataSpecs) []DataSetColumn {
 	rowLength := len(data)
 	colLength := len(data[0])
 	var columns []DataSetColumn
@@ -95,7 +95,7 @@ func convertToTypedColumns(data [][]string, decimalSep string) []DataSetColumn {
 		for j := 0; j < rowLength; j++ {
 			column = append(column, data[j][i])
 		}
-		columns = append(columns, guessColumnType(column, int(0.2*float64(rowLength)), decimalSep))
+		columns = append(columns, guessColumnType(column, int(0.2*float64(rowLength)), dfSpec))
 	}
 
 	return columns
@@ -103,7 +103,7 @@ func convertToTypedColumns(data [][]string, decimalSep string) []DataSetColumn {
 
 func readDatasetColumns(dfSpec common.DataSpecs) []DataSetColumn {
 	data := readAllLines(dfSpec)
-	return convertToTypedColumns(data, dfSpec.DecimalSeparator)
+	return convertToTypedColumns(data, dfSpec)
 }
 
 func readAllLines(dfSpec common.DataSpecs) [][]string {
