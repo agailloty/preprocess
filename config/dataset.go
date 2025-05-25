@@ -21,5 +21,5 @@ type ColumnConfig struct {
 }
 
 type DatasetOperations struct {
-	Preprocess *[]PreprocessOp `toml:"preprocess,omitempty"`
+	Operations *[]PreprocessOp `toml:"operations,omitempty"`
 }

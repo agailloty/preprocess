@@ -13,10 +13,10 @@ func DispatchOperations(prepfile *config.Prepfile) {
 
 	for _, col := range df.Columns {
 		if prepfile.Preprocess.NumericOperations != nil {
-			applyOperationsOnNumericColumns(&df, prepfile.Preprocess.NumericOperations.Preprocess)
+			applyOperationsOnNumericColumns(&df, prepfile.Preprocess.NumericOperations.Operations)
 		}
 		if prepfile.Preprocess.TextOperations != nil {
-			applyOperationsOnTextColumns(&df, prepfile.Preprocess.TextOperations.Preprocess)
+			applyOperationsOnTextColumns(&df, prepfile.Preprocess.TextOperations.Operations)
 		}
 		// If there are column specific operation
 		found, columnConfig := findColumnConfig(prepfile.Preprocess.Columns, col.GetName())
