@@ -65,7 +65,7 @@ func init() {
 	rootCmd.AddCommand(summaryCmd)
 	summaryCmd.Run = summarizeDataset
 	setDataSpecFlags(summaryCmd)
-	summaryCmd.Flags().StringVarP(&prepfilePath, "file", "f", "Prepfile.toml", "Path to the configuration file")
+	setPrepfileFlag(summaryCmd)
 	summaryCmd.Flags().StringVarP(&summaryOutput, "output", "o", "Summaryfile.toml", "Output name for Summaryfile")
 	summaryCmd.Flags().BoolVarP(&makeHtml, "html", "t", false, "Generate HTML file")
 }

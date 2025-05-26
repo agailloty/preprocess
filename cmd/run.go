@@ -10,7 +10,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var prepfilePath string
 var columnList []string
 var operationList []string
 var numerics bool
@@ -19,7 +18,7 @@ func init() {
 	rootCmd.AddCommand(runCmd)
 	runCmd.Run = run
 	setDataSpecFlags(runCmd)
-	runCmd.Flags().StringVarP(&prepfilePath, "file", "f", "Prepfile.toml", "Path to the configuration file")
+	setPrepfileFlag(runCmd)
 	runCmd.Flags().StringArrayVar(&columnList, "column", []string{}, "Target column(s) for preprocessing")
 	runCmd.Flags().StringArrayVar(&operationList, "op", []string{}, "Preprocessing operation(s) (e.g., fillna:method=mean)")
 	runCmd.Flags().BoolVar(&numerics, "numerics", false, "Apply operations only on numeric columns")
