@@ -15,8 +15,8 @@ var prepfilePath string
 
 var rootCmd = &cobra.Command{
 	Use:   "preprocess",
-	Short: "preprocess is a fast data analysis preprocessing tool.",
-	Long:  `preprocess is a fast data analysis preprocessing tool built with Go. Complete documentation is available at https://github.com/agailloty/preprocess`,
+	Short: PREPROCESS_SHORT_DESCRIPTION,
+	Long:  PREPROCESS_LONG_DESCRIPTION,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Do Stuff Here
 	},

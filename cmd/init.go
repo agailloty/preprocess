@@ -15,7 +15,8 @@ var templateOnly bool
 // Commande Cobra pour générer le fichier config.toml
 var initCmd = &cobra.Command{
 	Use:   "init",
-	Short: "Generate a Prepfile",
+	Short: INIT_SHORT_DESCRIPTION,
+	Long:  INIT_LONG_DESCRIPTION,
 	Args:  cobra.NoArgs,
 }
 

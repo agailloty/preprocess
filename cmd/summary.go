@@ -17,7 +17,8 @@ var makeHtml bool
 
 var summaryCmd = &cobra.Command{
 	Use:   "summary",
-	Short: "Display dataset summary statistics",
+	Short: SUMMARY_SHORT_DESCRIPTION,
+	Long:  SUMMARY_LONG_DESCRIPTION,
 	Run:   summarizeDataset,
 }
 

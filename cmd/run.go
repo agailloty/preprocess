@@ -26,7 +26,8 @@ func init() {
 
 var runCmd = &cobra.Command{
 	Use:   "run",
-	Short: "Run operations using Prepfile",
+	Short: RUN_SHORT_DESCRIPTION,
+	Long:  RUN_LONG_DESCRIPTION,
 }
 
 func run(cmd *cobra.Command, args []string) {
