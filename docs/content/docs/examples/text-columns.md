@@ -9,6 +9,8 @@ draft: false
 toc: true
 ---
 
+## Basic text operations
+
 This allows you to apply the same operations on all the text columns that are in the dataset. You can specify as much operation needed. 
 Operations are applied sequentially (in order) on each column. 
 

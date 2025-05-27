@@ -9,6 +9,8 @@ draft: false
 toc: true
 ---
 
+## Apply operations
+
 ```toml
 [data]
 file = '.\fifa_players_22.csv'

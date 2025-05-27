@@ -10,9 +10,24 @@ title = 'Preprocess'
         path = "github.com/gohugoio/hugo-mod-bootstrap-scss/v5"
         disable = false
 
+[params]
+
+google_fonts = [
+["Inter", "500, 600, 700, 800"],
+["Fira Code", "600, 800"]
+]
+
+sans_serif_font = "Inter"     # Default is System font
+secondary_font  = "Inter"     # Default is System font
+mono_font       = "Fira Code" # Default is System font
+
 [params.docs]
 sidebarIcons = true
 repoURL = "https://github.com/agailloty/preprocess"
 repoBranch = "main"
 lastMod = true
 lastModRelative = true
+themeColor = "emerald"
+prism = true
+darkMode = true
+prismTheme = "solarized-light"
