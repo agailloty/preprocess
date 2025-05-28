@@ -2,7 +2,7 @@ package config
 
 type BinningSpecs struct {
 	Bins      []BinningOperation `toml:"bins"`
-	NewColumn string             `toml:"newColumn"`
+	NewColumn string             `toml:"new_column"`
 }
 
 type BinningOperation struct {
