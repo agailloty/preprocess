@@ -24,42 +24,56 @@ var summaryCmd = &cobra.Command{
 
 func summarizeDataset(cmd *cobra.Command, args []string) {
 	start := time.Now()
-	prepfile, err := config.LoadConfigFromPrepfile(prepfilePath)
-	if err != nil {
-		fmt.Printf("Failed to load config file '%s': %s\n", prepfilePath, err)
+	var (
+		summaryFile summary.SummaryFile
+		dataframe   dataset.DataFrame
+		err         error
+	)
+
+	getOutputFile := func() string {
+		if summaryOutput == "" {
+			return "Summaryfile.toml"
+		}
+		return summaryOutput
+	}
+
+	switch {
+	case datafilename != "":
+		dfSpec := common.DataSpecs{
+			Filename:          datafilename,
+			CsvSeparator:      csvseparator,
+			DecimalSeparator:  decimalSeparator,
+			Encoding:          encoding,
+			MissingIdentifier: "",
+		}
+		dataframe = dataset.ReadDataFrame(dfSpec)
+	case prepfilePath != "":
+		var prepfile *config.Prepfile
+		prepfile, err = config.LoadConfigFromPrepfile(prepfilePath)
+		if err != nil {
+			fmt.Printf("Failed to load config file '%s': %s\n", prepfilePath, err)
+			return
+		}
+		if prepfile == nil {
+			fmt.Println("Prepfile is nil.")
+			return
+		}
+		dataframe = dataset.ReadDataFrame(prepfile.Data)
+	default:
+		fmt.Println("No data source specified. Please provide a data file or a prepfile.")
 		return
 	}
 
-	var summaryFile summary.SummaryFile
+	summaryFile = summary.GetSummaryFile(dataframe)
 
-	if prepfile != nil {
-		dataframe := dataset.ReadDataFrame(prepfile.Data)
+	outputFile := getOutputFile()
+	utils.SerializeStruct(summaryFile, outputFile)
 
-		summaryFile = summary.GetSummaryFile(dataframe)
-	} else {
-		if decimalSeparator == "" {
-			decimalSeparator = ","
-		}
-		dataSpec := common.DataSpecs{
-			Filename:         datafilename,
-			CsvSeparator:     csvseparator,
-			DecimalSeparator: decimalSeparator,
-			Encoding:         encoding,
-		}
-		dataframe := dataset.ReadDataFrame(dataSpec)
-		if summaryOutput == "" {
-			summaryOutput = "Summaryfile.toml"
-		}
-		summaryFile = summary.GetSummaryFile(dataframe)
-	}
-
-	utils.SerializeStruct(summaryFile, summaryOutput)
 	if makeHtml {
 		summary.SummaryHtml(summaryFile, "report.html")
 	}
 
-	elapsed := time.Since(start)
-	fmt.Printf("Finished in : %s\n", elapsed)
+	fmt.Printf("Finished in : %s\n", time.Since(start))
 }
 
 func init() {
