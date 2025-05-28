@@ -3,10 +3,13 @@ package utils
 import (
 	"fmt"
 	"log"
+	"maps"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 
+	"github.com/agailloty/preprocess/common"
 	"github.com/agailloty/preprocess/dataset"
 	"github.com/pelletier/go-toml/v2"
 )
@@ -69,4 +72,22 @@ func Contains[T comparable](slice []T, val T) bool {
 		}
 	}
 	return false
+}
+
+func ExtractUniqueValues(data []dataset.Nullable[string]) []common.ValueKeyCount {
+	summary := make(map[string]common.ValueKeyCount)
+	for _, value := range data {
+		var modality common.ValueKeyCount
+		var ok bool
+		modality, ok = summary[value.Value]
+		if !ok {
+			summary[value.Value] = common.ValueKeyCount{Key: value.Value, Count: 1}
+		} else {
+			modality.Count++
+			summary[value.Value] = modality
+		}
+	}
+	unique := slices.Collect(maps.Values(summary))
+
+	return unique
 }

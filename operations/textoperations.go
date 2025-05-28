@@ -10,12 +10,12 @@ import (
 func applyOperationsOnTextColumns(df *dataset.DataFrame, operations *[]config.PreprocessOp) {
 	for _, column := range df.Columns {
 		if column.GetType() == "string" {
-			applyTextOperationsOnColumn(operations, column)
+			applyTextOperationsOnColumn(df, operations, column)
 		}
 	}
 }
 
-func applyTextOperationsOnColumn(preprocessOps *[]config.PreprocessOp, col dataset.DataSetColumn) {
+func applyTextOperationsOnColumn(df *dataset.DataFrame, preprocessOps *[]config.PreprocessOp, col dataset.DataSetColumn) {
 	if preprocessOps == nil {
 		return
 	}
@@ -37,6 +37,10 @@ func applyTextOperationsOnColumn(preprocessOps *[]config.PreprocessOp, col datas
 			}
 		}
 		applyStringOperation(col, stringOps)
+
+		if prep.Op == "dummy" {
+			addDummyToDataframe(df, col, prep.DummyDropLast, prep.DummyDropColumn, prep.DummyPrefixColName)
+		}
 	}
 }
 

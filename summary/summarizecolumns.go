@@ -5,6 +5,7 @@ import (
 	"slices"
 	"sort"
 
+	"github.com/agailloty/preprocess/common"
 	"github.com/agailloty/preprocess/dataset"
 	"github.com/agailloty/preprocess/statistics"
 	"github.com/agailloty/preprocess/utils"
@@ -52,13 +53,13 @@ func GetSummaryFile(df dataset.DataFrame, excluded []string) SummaryFile {
 }
 
 func summarizeStringColumn(column *dataset.String) ColumnSummary {
-	summary := make(map[string]ValueKeyCount)
+	summary := make(map[string]common.ValueKeyCount)
 	for _, value := range column.Data {
-		var modality ValueKeyCount
+		var modality common.ValueKeyCount
 		var ok bool
 		modality, ok = summary[value.Value]
 		if !ok {
-			summary[value.Value] = ValueKeyCount{Key: value.Value, Count: 1}
+			summary[value.Value] = common.ValueKeyCount{Key: value.Value, Count: 1}
 		} else {
 			modality.Count++
 			summary[value.Value] = modality

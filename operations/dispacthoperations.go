@@ -25,7 +25,7 @@ func DispatchOperations(prepfile *config.Prepfile) {
 			if col.GetType() == "int" || col.GetType() == "float" {
 				applyNumericOperationsOnColumn(preprocessOps, col, &df)
 			} else if col.GetType() == "string" {
-				applyTextOperationsOnColumn(preprocessOps, col)
+				applyTextOperationsOnColumn(&df, preprocessOps, col)
 			}
 		}
 		RenameColumn(col, prepfile.Preprocess.Columns)

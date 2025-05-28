@@ -16,21 +16,16 @@ type DatasetSummary struct {
 }
 
 type ColumnSummary struct {
-	Name                string          `toml:"name,omitempty"`
-	Type                string          `toml:"type"`
-	RowCount            int             `toml:"rows_count,omitempty"`
-	UniqueValueCount    int             `toml:"unique_count,omitempty"`
-	UniqueValues        []string        `toml:"unique_values,omitempty"`
-	UniqueValuesSummary []ValueKeyCount `toml:"summary,inline,omitempty"`
+	Name                string                 `toml:"name,omitempty"`
+	Type                string                 `toml:"type"`
+	RowCount            int                    `toml:"rows_count,omitempty"`
+	UniqueValueCount    int                    `toml:"unique_count,omitempty"`
+	UniqueValues        []string               `toml:"unique_values,omitempty"`
+	UniqueValuesSummary []common.ValueKeyCount `toml:"summary,inline,omitempty"`
 
 	Min     float64 `toml:"min,omitempty"`
 	Mean    float64 `toml:"mean,omitempty"`
 	Median  float64 `toml:"median,omitempty"`
 	Max     float64 `toml:"max,omitempty"`
 	Missing int     `toml:"missing"`
-}
-
-type ValueKeyCount struct {
-	Key   string `toml:"modality"`
-	Count int    `toml:"count"`
 }

@@ -7,3 +7,8 @@ type DataSpecs struct {
 	Encoding          string `toml:"encoding"`
 	MissingIdentifier string `toml:"missing_identifier"`
 }
+
+type ValueKeyCount struct {
+	Key   string `toml:"modality"`
+	Count int    `toml:"count"`
+}
