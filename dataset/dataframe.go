@@ -97,6 +97,7 @@ func (d *DataFrame) DeleteColumnByName(columnName string) {
 	found, index := findFirstIndexByName(d.Columns, columnName)
 	if found {
 		d.Columns = slices.Delete(d.Columns, index, index+1)
+		d.ColumnsCount = len(d.Columns)
 	}
 
 }

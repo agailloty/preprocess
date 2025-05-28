@@ -10,17 +10,22 @@ import (
 	"github.com/agailloty/preprocess/utils"
 )
 
-func Summarize(df dataset.DataFrame, filename string) {
-	summaryFile := GetSummaryFile(df)
+func Summarize(df dataset.DataFrame, excluded []string, filename string) {
+	summaryFile := GetSummaryFile(df, excluded)
 	utils.SerializeStruct(summaryFile, filename)
 }
 
-func GetSummaryFile(df dataset.DataFrame) SummaryFile {
+func GetSummaryFile(df dataset.DataFrame, excluded []string) SummaryFile {
 	numericColumnCount := 0
 	stringColumnCount := 0
-
+	for _, col := range excluded {
+		df.DeleteColumnByName(col)
+	}
 	colSummaries := make([]ColumnSummary, df.ColumnsCount)
 	for i, col := range df.Columns {
+		if utils.Contains(excluded, col.GetName()) {
+			continue
+		}
 		switch v := col.(type) {
 		case *dataset.String:
 			colSummaries[i] = summarizeStringColumn(v)

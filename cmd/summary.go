@@ -14,6 +14,7 @@ import (
 
 var summaryOutput string
 var makeHtml bool
+var excludedColumns []string
 
 var summaryCmd = &cobra.Command{
 	Use:   "summary",
@@ -64,7 +65,7 @@ func summarizeDataset(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	summaryFile = summary.GetSummaryFile(dataframe)
+	summaryFile = summary.GetSummaryFile(dataframe, excludedColumns)
 
 	outputFile := getOutputFile()
 	utils.SerializeStruct(summaryFile, outputFile)
@@ -83,4 +84,5 @@ func init() {
 	setPrepfileFlag(summaryCmd)
 	summaryCmd.Flags().StringVarP(&summaryOutput, "output", "o", "Summaryfile.toml", "Output name for Summaryfile")
 	summaryCmd.Flags().BoolVarP(&makeHtml, "html", "t", false, "Generate HTML file")
+	summaryCmd.Flags().StringArrayVar(&excludedColumns, "exclude", excludedColumns, "Exclude columns from summary")
 }
