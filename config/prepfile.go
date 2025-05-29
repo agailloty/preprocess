@@ -4,25 +4,24 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"os"
 	"strings"
 
+	"github.com/BurntSushi/toml"
 	"github.com/agailloty/preprocess/common"
 	"github.com/agailloty/preprocess/utils"
-	"github.com/spf13/viper"
 )
 
 func SetConfigFile() {
-	viper.SetConfigName("config")
-	viper.SetConfigType("toml")
-	viper.AddConfigPath(".")
-
-	if err := viper.ReadInConfig(); err != nil {
-		log.Fatalf("error reading config Prepfile : %v", err)
+	file, err := os.Open("config.toml")
+	if err != nil {
+		log.Fatalf("error opening config.toml : %v", err)
 	}
+	defer file.Close()
 
 	var config Prepfile
-	if err := viper.Unmarshal(&config); err != nil {
-		log.Fatalf("error unmarshalling Prepfile : %v", err)
+	if _, err := toml.NewDecoder(file).Decode(&config); err != nil {
+		log.Fatalf("error decoding config.toml : %v", err)
 	}
 }
 
@@ -41,16 +40,15 @@ func InitDefaultPrepfile() Prepfile {
 }
 
 func LoadConfigFromPrepfile(path string) (*Prepfile, error) {
-	viper.SetConfigFile(path)
-	viper.SetConfigType("toml")
-
-	if err := viper.ReadInConfig(); err != nil {
-		return nil, fmt.Errorf("error reading Prepfile : %w", err)
+	file, err := os.Open(path)
+	if err != nil {
+		return nil, fmt.Errorf("error opening Prepfile : %w", err)
 	}
+	defer file.Close()
 
 	var config Prepfile
-	if err := viper.Unmarshal(&config); err != nil {
-		return nil, fmt.Errorf("a mapping error occured : %w", err)
+	if _, err := toml.NewDecoder(file).Decode(&config); err != nil {
+		return nil, fmt.Errorf("error decoding Prepfile : %w", err)
 	}
 
 	return &config, nil
