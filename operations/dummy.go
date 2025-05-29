@@ -7,17 +7,15 @@ import (
 	"github.com/agailloty/preprocess/utils"
 )
 
-func addDummyToDataframe(df *dataset.DataFrame, col dataset.DataSetColumn, dropLast bool, dropInitialCol bool, prefixColName bool, continueWithTooMany bool) {
+func addDummyToDataframe(df *dataset.DataFrame, col dataset.DataSetColumn, dropLast bool, prefixColName bool, continueWithTooMany bool) {
 	switch v := col.(type) {
 	case *dataset.String:
 		dummyCols := makeDummy(v, dropLast, prefixColName, continueWithTooMany)
 		for _, dummy := range dummyCols {
 			df.Columns = append(df.Columns, &dummy)
 		}
-
-		if dropInitialCol {
-			df.DeleteColumn(col)
-		}
+		// Delete initial column in all case to avoid adding dummy multiple times
+		df.DeleteColumn(col)
 	}
 }
 
@@ -42,6 +40,7 @@ func makeDummy(column *dataset.String, dropLast bool, prefixColName bool, contin
 				dummyValue = 1
 			}
 			dummyCol.Data[idx].Value = dummyValue
+			dummyCol.Data[idx].IsValid = true
 		}
 		dummyCols[i] = dummyCol
 	}

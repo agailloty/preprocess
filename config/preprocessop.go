@@ -7,7 +7,6 @@ type PreprocessOp struct {
 	Bins                           []BinningOperation `toml:"bins"`
 	DummyPrefixColName             bool               `toml:"dummy_prefix"`
 	DummyDropLast                  bool               `toml:"dummy_droplast"`
-	DummyDropColumn                bool               `toml:"dummy_dropcolumn"`
 	DummyContinueWithTooManyValues bool               `toml:"continue_with_toomany"`
 	ExcludeCols                    []string           `toml:"exclude_columns"`
 }
