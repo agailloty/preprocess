@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"fmt"
+	"log"
 	"time"
 
 	"github.com/agailloty/preprocess/common"
@@ -52,16 +52,16 @@ func summarizeDataset(cmd *cobra.Command, args []string) {
 		var prepfile *config.Prepfile
 		prepfile, err = config.LoadConfigFromPrepfile(prepfilePath)
 		if err != nil {
-			fmt.Printf("Failed to load config file '%s': %s\n", prepfilePath, err)
+			log.Printf("Failed to load config file '%s': %s\n", prepfilePath, err)
 			return
 		}
 		if prepfile == nil {
-			fmt.Println("Prepfile is nil.")
+			log.Println("Prepfile is nil.")
 			return
 		}
 		dataframe = dataset.ReadDataFrame(prepfile.Data)
 	default:
-		fmt.Println("No data source specified. Please provide a data file or a prepfile.")
+		log.Println("No data source specified. Please provide a data file or a prepfile.")
 		return
 	}
 
@@ -74,7 +74,7 @@ func summarizeDataset(cmd *cobra.Command, args []string) {
 		summary.SummaryHtml(summaryFile, "report.html")
 	}
 
-	fmt.Printf("Finished in : %s\n", time.Since(start))
+	log.Printf("Finished in : %s\n", time.Since(start))
 }
 
 func init() {

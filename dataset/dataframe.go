@@ -2,7 +2,7 @@ package dataset
 
 import (
 	"encoding/csv"
-	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"slices"
@@ -22,19 +22,19 @@ type DataFrame struct {
 func DisplayColumn(column DataSetColumn, n int) {
 	switch v := column.(type) {
 	case *Float:
-		fmt.Printf("%s (float) \n", v.Name)
+		log.Printf("%s (float) \n", v.Name)
 		for i := range n {
-			fmt.Printf("%.2f ", (v.Data)[i].Value)
+			log.Printf("%.2f ", (v.Data)[i].Value)
 		}
 	case *String:
-		fmt.Printf("%s (string) \n", v.Name)
+		log.Printf("%s (string) \n", v.Name)
 		for i := range n {
-			fmt.Printf("%s ", (v.Data)[i].Value)
+			log.Printf("%s ", (v.Data)[i].Value)
 		}
 	case *Integer:
-		fmt.Printf("%s (int) \n", v.Name)
+		log.Printf("%s (int) \n", v.Name)
 		for i := range n {
-			fmt.Printf("%d ", (v.Data)[i].Value)
+			log.Printf("%d ", (v.Data)[i].Value)
 		}
 	}
 }

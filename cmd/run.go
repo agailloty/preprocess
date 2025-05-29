@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"fmt"
+	"log"
 	"time"
 
 	"github.com/agailloty/preprocess/common"
@@ -34,7 +34,7 @@ func run(cmd *cobra.Command, args []string) {
 	start := time.Now()
 	validateFlags()
 	elapsed := time.Since(start)
-	fmt.Printf("Finished preprocessing in : %s\n", elapsed)
+	log.Printf("Finished preprocessing in : %s\n", elapsed)
 }
 
 func validateFlags() {
@@ -52,8 +52,7 @@ func validateFlags() {
 	if providedNFlags == 0 || isFileProvided {
 		prepfile, err := config.LoadConfigFromPrepfile(prepfilePath)
 		if err != nil {
-			fmt.Printf("Failed to load config file '%s': %s\n", prepfilePath, err)
-			return
+			log.Fatalf("Failed to load config file '%s': %s\n", prepfilePath, err)
 		}
 
 		operations.DispatchOperations(prepfile)

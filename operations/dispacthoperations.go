@@ -1,7 +1,7 @@
 package operations
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/agailloty/preprocess/config"
 	"github.com/agailloty/preprocess/dataset"
@@ -9,7 +9,7 @@ import (
 
 func DispatchOperations(prepfile *config.Prepfile) {
 	df := dataset.ReadDataFrame(prepfile.Data)
-	fmt.Printf("Successfully read dataset %s \n", prepfile.Data.Filename)
+	log.Printf("Successfully read dataset %s \n", prepfile.Data.Filename)
 
 	for _, col := range df.Columns {
 		if prepfile.Preprocess.NumericOperations != nil {

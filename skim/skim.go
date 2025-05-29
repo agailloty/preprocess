@@ -19,7 +19,7 @@ const (
 func SkimDf(dfSpec common.DataSpecs) {
 	file, err := os.Open(dfSpec.Filename)
 	if err != nil {
-		fmt.Printf("error opening %s : %s", dfSpec.Filename, err)
+		log.Printf("error opening %s : %s", dfSpec.Filename, err)
 		return
 	}
 	defer file.Close()
@@ -40,7 +40,7 @@ func SkimDf(dfSpec common.DataSpecs) {
 			break
 		}
 		if err != nil {
-			fmt.Println("error reading line", err)
+			log.Println("error reading line", err)
 			return
 		}
 		records = append(records, row)
@@ -48,7 +48,7 @@ func SkimDf(dfSpec common.DataSpecs) {
 	}
 
 	if len(records) == 0 {
-		fmt.Println("Empty file.")
+		log.Println("Empty file.")
 		return
 	}
 
@@ -59,7 +59,7 @@ func SkimDf(dfSpec common.DataSpecs) {
 			break
 		}
 		if err != nil {
-			fmt.Println("error reading line during count", err)
+			log.Println("error reading line during count", err)
 			return
 		}
 		totalRows++
@@ -67,7 +67,7 @@ func SkimDf(dfSpec common.DataSpecs) {
 
 	numCols := len(records[0])
 
-	fmt.Printf("Columns: %d | Total rows: %d\n\n", numCols, totalRows)
+	log.Printf("Columns: %d | Total rows: %d\n\n", numCols, totalRows)
 
 	startCols := []int{}
 	endCols := []int{}
@@ -113,16 +113,16 @@ func SkimDf(dfSpec common.DataSpecs) {
 			} else if idx < len(row) {
 				val = row[idx]
 			}
-			fmt.Printf("%-*s  ", colWidths[idx], val)
+			log.Printf("%-*s  ", colWidths[idx], val)
 		}
-		fmt.Println()
+		log.Println()
 	}
 
 	printRow(records[0])
 	for _, idx := range colIndexes {
 		fmt.Print(strings.Repeat("-", colWidths[idx]), "  ")
 	}
-	fmt.Println()
+	log.Println()
 
 	for _, row := range records[1:] {
 		printRow(row)
