@@ -39,7 +39,7 @@ func applyTextOperationsOnColumn(df *dataset.DataFrame, preprocessOps *[]config.
 		applyStringOperation(col, stringOps)
 
 		if prep.Op == "dummy" {
-			addDummyToDataframe(df, col, prep.DummyDropLast, prep.DummyDropColumn, prep.DummyPrefixColName)
+			addDummyToDataframe(df, col, prep.DummyDropLast, prep.DummyDropColumn, prep.DummyPrefixColName, prep.DummyContinueWithTooManyValues)
 		}
 	}
 }

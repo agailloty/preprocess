@@ -1,14 +1,16 @@
 package operations
 
 import (
+	"log"
+
 	"github.com/agailloty/preprocess/dataset"
 	"github.com/agailloty/preprocess/utils"
 )
 
-func addDummyToDataframe(df *dataset.DataFrame, col dataset.DataSetColumn, dropLast bool, dropInitialCol bool, prefixColName bool) {
+func addDummyToDataframe(df *dataset.DataFrame, col dataset.DataSetColumn, dropLast bool, dropInitialCol bool, prefixColName bool, continueWithTooMany bool) {
 	switch v := col.(type) {
 	case *dataset.String:
-		dummyCols := makeDummy(v, dropLast, prefixColName)
+		dummyCols := makeDummy(v, dropLast, prefixColName, continueWithTooMany)
 		for _, dummy := range dummyCols {
 			df.Columns = append(df.Columns, &dummy)
 		}
@@ -19,11 +21,15 @@ func addDummyToDataframe(df *dataset.DataFrame, col dataset.DataSetColumn, dropL
 	}
 }
 
-func makeDummy(column *dataset.String, dropLast bool, prefixColName bool) []dataset.Integer {
+func makeDummy(column *dataset.String, dropLast bool, prefixColName bool, continueWithTooMany bool) []dataset.Integer {
 	uniqueValues := utils.ExtractUniqueValues(column.Data)
 
 	if dropLast {
 		uniqueValues = uniqueValues[:len(uniqueValues)-1]
+	}
+
+	if len(uniqueValues) >= 500 && !continueWithTooMany {
+		log.Fatalf("[Dummy operation] : There are too many values for %s. Total count : %d", column.Name, len(uniqueValues))
 	}
 
 	dummyCols := make([]dataset.Integer, len(uniqueValues))
