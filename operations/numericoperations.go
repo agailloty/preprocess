@@ -4,7 +4,6 @@ import (
 	"github.com/agailloty/preprocess/config"
 	"github.com/agailloty/preprocess/dataset"
 	"github.com/agailloty/preprocess/statistics"
-	"github.com/agailloty/preprocess/utils"
 )
 
 func applyOperationsOnNumericColumns(df *dataset.DataFrame, operations *[]config.PreprocessOp) {
@@ -25,11 +24,11 @@ func applyNumericOperationsOnColumn(preprocessOps *[]config.PreprocessOp, col da
 			}
 
 			// Transform operation come after filling missing values
-			if prep.Op == "normalize" {
+			if prep.Op == "scale" {
 				if prep.Method == "zscore" {
-					applyZScoreToEveryElement(col, df)
+					statistics.ScaleWithZscore(col, df)
 				} else if prep.Method == "minmax" {
-					applyMinMaxScoreToEveryElement(col)
+					statistics.ScaleWithMinMax(col, df)
 				}
 			}
 
@@ -139,52 +138,5 @@ func replaceFloatColumnWithStatsFunc[T statistics.Number](column dataset.DataSet
 		}
 		replaceValue := f(validData)
 		replaceMissingValues(column, replaceValue)
-	}
-}
-
-func applyZScoreToEveryElement(column dataset.DataSetColumn, df *dataset.DataFrame) {
-	switch v := column.(type) {
-	case *dataset.Integer:
-		// Convert into to float64
-		validData := utils.ExtractNonNullInts(v.Data)
-		mu := statistics.Mean(validData)
-		sigma := statistics.StdDev(validData)
-		zScores := make([]dataset.Nullable[float64], column.Length())
-		for i := range v.Data {
-			zScore := statistics.ComputeZScore(float64(v.Data[i].Value), float64(mu), float64(sigma))
-			zScores[i] = dataset.Nullable[float64]{IsValid: v.Data[i].IsValid, Value: zScore}
-		}
-		newColumn := dataset.Float{Name: column.GetName(), Data: zScores}
-		utils.OverrideDataFrameColumn(df, column.GetName(), &newColumn)
-
-	case *dataset.Float:
-		validData := utils.ExtractNonNullFloats(v.Data)
-		mu := statistics.Mean(validData)
-		sigma := statistics.StdDev(validData)
-		for i := range v.Data {
-			zScore := statistics.ComputeZScore(float64(v.Data[i].Value), float64(mu), float64(sigma))
-			v.Data[i] = dataset.Nullable[float64]{IsValid: v.Data[i].IsValid, Value: zScore}
-		}
-	}
-}
-
-func applyMinMaxScoreToEveryElement(column dataset.DataSetColumn) {
-	switch v := column.(type) {
-	case *dataset.Integer:
-		validData := utils.ExtractNonNullInts(v.Data)
-		min, max := statistics.MinMax(validData)
-		for i := range v.Data {
-			zScore := statistics.ComputeMinMaxScore(float64(v.Data[i].Value), float64(min), float64(max))
-			v.Data[i] = dataset.Nullable[int]{IsValid: v.Data[i].IsValid, Value: int(zScore)}
-		}
-
-	case *dataset.Float:
-		validData := utils.ExtractNonNullFloats(v.Data)
-		mu := statistics.Mean(validData)
-		sigma := statistics.StdDev(validData)
-		for i := range v.Data {
-			zScore := statistics.ComputeZScore(float64(v.Data[i].Value), float64(mu), float64(sigma))
-			v.Data[i] = dataset.Nullable[float64]{IsValid: v.Data[i].IsValid, Value: zScore}
-		}
 	}
 }
