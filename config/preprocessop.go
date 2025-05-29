@@ -9,4 +9,5 @@ type PreprocessOp struct {
 	DummyDropLast                  bool               `toml:"dummy_droplast"`
 	DummyDropColumn                bool               `toml:"dummy_dropcolumn"`
 	DummyContinueWithTooManyValues bool               `toml:"continue_with_toomany"`
+	ExcludeCols                    []string           `toml:"exclude_columns"`
 }

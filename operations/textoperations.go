@@ -5,6 +5,7 @@ import (
 
 	"github.com/agailloty/preprocess/config"
 	"github.com/agailloty/preprocess/dataset"
+	"github.com/agailloty/preprocess/utils"
 )
 
 func applyOperationsOnTextColumns(df *dataset.DataFrame, operations *[]config.PreprocessOp) {
@@ -39,6 +40,9 @@ func applyTextOperationsOnColumn(df *dataset.DataFrame, preprocessOps *[]config.
 		applyStringOperation(col, stringOps)
 
 		if prep.Op == "dummy" {
+			if len(prep.ExcludeCols) > 0 && utils.Contains(prep.ExcludeCols, col.GetName()) {
+				continue
+			}
 			addDummyToDataframe(df, col, prep.DummyDropLast, prep.DummyDropColumn, prep.DummyPrefixColName, prep.DummyContinueWithTooManyValues)
 		}
 	}

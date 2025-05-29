@@ -29,7 +29,7 @@ func makeDummy(column *dataset.String, dropLast bool, prefixColName bool, contin
 	}
 
 	if len(uniqueValues) >= 500 && !continueWithTooMany {
-		log.Fatalf("[Dummy operation] : There are too many values for %s. Total count : %d", column.Name, len(uniqueValues))
+		log.Fatalf(`[Dummy operation] : There are too many values for %s. Total count : %d. Use exclude_columns = ["%s"] to exclude it.`, column.Name, len(uniqueValues), column.Name)
 	}
 
 	dummyCols := make([]dataset.Integer, len(uniqueValues))
