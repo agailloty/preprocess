@@ -25,3 +25,5 @@ go.work.sum
 .env
 *.csv
 *file.toml
+# Added by goreleaser init:
+dist/
