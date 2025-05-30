@@ -22,24 +22,24 @@ func applyTextOperationsOnColumn(df *dataset.DataFrame, preprocessOps *[]config.
 	}
 
 	for _, prep := range *preprocessOps {
-		if prep.Op == "fillna" && prep.Method == "" && prep.Value != "" {
+		if prep.Op == OP_FILLNA && prep.Method == "" && prep.Value != "" {
 			replaceMissingValues(col, prep.Value)
 		}
 		var stringOps []stringFuction
-		if prep.Op == "clean" {
-			if prep.Method == "trimws" {
+		if prep.Op == OP_CLEAN {
+			if prep.Method == METHOD_CLEAN_TRIMWS {
 				stringOps = append(stringOps, trimWhitespace)
 			}
-			if prep.Method == "upper" {
+			if prep.Method == METHOD_CLEAN_UPPER {
 				stringOps = append(stringOps, strings.ToUpper)
 			}
-			if prep.Method == "lower" {
+			if prep.Method == METHOD_CLEAN_LOWER {
 				stringOps = append(stringOps, strings.ToLower)
 			}
 		}
 		applyStringOperation(col, stringOps)
 
-		if prep.Op == "dummy" {
+		if prep.Op == OP_DUMMY {
 			if len(prep.ExcludeCols) > 0 && utils.Contains(prep.ExcludeCols, col.GetName()) {
 				continue
 			}

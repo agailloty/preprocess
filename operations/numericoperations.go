@@ -17,22 +17,22 @@ func applyOperationsOnNumericColumns(df *dataset.DataFrame, operations *[]config
 func applyNumericOperationsOnColumn(preprocessOps *[]config.PreprocessOp, col dataset.DataSetColumn, df *dataset.DataFrame) {
 	if preprocessOps != nil {
 		for _, prep := range *preprocessOps {
-			if prep.Op == "fillna" && prep.Method == "" && prep.Value != "" {
+			if prep.Op == OP_FILLNA && prep.Method == "" && prep.Value != "" {
 				replaceMissingValues(col, prep.Value)
-			} else if prep.Op == "fillna" && prep.Method != "" {
+			} else if prep.Op == OP_FILLNA && prep.Method != "" {
 				replaceMissingWithStats(col, prep.Method)
 			}
 
 			// Transform operation come after filling missing values
-			if prep.Op == "scale" {
-				if prep.Method == "zscore" {
+			if prep.Op == OP_SCALE {
+				if prep.Method == METHOD_SCALE_ZSCORE {
 					statistics.ScaleWithZscore(col, df)
-				} else if prep.Method == "minmax" {
+				} else if prep.Method == METHOD_SCALE_MINMAX {
 					statistics.ScaleWithMinMax(col, df)
 				}
 			}
 
-			if prep.Op == "discretize" && prep.Method == "binning" && prep.Bins != nil {
+			if prep.Op == OP_DISCRETIZE && prep.Method == METHOD_DISCRETIZE_BINNING && prep.Bins != nil {
 				makeBinsFromNumericColumns(col, prep.Bins, df, true)
 			}
 		}
