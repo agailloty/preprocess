@@ -1,10 +1,11 @@
 package config
 
 type PostProcessConfig struct {
-	DropColumns *[]string           `toml:"drop_columns,omitempty"`
-	SortDataset *SortDatasetColumns `toml:"sort_dataset,omitempty"`
-	Format      string              `toml:"format"`
-	FileName    string              `toml:"filename"`
+	DropColumns  *[]string           `toml:"drop_columns,omitempty"`
+	SortDataset  *SortDatasetColumns `toml:"sort_dataset,omitempty"`
+	Format       string              `toml:"format"`
+	FileName     string              `toml:"filename"`
+	DataSetSplit *DataSetSplit       `toml:"dataset_split"`
 }
 
 type SortDatasetColumns struct {

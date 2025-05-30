@@ -41,7 +41,11 @@ func DispatchOperations(prepfile *config.Prepfile) {
 		SortDatasetColumns(df, prepfile.PostProcess.SortDataset.Descending)
 	}
 
+	if prepfile.PostProcess.DataSetSplit != nil {
+		operateSplit(&df, prepfile.PostProcess.DataSetSplit)
+	}
 	ExportCsv(df, prepfile.PostProcess.FileName)
+
 }
 
 func findColumnConfig(columns []config.ColumnConfig, name string) (found bool, result config.ColumnConfig) {
