@@ -18,7 +18,9 @@ var rootCmd = &cobra.Command{
 	Short: PREPROCESS_SHORT_DESCRIPTION,
 	Long:  PREPROCESS_LONG_DESCRIPTION,
 	Run: func(cmd *cobra.Command, args []string) {
-		// Do Stuff Here
+		if len(args) == 0 {
+			cmd.Usage()
+		}
 	},
 }
 
