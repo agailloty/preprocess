@@ -142,7 +142,7 @@ Finished in : 254.9019ms
 Now you can open and explore the content of the fifa_stats.toml file. 
 Below is a subset of the fifa_stats.toml file. 
 
-```
+```toml
 [data]
 filename = '.\fifa_players.csv'
 csv_separator = ','
@@ -196,14 +196,122 @@ It will generate a HTML file that contains the summary statistics. You can use y
 
 As an example, you will have a web page that looks like the following : 
 
-![](fifa-analysis-assets/fifa_numeric_stats.PNG)
+![fifa numeric](assets/fifa_numeric_stats.PNG)
 
 The remaining statistics
 
-![](fifa-analysis-assets/fifa_remaining_stats.PNG)
+![fifa remaining data](assets/fifa_remaining_stats.PNG)
 
 **Goal 2 solved : I am able to explore summary statistics on numeric and text columns**
 
 ## Preprocessing the data 
 
-Now let's explore how to use preprocess CLI for data preprocessing. Let's suppose we want to preprocess the data so we can feed it later in a machine learning pipeline
+Now let's explore how to use preprocess CLI for data preprocessing. Let's suppose we want to preprocess the data so we can feed it later in a machine learning pipeline.
+
+### Introducting Prepfile
+
+If you have worked with tools such as Docker you'll notice that they give the user the ability to declare operations they wish to perform using simple files such as `Dockerfile` or `compose.yml`. 
+
+Preprocess CLI implements a similar idea with the Prepfile.toml
+
+With the `init` command you can use Preprocess CLI to generate a Prepfile. 
+The Prepfile contains three sections : 
+- Data section [data]
+- Preprocess section [preprocess]
+- Postprocess section [postprocess]
+
+In the data section you provide all necessary information to read the dataset on which you want to apply the operations. 
+The preprocess section contains the operations that will be applied on the dataset. 
+The postprocess section contains what to do after the preprocessing steps. 
+
+### Generate the Prepfile for this project
+
+Let's use the `init` command to generate a Prepfile for our dataset. 
+
+```
+preprocess init --help
+```
+
+```
+This command is used to generate a Prepfile in which you can specify the preprocessing computations either on specifics columns of the dataset or on whole numeric or text columns.
+
+Usage:
+  preprocess init [flags]
+
+Flags:
+  -d, --data string       Path to the dataset
+  -m, --dsep string       Decimal separator (default ".")
+  -e, --encoding string   Character encoding (default "utf-8")
+  -h, --help              help for init
+  -o, --output string     Output name for Prepfile (default "Prepfile.toml")
+  -s, --sep string        Separator for csv file (default ",")
+  -t, --template          Generate example Prepfile.toml template
+```
+
+```powershell
+preprocess init --data .\fifa_players.csv
+```
+
+If you provide only the `--data` flag it will default utf-8 for character encoding, `,` for csv separator and `.` for decimal separator. 
+
+The Prepfile can be quite long depending on the columns the dataset has. For brevity I show a truncated version of the Prepfile below. 
+
+```toml
+[data]
+filename = '.\fifa_players.csv'
+csv_separator = ','
+decimal_separator = '.'
+encoding = 'utf-8'
+missing_identifier = ''
+
+[preprocess]
+[[preprocess.columns]]
+name = 'short_name'
+type = 'string'
+
+[[preprocess.columns]]
+name = 'age'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'height_cm'
+type = 'int'
+
+
+[[preprocess.columns]]
+name = 'wage_eur'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'league_level'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'international_reputation'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'preferred_foot'
+type = 'string'
+
+[[preprocess.columns]]
+name = 'body_type'
+type = 'string'
+
+[postprocess]
+format = 'csv'
+filename = 'fifa_players_cleaned.csv'
+
+```
+
+With Prepfile I can apply operations on individual columns of the dataset. 
+For example if I want to fill the missing values of the column `wage_eur` with the mean value of the column (excluded missing values), I will do the following. 
+
+```toml
+[[preprocess.columns]]
+name = 'wage_eur'
+type = 'int'
+operations = [
+  {op = "fillna", method = "mean"}
+]
+```
