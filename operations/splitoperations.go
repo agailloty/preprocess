@@ -14,7 +14,7 @@ func splitUsingRandom(df *dataset.DataFrame, seed uint64, ratio float64, train s
 		test = df.Name + "_test"
 	}
 
-	s1, s2 := generateRandomSlices(df.RowsCount, seed, ratio)
+	s1, s2 := generateRandomSlices(df.RowsCount-1, seed, ratio)
 	result := make([]dataset.SplitSpec, 2)
 
 	result[0] = dataset.SplitSpec{Name: train, Rows: s1}

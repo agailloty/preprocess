@@ -56,7 +56,7 @@ func (d *DataFrame) writeCsv(filepath string, spec SplitSpec) error {
 	}
 
 	// Write rows
-	for i := range spec.Rows {
+	for _, i := range spec.Rows {
 		var row []string
 		for _, col := range d.Columns {
 			row = append(row, col.ValueAt(i))
