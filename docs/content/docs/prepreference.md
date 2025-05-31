@@ -35,7 +35,7 @@ The postprocess section contains what to do after the preprocessing steps.
 | Parameter | Default Value | Description |
 |---------|--------|------|
 | `filename` | N/A | The path to the dataset. This is a mandatory parameter. |
-| `csv_separator` | "," | Specify the separator used for reading the CSV file. Accepts any single character : `";"`, `"\t"`, `" "` |
+| `csv_separator` | N/A | Specify the separator used for reading the CSV file. Accepts any single character : `";"`, `"\t"`, `" "` |
 | `decimal_separator` | `"."` | Specify the decimal separator when reading the dataset. Possible values may include `","`, `"."` |
 | `encoding` | `"utf-8"` | Specify the character set encoding. Possible values are `"utf-8"`, `"latin-1"` |
 | `missing_identifier` | `""` | Specify how missing values are represented in the dataset. For most data it's empty `""` but some dataset may explicitly fill missing values with  `"NA"`, `"N/A"` ...  |
@@ -45,15 +45,7 @@ The postprocess section contains what to do after the preprocessing steps.
 
 ### [preprocess.numerics]
 
-{{< table "table-hover" >}}
-| Parameter | Default Value | Description |
-|---------|--------|------|
-| `op` | N/A | The name of the operations  |
-| `csv_separator` | "," | Specify the separator used for reading the CSV file. Accepts any single character : `";"`, `"\t"`, `" "` |
-| `decimal_separator` | `"."` | Specify the decimal separator when reading the dataset. Possible values may include `","`, `"."` |
-| `encoding` | `"utf-8"` | Specify the character set encoding. Possible values are `"utf-8"`, `"latin-1"` |
-| `missing_identifier` | `""` | Specify how missing values are represented in the dataset. For most data it's empty `""` but some dataset may explicitly fill missing values with  `"NA"`, `"N/A"` ...  |
-{{< /table >}}
+
 
 ### [preprocess.texts]
 
