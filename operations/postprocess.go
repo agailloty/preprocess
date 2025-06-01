@@ -30,7 +30,7 @@ func operateTrainTestSplit(df *dataset.DataFrame, split *config.DataSetSplit) {
 		ratio = *split.TrainTestSplitRatio
 	}
 
-	train, test := "", ""
+	train, test := df.Name+"_train", df.Name+"_test"
 
 	if split.SplitNames != nil {
 		if len(*split.SplitNames) != 2 {
@@ -44,4 +44,6 @@ func operateTrainTestSplit(df *dataset.DataFrame, split *config.DataSetSplit) {
 	}
 
 	df.SaveSplittedDataframeToCSV(splitFunc)
+
+	log.Printf("Successfully exported : %s and %s split", train, test)
 }

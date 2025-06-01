@@ -2,6 +2,7 @@ package operations
 
 import (
 	"cmp"
+	"log"
 	"slices"
 
 	"github.com/agailloty/preprocess/dataset"
@@ -31,4 +32,5 @@ func ExportCsv(df dataset.DataFrame, filename string) {
 	}
 
 	df.SaveToCSV(fileName, ",")
+	log.Printf("Successfully exported : %s", fileName)
 }

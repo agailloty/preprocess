@@ -1,8 +1,6 @@
 package operations
 
 import (
-	"log"
-
 	"github.com/agailloty/preprocess/config"
 	"github.com/agailloty/preprocess/dataset"
 	"github.com/agailloty/preprocess/statistics"
@@ -32,7 +30,6 @@ func applySingleNumericOperation(df *dataset.DataFrame, operation config.Preproc
 
 func dispatchDatasetNumericOperations(df *dataset.DataFrame, operations *[]config.PreprocessOp, excluded []string) {
 	if operations == nil {
-		log.Print("No preprocess operation applied.")
 		return
 	}
 	for _, column := range df.Columns {
@@ -53,7 +50,6 @@ func dispatchDatasetNumericOperations(df *dataset.DataFrame, operations *[]confi
 
 func dispatchColumnNumericOperations(df *dataset.DataFrame, column dataset.DataSetColumn, operations *[]config.PreprocessOp, excluded []string) {
 	if operations == nil {
-		log.Print("No preprocess operation applied.")
 		return
 	}
 	// Do not process excluded columns
