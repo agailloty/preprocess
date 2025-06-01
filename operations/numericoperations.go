@@ -1,41 +1,73 @@
 package operations
 
 import (
+	"log"
+
 	"github.com/agailloty/preprocess/config"
 	"github.com/agailloty/preprocess/dataset"
 	"github.com/agailloty/preprocess/statistics"
+	"github.com/agailloty/preprocess/utils"
 )
 
-func applyOperationsOnNumericColumns(df *dataset.DataFrame, operations *[]config.PreprocessOp) {
+func applySingleNumericOperation(df *dataset.DataFrame, operation config.PreprocessOp, col dataset.DataSetColumn) {
+	if operation.Op == OP_FILLNA && operation.Method == "" && operation.Value != "" {
+		replaceMissingValues(col, operation.Value)
+	} else if operation.Op == OP_FILLNA && operation.Method != "" {
+		replaceMissingWithStats(col, operation.Method)
+	}
+
+	// Transform operation come after filling missing values
+	if operation.Op == OP_SCALE {
+		if operation.Method == METHOD_SCALE_ZSCORE {
+			statistics.ScaleWithZscore(col, df)
+		} else if operation.Method == METHOD_SCALE_MINMAX {
+			statistics.ScaleWithMinMax(col, df)
+		}
+	}
+
+	if operation.Op == OP_DISCRETIZE && operation.Method == METHOD_DISCRETIZE_BINNING && operation.Bins != nil {
+		makeBinsFromNumericColumns(col, operation.Bins, df, true)
+	}
+}
+
+func dispatchDatasetNumericOperations(df *dataset.DataFrame, operations *[]config.PreprocessOp, excluded []string) {
+	if operations == nil {
+		log.Print("No preprocess operation applied.")
+		return
+	}
 	for _, column := range df.Columns {
-		if column.GetType() == "int" || column.GetType() == "float" {
-			applyNumericOperationsOnColumn(operations, column, df)
+		// Do not process excluded columns
+		if utils.Contains(excluded, column.GetName()) {
+			continue
+		}
+
+		if column.GetType() != "int" && column.GetType() != "float" {
+			continue
+		}
+
+		for _, op := range *operations {
+			applySingleNumericOperation(df, op, column)
 		}
 	}
 }
 
-func applyNumericOperationsOnColumn(preprocessOps *[]config.PreprocessOp, col dataset.DataSetColumn, df *dataset.DataFrame) {
-	if preprocessOps != nil {
-		for _, prep := range *preprocessOps {
-			if prep.Op == OP_FILLNA && prep.Method == "" && prep.Value != "" {
-				replaceMissingValues(col, prep.Value)
-			} else if prep.Op == OP_FILLNA && prep.Method != "" {
-				replaceMissingWithStats(col, prep.Method)
-			}
+func dispatchColumnNumericOperations(df *dataset.DataFrame, column dataset.DataSetColumn, operations *[]config.PreprocessOp, excluded []string) {
+	if operations == nil {
+		log.Print("No preprocess operation applied.")
+		return
+	}
+	// Do not process excluded columns
+	if utils.Contains(excluded, column.GetName()) {
+		return
+	}
 
-			// Transform operation come after filling missing values
-			if prep.Op == OP_SCALE {
-				if prep.Method == METHOD_SCALE_ZSCORE {
-					statistics.ScaleWithZscore(col, df)
-				} else if prep.Method == METHOD_SCALE_MINMAX {
-					statistics.ScaleWithMinMax(col, df)
-				}
-			}
+	// Process only numeric columns
+	if column.GetType() != "int" && column.GetType() != "float" {
+		return
+	}
 
-			if prep.Op == OP_DISCRETIZE && prep.Method == METHOD_DISCRETIZE_BINNING && prep.Bins != nil {
-				makeBinsFromNumericColumns(col, prep.Bins, df, true)
-			}
-		}
+	for _, op := range *operations {
+		applySingleNumericOperation(df, op, column)
 	}
 }
 

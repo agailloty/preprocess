@@ -1,5 +1,6 @@
 package config
 
 type DatasetOperations struct {
-	Operations *[]PreprocessOp `toml:"operations,omitempty"`
+	ExcludeCols []string        `toml:"exclude_columns"`
+	Operations  *[]PreprocessOp `toml:"operations,omitempty"`
 }

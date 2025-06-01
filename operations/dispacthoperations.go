@@ -11,19 +11,22 @@ func DispatchOperations(prepfile *config.Prepfile) {
 	df := dataset.ReadDataFrame(prepfile.Data)
 	log.Printf("Successfully read dataset %s \n", prepfile.Data.Filename)
 
+	if prepfile.Preprocess.NumericOperations != nil {
+		excluded := prepfile.Preprocess.NumericOperations.ExcludeCols
+		dispatchDatasetNumericOperations(&df, prepfile.Preprocess.NumericOperations.Operations, excluded)
+	}
+
+	if prepfile.Preprocess.TextOperations != nil {
+		applyOperationsOnTextColumns(&df, prepfile.Preprocess.TextOperations.Operations)
+	}
+
 	for _, col := range df.Columns {
-		if prepfile.Preprocess.NumericOperations != nil {
-			applyOperationsOnNumericColumns(&df, prepfile.Preprocess.NumericOperations.Operations)
-		}
-		if prepfile.Preprocess.TextOperations != nil {
-			applyOperationsOnTextColumns(&df, prepfile.Preprocess.TextOperations.Operations)
-		}
 		// If there are column specific operation
 		found, columnConfig := findColumnConfig(prepfile.Preprocess.Columns, col.GetName())
 		if found {
 			preprocessOps := columnConfig.Operations
 			if col.GetType() == "int" || col.GetType() == "float" {
-				applyNumericOperationsOnColumn(preprocessOps, col, &df)
+				dispatchColumnNumericOperations(&df, col, preprocessOps, []string{})
 			} else if col.GetType() == "string" {
 				applyTextOperationsOnColumn(&df, preprocessOps, col)
 			}
