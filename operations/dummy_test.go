@@ -1,6 +1,7 @@
 package operations
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/agailloty/preprocess/dataset"
@@ -29,5 +30,19 @@ func TestMakeDummy(t *testing.T) {
 	t.Run("Dummy with drop last returns  elements", func(t *testing.T) {
 		res := makeDummy(&countryCol, true, false, true)
 		assert.Equal(t, len(res), 3)
+	})
+
+	t.Run("Dummy without prefix does not affect new column names", func(t *testing.T) {
+		prefix := "Countries"
+		var results []bool
+		res := makeDummy(&countryCol, true, false, true)
+
+		for _, col := range res {
+			isPrefixed := !strings.HasPrefix(prefix, col.Name)
+			results = append(results, isPrefixed)
+		}
+		for _, v := range results {
+			assert.True(t, v)
+		}
 	})
 }
