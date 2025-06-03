@@ -38,11 +38,41 @@ func TestMakeDummy(t *testing.T) {
 		res := makeDummy(&countryCol, true, false, true)
 
 		for _, col := range res {
-			isPrefixed := !strings.HasPrefix(prefix, col.Name)
+			isPrefixed := !strings.HasPrefix(col.Name, prefix)
 			results = append(results, isPrefixed)
 		}
 		for _, v := range results {
 			assert.True(t, v)
 		}
 	})
+
+	t.Run("Dummy with prefix affect new column names", func(t *testing.T) {
+		prefix := "Countries"
+		var results []bool
+		res := makeDummy(&countryCol, false, true, true)
+
+		for _, col := range res {
+			isPrefixed := strings.HasPrefix(col.Name, prefix)
+			results = append(results, isPrefixed)
+		}
+		for _, v := range results {
+			assert.True(t, v)
+		}
+	})
+
+	t.Run("Number of ones equals number of rows", func(t *testing.T) {
+		res := makeDummy(&countryCol, false, true, true)
+		onesCount := 0
+
+		for _, col := range res {
+			for _, data := range col.Data {
+				if data.Value == 1 {
+					onesCount++
+				}
+			}
+		}
+
+		assert.Equal(t, onesCount, countryCol.Length())
+	})
+
 }
