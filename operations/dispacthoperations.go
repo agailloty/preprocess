@@ -11,6 +11,8 @@ func DispatchOperations(prepfile *config.Prepfile) {
 	df := dataset.ReadDataFrame(prepfile.Data)
 	log.Printf("Successfully read dataset %s \n", prepfile.Data.Filename)
 
+	operationStats := summarizeOperations(prepfile, &df)
+
 	if prepfile.Preprocess.NumericOperations != nil {
 		excluded := prepfile.Preprocess.NumericOperations.ExcludeCols
 		dispatchDatasetNumericOperations(&df, prepfile.Preprocess.NumericOperations.Operations, excluded)
@@ -49,6 +51,7 @@ func DispatchOperations(prepfile *config.Prepfile) {
 	}
 	ExportCsv(df, prepfile.PostProcess.FileName)
 
+	operationStats.logOperationStats()
 }
 
 func findColumnConfig(columns []config.ColumnConfig, name string) (found bool, result config.ColumnConfig) {
