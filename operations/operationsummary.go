@@ -34,7 +34,7 @@ func summarizeOperations(prepfile *config.Prepfile, df *dataset.DataFrame) opSum
 	// When operations are applied on whole numeric columns then we consider
 	// they are applied to each column individually except the columns marked as
 	// excluded
-	if prepfile.Preprocess.NumericOperations.Operations != nil {
+	if prepfile.Preprocess.NumericOperations != nil {
 		// Make sure excluded numeric columns really exist
 		excluded := []string{}
 		for _, colName := range prepfile.Preprocess.NumericOperations.ExcludeCols {
@@ -47,7 +47,7 @@ func summarizeOperations(prepfile *config.Prepfile, df *dataset.DataFrame) opSum
 		numericOperations = (nbNumericColums - len(excluded)) * nbDatasetNumericOps
 	}
 
-	if prepfile.Preprocess.TextOperations.Operations != nil {
+	if prepfile.Preprocess.TextOperations != nil {
 		excluded := []string{}
 		for _, colName := range prepfile.Preprocess.TextOperations.ExcludeCols {
 			if exists(df.Columns, colName, "string") {
