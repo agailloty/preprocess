@@ -23,20 +23,22 @@ func TestMakeDummy(t *testing.T) {
 	countryCol := dataset.String{Name: "Countries", Data: countries}
 
 	t.Run("Dummy without drop last returns 4 elements", func(t *testing.T) {
-		res := makeDummy(&countryCol, false, false, true)
+		err, res := makeDummy(&countryCol, false, false, true)
+		assert.NoError(t, err)
 		assert.Equal(t, len(res), 4)
 	})
 
 	t.Run("Dummy with drop last returns  elements", func(t *testing.T) {
-		res := makeDummy(&countryCol, true, false, true)
+		err, res := makeDummy(&countryCol, true, false, true)
+		assert.NoError(t, err)
 		assert.Equal(t, len(res), 3)
 	})
 
 	t.Run("Dummy without prefix does not affect new column names", func(t *testing.T) {
 		prefix := "Countries"
 		var results []bool
-		res := makeDummy(&countryCol, true, false, true)
-
+		err, res := makeDummy(&countryCol, true, false, true)
+		assert.NoError(t, err)
 		for _, col := range res {
 			isPrefixed := !strings.HasPrefix(col.Name, prefix)
 			results = append(results, isPrefixed)
@@ -49,8 +51,8 @@ func TestMakeDummy(t *testing.T) {
 	t.Run("Dummy with prefix affect new column names", func(t *testing.T) {
 		prefix := "Countries"
 		var results []bool
-		res := makeDummy(&countryCol, false, true, true)
-
+		err, res := makeDummy(&countryCol, false, true, true)
+		assert.NoError(t, err)
 		for _, col := range res {
 			isPrefixed := strings.HasPrefix(col.Name, prefix)
 			results = append(results, isPrefixed)
@@ -61,7 +63,8 @@ func TestMakeDummy(t *testing.T) {
 	})
 
 	t.Run("Number of ones equals number of rows", func(t *testing.T) {
-		res := makeDummy(&countryCol, false, true, true)
+		err, res := makeDummy(&countryCol, false, true, true)
+		assert.NoError(t, err)
 		onesCount := 0
 
 		for _, col := range res {

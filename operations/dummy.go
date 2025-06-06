@@ -1,40 +1,34 @@
 package operations
 
 import (
+	"errors"
 	"log"
 
 	"github.com/agailloty/preprocess/dataset"
 	"github.com/agailloty/preprocess/utils"
 )
 
-func addDummyToDataframe(df *dataset.DataFrame, col dataset.DataSetColumn, dropLast bool, prefixColName bool, continueWithTooMany bool) {
-	switch v := col.(type) {
-	case *dataset.String:
-		dummyCols := makeDummy(v, dropLast, prefixColName, continueWithTooMany)
-		for _, dummy := range dummyCols {
-			df.Columns = append(df.Columns, &dummy)
-		}
-		// Delete initial column in all case to avoid adding dummy multiple times
-		df.DeleteColumn(col)
+func makeDummy(specs dummyOperation) (error, []dataset.Integer) {
+	uniqueValues := utils.ExtractUniqueValues(specs.col.Data)
+
+	if specs.isExcluded {
+		return errors.New("EXCLUDED_COLUMN"), []dataset.Integer{}
 	}
-}
 
-func makeDummy(column *dataset.String, dropLast bool, prefixColName bool, continueWithTooMany bool) []dataset.Integer {
-	uniqueValues := utils.ExtractUniqueValues(column.Data)
-
-	if dropLast {
+	if specs.dropLast {
 		uniqueValues = uniqueValues[:len(uniqueValues)-1]
 	}
 
-	if len(uniqueValues) >= 500 && !continueWithTooMany {
-		log.Fatalf(`[Dummy operation] : There are too many values for %s. Total count : %d. Use exclude_columns = ["%s"] to exclude it.`, column.Name, len(uniqueValues), column.Name)
+	if len(uniqueValues) >= 500 && !specs.continueWithTooMany {
+		log.Fatalf(`[Dummy operation] : There are too many values for %s. Total count : %d. Use exclude_columns = ["%s"] to exclude it.`, specs.col.Name, len(uniqueValues), specs.col.Name)
+		return errors.New("DUMMY_TOO_MANY_VALUES"), []dataset.Integer{}
 	}
 
 	dummyCols := make([]dataset.Integer, len(uniqueValues))
 
 	for i, uniqueVal := range uniqueValues {
-		dummyCol := makeIntegerColumn(column.Name, uniqueVal.Key, column.Length(), prefixColName)
-		for idx, value := range column.Data {
+		dummyCol := makeIntegerColumn(specs.col.Name, uniqueVal.Key, specs.col.Length(), specs.prefixColName)
+		for idx, value := range specs.col.Data {
 			dummyValue := 0
 			if value.Value == uniqueVal.Key {
 				dummyValue = 1
@@ -45,7 +39,7 @@ func makeDummy(column *dataset.String, dropLast bool, prefixColName bool, contin
 		dummyCols[i] = dummyCol
 	}
 
-	return dummyCols
+	return nil, dummyCols
 }
 
 func makeIntegerColumn(colName string, modalityName string, length int, prefixName bool) dataset.Integer {

@@ -43,7 +43,7 @@ func applyTextOperationsOnColumn(df *dataset.DataFrame, preprocessOps *[]config.
 			if len(prep.ExcludeCols) > 0 && utils.Contains(prep.ExcludeCols, col.GetName()) {
 				continue
 			}
-			addDummyToDataframe(df, col, prep.DummyDropLast, prep.DummyPrefixColName, prep.DummyContinueWithTooManyValues)
+			//addDummyToDataframe(df, col, prep.DummyDropLast, prep.DummyPrefixColName, prep.DummyContinueWithTooManyValues)
 		}
 	}
 }
