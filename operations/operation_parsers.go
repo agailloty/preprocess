@@ -24,7 +24,7 @@ func parseOperations(ops []config.PreprocessOp, df *dataset.DataFrame, col datas
 			case *dataset.Integer:
 				operationRunners = append(operationRunners, parseNumericFillna(op, df, v))
 			case *dataset.String:
-				operationRunners = append(operationRunners, parseNumericFillna(op, df, v))
+				operationRunners = append(operationRunners, parseStringFillna(op, df, v))
 			}
 		}
 	}
