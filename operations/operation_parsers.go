@@ -16,6 +16,17 @@ func parseOperations(ops []config.PreprocessOp, df *dataset.DataFrame, col datas
 			}
 			operationRunners = append(operationRunners, parseDummy(op, df, strCol))
 		}
+
+		if op.Op == OP_FILLNA {
+			switch v := col.(type) {
+			case *dataset.Float:
+				operationRunners = append(operationRunners, parseNumericFillna(op, df, v))
+			case *dataset.Integer:
+				operationRunners = append(operationRunners, parseNumericFillna(op, df, v))
+			case *dataset.String:
+				operationRunners = append(operationRunners, parseNumericFillna(op, df, v))
+			}
+		}
 	}
 
 	return operationRunners
@@ -29,6 +40,33 @@ func parseDummy(op config.PreprocessOp, df *dataset.DataFrame, col *dataset.Stri
 		dropLast:            op.DummyDropLast,
 		prefixColName:       op.DummyPrefixColName,
 		continueWithTooMany: op.DummyContinueWithTooManyValues,
+	}
+
+	return parsedOp
+}
+
+func parseNumericFillna(op config.PreprocessOp, df *dataset.DataFrame, col dataset.DataSetColumn) fillnaNumericOperation {
+	value, ok := op.Value.(float64)
+
+	parsedOp := fillnaNumericOperation{
+		df:             df,
+		col:            col,
+		method:         op.Method,
+		value:          value,
+		isValueNumeric: ok,
+	}
+
+	return parsedOp
+}
+
+func parseStringFillna(op config.PreprocessOp, df *dataset.DataFrame, col *dataset.String) fillnaStringOperation {
+	value, _ := op.Value.(string)
+
+	parsedOp := fillnaStringOperation{
+		df:     df,
+		col:    col,
+		method: op.Method,
+		value:  value,
 	}
 
 	return parsedOp

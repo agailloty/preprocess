@@ -65,10 +65,10 @@ func DispatchOperations(prepfile *config.Prepfile) {
 			}
 		}
 
-		runAllOperations(operationRunners)
-
-		RenameColumn(col, prepfile.Preprocess.Columns)
+		//RenameColumn(col, prepfile.Preprocess.Columns)
 	}
+
+	runAllOperations(operationRunners)
 
 	if prepfile.PostProcess.DropColumns != nil {
 		for _, columnToDelete := range *prepfile.PostProcess.DropColumns {
