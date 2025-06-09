@@ -71,3 +71,13 @@ func parseStringFillna(op config.PreprocessOp, df *dataset.DataFrame, col *datas
 
 	return parsedOp
 }
+
+func parseRenameColumn(op config.ColumnConfig, df *dataset.DataFrame, col *dataset.DataSetColumn) renameOperation {
+	parsedOp := renameOperation{
+		df:      df,
+		col:     col,
+		newName: op.NewName,
+	}
+
+	return parsedOp
+}

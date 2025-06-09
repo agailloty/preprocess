@@ -54,18 +54,22 @@ func DispatchOperations(prepfile *config.Prepfile) {
 		found, columnConfig := findColumnConfig(prepfile.Preprocess.Columns, col.GetName())
 		if found {
 			preprocessOps := columnConfig.Operations
-			if col.GetType() == "int" || col.GetType() == "float" {
-				//dispatchColumnNumericOperations(&df, col, preprocessOps, []string{})
-				parsedOperations := parseOperations(*preprocessOps, &df, col)
-				operationRunners = append(operationRunners, parsedOperations...)
-			} else if col.GetType() == "string" {
-				//applyTextOperationsOnColumn(&df, preprocessOps, col)
-				parsedOperations := parseOperations(*preprocessOps, &df, col)
-				operationRunners = append(operationRunners, parsedOperations...)
+			if preprocessOps != nil {
+				if col.GetType() == "int" || col.GetType() == "float" {
+					//dispatchColumnNumericOperations(&df, col, preprocessOps, []string{})
+					parsedOperations := parseOperations(*preprocessOps, &df, col)
+					operationRunners = append(operationRunners, parsedOperations...)
+				} else if col.GetType() == "string" {
+					//applyTextOperationsOnColumn(&df, preprocessOps, col)
+					parsedOperations := parseOperations(*preprocessOps, &df, col)
+					operationRunners = append(operationRunners, parsedOperations...)
+				}
+			}
+
+			if columnConfig.NewName != "" {
+				operationRunners = append(operationRunners, parseRenameColumn(columnConfig, &df, &col))
 			}
 		}
-
-		//RenameColumn(col, prepfile.Preprocess.Columns)
 	}
 
 	runAllOperations(operationRunners)
