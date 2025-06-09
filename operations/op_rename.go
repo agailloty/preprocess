@@ -18,10 +18,6 @@ func (o renameOperation) run() []operationResult {
 	return results
 }
 
-func (o renameOperation) isIndependant() bool {
-	return true
-}
-
 func op_rename(specs renameOperation) operationResult {
 	if specs.newName == "" {
 		return operationResult{isSuccess: false, opErrors: []error{errors.New("NEW_NAME_EMPTY")}}

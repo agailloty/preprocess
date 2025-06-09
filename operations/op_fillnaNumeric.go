@@ -21,10 +21,6 @@ func (o fillnaNumericOperation) run() []operationResult {
 	return results
 }
 
-func (o fillnaNumericOperation) isIndependant() bool {
-	return true
-}
-
 func op_fillnaNumeric(specs fillnaNumericOperation) operationResult {
 
 	if specs.method == "" {

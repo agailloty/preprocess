@@ -34,7 +34,3 @@ func (o fillnaStringOperation) run() []operationResult {
 	results = append(results, op_fillnaString(o))
 	return results
 }
-
-func (o fillnaStringOperation) isIndependant() bool {
-	return true
-}

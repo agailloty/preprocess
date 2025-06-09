@@ -32,7 +32,3 @@ func (o dummyOperation) run() []operationResult {
 	results = append(results, op_dummy(o))
 	return results
 }
-
-func (o dummyOperation) isIndependant() bool {
-	return true
-}
