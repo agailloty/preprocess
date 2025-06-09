@@ -1,0 +1,214 @@
+[data]
+filename = '.\fifa_players.csv'
+csv_separator = ','
+decimal_separator = '.'
+encoding = 'utf-8'
+missing_identifier = ''
+
+[preprocess]
+[[preprocess.columns]]
+name = 'short_name'
+type = 'string'
+operations = [
+    {op = "clean", method = "upper"},
+    {op = "clean", method = "cleanws"}
+]
+
+[[preprocess.columns]]
+name = 'age'
+type = 'int'
+operations = [
+    {op = "scale", method = "zscore"}
+]
+
+[[preprocess.columns]]
+name = 'height_cm'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'weight_kg'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'shooting'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'passing'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'dribbling'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'defending'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'physic'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'attacking_crossing'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'attacking_finishing'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'attacking_heading_accuracy'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'attacking_short_passing'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'attacking_volleys'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'skill_dribbling'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'skill_curve'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'skill_fk_accuracy'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'skill_long_passing'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'skill_ball_control'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'movement_acceleration'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'movement_sprint_speed'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'movement_agility'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'movement_reactions'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'movement_balance'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'power_shot_power'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'power_jumping'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'power_stamina'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'power_strength'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'power_long_shots'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'mentality_aggression'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'mentality_interceptions'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'mentality_positioning'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'mentality_vision'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'mentality_penalties'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'mentality_composure'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'defending_marking_awareness'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'defending_standing_tackle'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'defending_sliding_tackle'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'goalkeeping_diving'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'goalkeeping_handling'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'goalkeeping_reflexes'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'overall'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'potential'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'value_eur'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'wage_eur'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'league_level'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'international_reputation'
+type = 'int'
+
+[[preprocess.columns]]
+name = 'preferred_foot'
+type = 'string'
+
+[[preprocess.columns]]
+name = 'body_type'
+type = 'string'
+
+[postprocess]
+format = 'csv'
+filename = 'fifa_players_cleaned.csv'
