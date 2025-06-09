@@ -1,32 +1,33 @@
-## Implemented Functionalities
+preprocess is a fast cross-platform data analysis preprocessing tool.
 
-The following functionalities have been implemented so far:
+## Installation
 
-### 🔹 1. **Data Cleaning**
-- ✅ **Handle Missing Values**:
-  - ✅ Replace missing values with mean and median (`156d457`).
-  - ✅ Replace missing values with static data (`fb1d351`).
+Install the [preprocess CLI](https://github.com/agailloty/preprocess/releases/latest), using the specific instructions for your operating system below:
 
-### 🔹 2. **Encoding Categorical Variables**
+### Linux and MacOs"
+
+Use `curl` to download the script and execute it with sh:
+
+```sh
+curl -LsSf https://preprocess-cli.netlify.app/install.sh | sh
+```
+
+If your system doesn't have `curl`, you can use wget:
+
+```sh
+wget -qO- https://preprocess-cli.netlify.app/install.sh | sh
+```
+
+### Windows"
 
 
-### 🔹 3. **Feature Transformation**
-- ✅ **Normalization (Min-Max Scaling)**: Added scaling operation with Min-Max (`fb11c65`).
-- ✅ **Standardization (Z-score Scaling)**: Normalize column with Z-score (`6bb2be0`).
-
-### 🔹 4. **Dimensionality Reduction**
+```sh
+powershell -ExecutionPolicy ByPass -c "irm https://preprocess-cli.netlify.app/install.ps1 | iex"
+```
 
 
-### 🔹 5. **Feature Engineering**
-- ✅ **Sorting Dataset**: Implemented sorting dataset in ascending and descending order (`3b5781c`).
-- ✅ **Rename Operation**: Implemented rename operation (`7893ad6`).
+### Manual Installation
 
-### 🔹 6. **Handling Imbalanced Data**
+The preprocess GitHub repository contains pre-built versions of the preprocess command-line tool for various operating systems, which can be found on the [Releases page](https://github.com/agailloty/preprocess/releases/latest)
 
-### 🔹 7. **Text Preprocessing**
-
-### 🔹 8. **Other Advanced Techniques**
-- ✅ **Export Dataset**: Export using provided file path (`9ef9327`).
-- ✅ **Generate Prepfile**: Added a way to generate Prepfile (`f9624dd`, `759e3d3`).
-- ✅ **Read Dataset**: Read dataset from provided Prepfile (`79191cb`).
-- ✅ **Guess Column Types**: Guess column types and print column name, type, and sample (`382235f`, `20f4cdd`, `c63de16`).
+At the release section, download the release for your operating system. You may need to set the environment variable to the location where you save the binary so you can call `preprocess` from any terminal on your computer. 
