@@ -27,6 +27,11 @@ func parseOperations(ops []config.PreprocessOp, df *dataset.DataFrame, col datas
 				operationRunners = append(operationRunners, parseStringFillna(op, df, v))
 			}
 		}
+
+		if op.Op == OP_DISCRETIZE && op.Method == METHOD_DISCRETIZE_BINNING && op.Bins != nil {
+			operationRunners = append(operationRunners, parseBins(op, df, &col))
+		}
+
 	}
 
 	return operationRunners
@@ -80,4 +85,14 @@ func parseRenameColumn(op config.ColumnConfig, df *dataset.DataFrame, col *datas
 	}
 
 	return parsedOp
+}
+
+func parseBins(op config.PreprocessOp, df *dataset.DataFrame, col *dataset.DataSetColumn) binOperation {
+	parsedOps := binOperation{
+		df:             df,
+		col:            col,
+		bins:           op.Bins,
+		overrideColumn: true,
+	}
+	return parsedOps
 }

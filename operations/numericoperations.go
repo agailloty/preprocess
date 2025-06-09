@@ -22,10 +22,6 @@ func applySingleNumericOperation(df *dataset.DataFrame, operation config.Preproc
 			statistics.ScaleWithMinMax(col, df)
 		}
 	}
-
-	if operation.Op == OP_DISCRETIZE && operation.Method == METHOD_DISCRETIZE_BINNING && operation.Bins != nil {
-		makeBinsFromNumericColumns(col, operation.Bins, df, true)
-	}
 }
 
 func dispatchDatasetNumericOperations(df *dataset.DataFrame, operations *[]config.PreprocessOp, excluded []string) {
@@ -64,59 +60,5 @@ func dispatchColumnNumericOperations(df *dataset.DataFrame, column dataset.DataS
 
 	for _, op := range *operations {
 		applySingleNumericOperation(df, op, column)
-	}
-}
-
-func makeBinsFromNumericColumns(column dataset.DataSetColumn, bins []config.BinningOperation, df *dataset.DataFrame, overrideColumn bool) {
-	binData := make([]dataset.Nullable[string], column.Length())
-
-	switch v := column.(type) {
-	case *dataset.Float:
-		for i, val := range v.Data {
-			binFound := false
-			for _, bin := range bins {
-				if val.Value >= bin.Lower && val.Value <= bin.Upper {
-					binData[i] = dataset.Nullable[string]{IsValid: true, Value: bin.Label}
-					binFound = true
-					break
-				}
-				if !binFound {
-					binData[i] = dataset.Nullable[string]{IsValid: true, Value: column.ValueAt(i)}
-				}
-			}
-		}
-	case *dataset.Integer:
-		for i, val := range v.Data {
-			binFound := false
-			for _, bin := range bins {
-				if float64(val.Value) >= bin.Lower && float64(val.Value) <= bin.Upper {
-					binData[i] = dataset.Nullable[string]{IsValid: true, Value: bin.Label}
-					binFound = true
-					break
-				}
-				if !binFound {
-					binData[i] = dataset.Nullable[string]{IsValid: true, Value: column.ValueAt(i)}
-				}
-			}
-		}
-	}
-
-	columnName := column.GetName()
-	if !overrideColumn {
-		columnName = columnName + "_C"
-	}
-	binnedColumn := dataset.String{
-		Name: columnName,
-		Data: binData,
-	}
-
-	if overrideColumn {
-		for i := range df.Columns {
-			if df.Columns[i].GetName() == columnName {
-				df.Columns[i] = &binnedColumn
-			}
-		}
-	} else {
-		df.Columns = append(df.Columns, &binnedColumn)
 	}
 }
