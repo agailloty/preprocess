@@ -9,5 +9,6 @@ const (
 	METHOD_CLEAN_TRIMWS       = "trimws"
 	METHOD_CLEAN_UPPER        = "upper"
 	METHOD_CLEAN_LOWER        = "lower"
+	METHOD_CLEAN_TITLE        = "title"
 	METHOD_TRAIN_TEST_SPLIT   = "train_test_split"
 )

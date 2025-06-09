@@ -1,6 +1,8 @@
 package operations
 
 import (
+	"strings"
+
 	"github.com/agailloty/preprocess/config"
 	"github.com/agailloty/preprocess/dataset"
 	"github.com/agailloty/preprocess/utils"
@@ -30,6 +32,14 @@ func parseOperations(ops []config.PreprocessOp, df *dataset.DataFrame, col datas
 
 		if op.Op == OP_DISCRETIZE && op.Method == METHOD_DISCRETIZE_BINNING && op.Bins != nil {
 			operationRunners = append(operationRunners, parseBins(op, df, &col))
+		}
+
+		if op.Op == OP_CLEAN && op.Method != "" {
+			strCol, ok := col.(*dataset.String)
+			if !ok {
+				continue
+			}
+			operationRunners = append(operationRunners, parseClean(op, df, strCol))
 		}
 
 	}
@@ -95,4 +105,31 @@ func parseBins(op config.PreprocessOp, df *dataset.DataFrame, col *dataset.DataS
 		overrideColumn: true,
 	}
 	return parsedOps
+}
+
+func parseClean(op config.PreprocessOp, df *dataset.DataFrame, col *dataset.String) cleanOperation {
+	var cleanFunc stringFuction
+
+	if op.Method == METHOD_CLEAN_TRIMWS {
+		cleanFunc = trimWhitespace
+	}
+	if op.Method == METHOD_CLEAN_LOWER {
+		cleanFunc = strings.ToLower
+	}
+
+	if op.Method == METHOD_CLEAN_UPPER {
+		cleanFunc = strings.ToUpper
+	}
+
+	if op.Method == METHOD_CLEAN_TITLE {
+		cleanFunc = strings.ToTitle
+	}
+
+	parsedOp := cleanOperation{
+		df:        df,
+		col:       col,
+		cleanFunc: cleanFunc,
+	}
+
+	return parsedOp
 }
