@@ -8,11 +8,11 @@ import (
 	"github.com/agailloty/preprocess/utils"
 )
 
-func makeDummy(specs dummyOperation) (error, []dataset.Integer) {
+func makeDummy(specs dummyOperation) ([]dataset.Integer, error) {
 	uniqueValues := utils.ExtractUniqueValues(specs.col.Data)
 
 	if specs.isExcluded {
-		return errors.New("EXCLUDED_COLUMN"), []dataset.Integer{}
+		return []dataset.Integer{}, errors.New("EXCLUDED_COLUMN")
 	}
 
 	if specs.dropLast {
@@ -21,7 +21,7 @@ func makeDummy(specs dummyOperation) (error, []dataset.Integer) {
 
 	if len(uniqueValues) >= 500 && !specs.continueWithTooMany {
 		log.Fatalf(`[Dummy operation] : There are too many values for %s. Total count : %d. Use exclude_columns = ["%s"] to exclude it.`, specs.col.Name, len(uniqueValues), specs.col.Name)
-		return errors.New("DUMMY_TOO_MANY_VALUES"), []dataset.Integer{}
+		return []dataset.Integer{}, errors.New("DUMMY_TOO_MANY_VALUES")
 	}
 
 	dummyCols := make([]dataset.Integer, len(uniqueValues))
@@ -39,7 +39,7 @@ func makeDummy(specs dummyOperation) (error, []dataset.Integer) {
 		dummyCols[i] = dummyCol
 	}
 
-	return nil, dummyCols
+	return dummyCols, nil
 }
 
 func makeIntegerColumn(colName string, modalityName string, length int, prefixName bool) dataset.Integer {
