@@ -9,7 +9,6 @@ import (
 )
 
 func TestMakeDummy(t *testing.T) {
-
 	countries := []dataset.Nullable[string]{
 		{Value: "Japan", IsValid: true},
 		{Value: "France", IsValid: true},
@@ -22,22 +21,30 @@ func TestMakeDummy(t *testing.T) {
 
 	countryCol := dataset.String{Name: "Countries", Data: countries}
 
+	df := dataset.DataFrame{Columns: []dataset.DataSetColumn{&countryCol}}
+
+	dummyOp := dummyOperation{df: &df, col: &countryCol, dropLast: false, prefixColName: false}
+
 	t.Run("Dummy without drop last returns 4 elements", func(t *testing.T) {
-		err, res := makeDummy(&countryCol, false, false, true)
+		res, err := makeDummy(dummyOp)
 		assert.NoError(t, err)
 		assert.Equal(t, len(res), 4)
 	})
 
+	dummyOp = dummyOperation{df: &df, col: &countryCol, dropLast: true, prefixColName: false}
+
 	t.Run("Dummy with drop last returns  elements", func(t *testing.T) {
-		err, res := makeDummy(&countryCol, true, false, true)
+		res, err := makeDummy(dummyOp)
 		assert.NoError(t, err)
 		assert.Equal(t, len(res), 3)
 	})
 
+	dummyOp = dummyOperation{df: &df, col: &countryCol, dropLast: true, prefixColName: false}
+
 	t.Run("Dummy without prefix does not affect new column names", func(t *testing.T) {
 		prefix := "Countries"
 		var results []bool
-		err, res := makeDummy(&countryCol, true, false, true)
+		res, err := makeDummy(dummyOp)
 		assert.NoError(t, err)
 		for _, col := range res {
 			isPrefixed := !strings.HasPrefix(col.Name, prefix)
@@ -48,10 +55,12 @@ func TestMakeDummy(t *testing.T) {
 		}
 	})
 
+	dummyOp = dummyOperation{df: &df, col: &countryCol, dropLast: true, prefixColName: true}
+
 	t.Run("Dummy with prefix affect new column names", func(t *testing.T) {
 		prefix := "Countries"
 		var results []bool
-		err, res := makeDummy(&countryCol, false, true, true)
+		res, err := makeDummy(dummyOp)
 		assert.NoError(t, err)
 		for _, col := range res {
 			isPrefixed := strings.HasPrefix(col.Name, prefix)
@@ -62,8 +71,10 @@ func TestMakeDummy(t *testing.T) {
 		}
 	})
 
+	dummyOp = dummyOperation{df: &df, col: &countryCol, dropLast: false, prefixColName: true}
+
 	t.Run("Number of ones equals number of rows", func(t *testing.T) {
-		err, res := makeDummy(&countryCol, false, true, true)
+		res, err := makeDummy(dummyOp)
 		assert.NoError(t, err)
 		onesCount := 0
 

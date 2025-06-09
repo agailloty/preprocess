@@ -14,7 +14,7 @@ type dummyOperation struct {
 }
 
 func op_dummy(specs dummyOperation) operationResult {
-	err, dummyCols := makeDummy(specs)
+	dummyCols, err := makeDummy(specs)
 	if err != nil {
 		return operationResult{isSuccess: false, opErrors: []error{err}}
 	}
