@@ -42,6 +42,13 @@ func parseOperations(ops []config.PreprocessOp, df *dataset.DataFrame, col datas
 			operationRunners = append(operationRunners, parseClean(op, df, strCol))
 		}
 
+		if op.Op == OP_GROUP && len(op.Options) > 0 {
+			strCol, ok := col.(*dataset.String)
+			if !ok {
+				continue
+			}
+			operationRunners = append(operationRunners, parseGroup(op, df, strCol))
+		}
 	}
 
 	return operationRunners
@@ -132,4 +139,14 @@ func parseClean(op config.PreprocessOp, df *dataset.DataFrame, col *dataset.Stri
 	}
 
 	return parsedOp
+}
+
+func parseGroup(op config.PreprocessOp, df *dataset.DataFrame, col *dataset.String) groupOperation {
+	parsedOps := groupOperation{
+		df:      df,
+		col:     col,
+		options: op.Options,
+	}
+
+	return parsedOps
 }
