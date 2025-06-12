@@ -16,7 +16,7 @@ func SummaryHtml(summary SummaryFile, filename string) {
 		},
 	}).Parse(htmlTemplate))
 
-	f, err := os.Create("rapport.html")
+	f, err := os.Create(filename)
 	if err != nil {
 		panic(err)
 	}

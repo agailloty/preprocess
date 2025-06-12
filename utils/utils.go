@@ -1,10 +1,13 @@
 package utils
 
 import (
+	"fmt"
 	"log"
 	"maps"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"runtime"
 	"slices"
 	"strings"
 
@@ -89,4 +92,25 @@ func ExtractUniqueValues(data []dataset.Nullable[string]) []common.ValueKeyCount
 	unique := slices.Collect(maps.Values(summary))
 
 	return unique
+}
+
+func OpenBrowser(url string) error {
+	var cmd string
+	var args []string
+
+	switch runtime.GOOS {
+	case "linux":
+		cmd = "xdg-open"
+		args = []string{url}
+	case "windows":
+		cmd = "rundll32"
+		args = []string{"url.dll,FileProtocolHandler", url}
+	case "darwin":
+		cmd = "open"
+		args = []string{url}
+	default:
+		return fmt.Errorf("système d'exploitation non supporté")
+	}
+
+	return exec.Command(cmd, args...).Start()
 }

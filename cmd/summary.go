@@ -71,7 +71,9 @@ func summarizeDataset(cmd *cobra.Command, args []string) {
 	utils.SerializeStruct(summaryFile, outputFile)
 
 	if makeHtml {
-		summary.SummaryHtml(summaryFile, "report.html")
+		htmlFilename := dataframe.Name + "_report.html"
+		summary.SummaryHtml(summaryFile, htmlFilename)
+		utils.OpenBrowser(htmlFilename)
 	}
 
 	log.Printf("Finished in : %s\n", time.Since(start))
