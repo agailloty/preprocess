@@ -6,12 +6,16 @@ import (
 )
 
 type DatasetDiff struct {
-	AddedColumns       []dataset.DataSetColumn
-	RemovedColumns     []dataset.DataSetColumn
-	AlteredColumns     []dataset.DataSetColumn
-	IdenticalColumns   []dataset.DataSetColumn
-	StringColumnDiffs  []StringColumnDiff
-	NumericColumnDiffs []NumericColumnDiff
+	AddedColumns     []dataset.DataSetColumn
+	RemovedColumns   []dataset.DataSetColumn
+	AlteredColumns   []AlteredColumn
+	IdenticalColumns []dataset.DataSetColumn
+}
+
+type AlteredColumn struct {
+	SourceColumn       dataset.DataSetColumn
+	StringColumnDiff   StringColumnDiff
+	NumericColumnDiffs NumericColumnDiff
 }
 
 type StringColumnDiff struct {
@@ -38,17 +42,16 @@ func ComputeDiffs(baseDf *dataset.DataFrame, newDf *dataset.DataFrame) DatasetDi
 		}
 	}
 
-	var alteredColumns []dataset.DataSetColumn
-	var stringColumnDiffs []StringColumnDiff
+	var alteredColumns []AlteredColumn
 	var identicalColumns []dataset.DataSetColumn
 	for _, column := range newDf.Columns {
 		baseCol := baseDf.GetColumn(column)
 		if baseCol != nil && isColumnDifferent(baseCol, column) {
-			alteredColumns = append(alteredColumns, column)
 			newDfColumn, ok := column.(*dataset.String)
 			if ok {
-				baseDfColumn, _ := column.(*dataset.String)
-				stringColumnDiffs = append(stringColumnDiffs, getStringColumnDiff(baseDfColumn, newDfColumn))
+				baseDfColumn, _ := baseCol.(*dataset.String)
+				alteredColumn := AlteredColumn{SourceColumn: baseDfColumn, StringColumnDiff: getStringColumnDiff(baseDfColumn, newDfColumn)}
+				alteredColumns = append(alteredColumns, alteredColumn)
 			}
 		} else if baseCol != nil && !isColumnDifferent(baseCol, column) {
 			identicalColumns = append(identicalColumns, baseCol)
@@ -56,30 +59,18 @@ func ComputeDiffs(baseDf *dataset.DataFrame, newDf *dataset.DataFrame) DatasetDi
 	}
 
 	return DatasetDiff{
-		AddedColumns:      addedColumns,
-		RemovedColumns:    removedColumns,
-		AlteredColumns:    alteredColumns,
-		StringColumnDiffs: stringColumnDiffs,
-		IdenticalColumns:  identicalColumns,
+		AddedColumns:     addedColumns,
+		RemovedColumns:   removedColumns,
+		AlteredColumns:   alteredColumns,
+		IdenticalColumns: identicalColumns,
 	}
 }
 
 func getStringColumnDiff(base *dataset.String, new *dataset.String) StringColumnDiff {
 	added, removed := utils.GetDiff(base.Data, new.Data)
-	addedValues := make([]string, len(added))
-	removedValues := make([]string, len(removed))
-
-	for i, v := range added {
-		addedValues[i] = v.Value
-	}
-
-	for i, v := range removed {
-		removedValues[i] = v.Value
-	}
-
 	return StringColumnDiff{
-		RemovedValues: removedValues,
-		AddedValues:   addedValues,
+		RemovedValues: removed,
+		AddedValues:   added,
 	}
 }
 

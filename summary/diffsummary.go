@@ -38,8 +38,10 @@ func GenerateDiffSummary(source *dataset.DataFrame, target *dataset.DataFrame) D
 
 	for _, diffColumn := range dfDiff.AlteredColumns {
 		for _, colSummary := range targetSummary.Columns {
-			if diffColumn.GetName() == colSummary.Name && diffColumn.GetType() == colSummary.Type {
+			if diffColumn.SourceColumn.GetName() == colSummary.Name && diffColumn.SourceColumn.GetType() == colSummary.Type {
 				colSummary.IsAltered = true
+				colSummary.AddedStringValues = diffColumn.StringColumnDiff.AddedValues
+				colSummary.RemovedStringValues = diffColumn.StringColumnDiff.RemovedValues
 				colSummaries = append(colSummaries, colSummary)
 			}
 		}

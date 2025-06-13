@@ -76,29 +76,21 @@ func Contains[T comparable](slice []T, val T) bool {
 	return false
 }
 
-func GetDiff[T comparable](a, b []T) (plus, minus []T) {
-	mapA := make(map[T]bool)
-	mapB := make(map[T]bool)
+func GetDiff(source, target []dataset.Nullable[string]) (plus, minus []string) {
+	uniqueSource := ExtractUniqueValues(source)
+	uniqueTarget := ExtractUniqueValues(target)
 
-	for _, v := range a {
-		mapA[v] = true
-	}
-	for _, v := range b {
-		mapB[v] = true
-	}
-
-	for v := range mapB {
-		if !mapA[v] {
-			plus = append(plus, v)
+	for _, val := range uniqueTarget {
+		if !Contains(uniqueSource, val) {
+			plus = append(plus, val.Key)
 		}
 	}
 
-	for v := range mapA {
-		if !mapB[v] {
-			minus = append(minus, v)
+	for _, val := range uniqueSource {
+		if !Contains(uniqueTarget, val) {
+			minus = append(minus, val.Key)
 		}
 	}
-
 	return
 }
 
