@@ -30,3 +30,22 @@ func ToJSON(v interface{}) template.JS {
 	a, _ := json.Marshal(v)
 	return template.JS(a)
 }
+
+func DiffHtml(diff DiffSummary, filename string) {
+
+	tmpl := template.Must(template.New("diff").Funcs(template.FuncMap{
+		"toJson": func(v interface{}) template.JS {
+			a, _ := json.Marshal(v)
+			return template.JS(a)
+		},
+	}).Parse(diffTemplate))
+
+	f, err := os.Create(filename)
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+
+	tmpl.Execute(f, diff)
+
+}

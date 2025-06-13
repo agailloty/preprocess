@@ -37,7 +37,8 @@ func computeDiff(cmd *cobra.Command, args []string) {
 	target := dataset.ReadDataFrame(common.DataSpecs{Filename: targetdata,
 		CsvSeparator:     csvseparator,
 		DecimalSeparator: decimalSeparator})
-	summary.GenerateDiffSummary(&source, &target)
+	diff := summary.GenerateDiffSummary(&source, &target)
+	summary.DiffHtml(diff, "htmldiff.html")
 	elapsed := time.Since(start)
 	log.Printf("Finished preprocessing in : %s\n", elapsed)
 }
