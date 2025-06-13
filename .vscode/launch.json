@@ -48,6 +48,14 @@
         "mode": "debug",
         "program": "${workspaceFolder}/main.go",
         "args": ["init", "--data", "barometre-du-numerique-2024.csv", "--sep", ";"]
+      },
+            {
+        "name": "diff",
+        "type": "go",
+        "request": "launch",
+        "mode": "debug",
+        "program": "${workspaceFolder}/main.go",
+        "args": ["diff", "--source", "mental_health_survey.csv", "--target", "mental_health_survey_cleaned.csv", "--sep", ","]
       }
     ]
   }

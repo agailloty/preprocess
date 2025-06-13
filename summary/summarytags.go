@@ -22,6 +22,12 @@ type ColumnSummary struct {
 	UniqueValueCount    int                    `toml:"unique_count,omitempty"`
 	UniqueValues        []string               `toml:"unique_values,omitempty"`
 	UniqueValuesSummary []common.ValueKeyCount `toml:"summary,inline,omitempty"`
+	IsDeleted           bool
+	IsAdded             bool
+	IsAltered           bool
+	IsIdentical         bool
+	AddedStringValues   []string
+	RemovedStringValues []string
 
 	Min     float64 `toml:"min,omitempty"`
 	Mean    float64 `toml:"mean,omitempty"`

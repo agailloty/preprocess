@@ -85,6 +85,30 @@ func (d DataFrame) SaveToCSV(filepath string, sep string) error {
 	return nil
 }
 
+// If name and type match then we consider it's the same column
+func (d *DataFrame) ColumnExists(column DataSetColumn) (found bool) {
+	for _, col := range d.Columns {
+		if col.GetName() == column.GetName() && col.GetType() == column.GetType() {
+			found = true
+			break
+		}
+	}
+
+	return found
+}
+
+func (d *DataFrame) GetColumn(column DataSetColumn) DataSetColumn {
+	var foundColumn DataSetColumn
+	for _, col := range d.Columns {
+		if col.GetName() == column.GetName() && col.GetType() == column.GetType() {
+			foundColumn = col
+			break
+		}
+	}
+
+	return foundColumn
+}
+
 func (d *DataFrame) DeleteColumn(column DataSetColumn) {
 	found, index := findIndex(d.Columns, column)
 	if found {
