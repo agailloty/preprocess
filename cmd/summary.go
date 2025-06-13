@@ -15,6 +15,7 @@ import (
 var summaryOutput string
 var makeHtml bool
 var excludedColumns []string
+var nobrowser bool
 
 var summaryCmd = &cobra.Command{
 	Use:   "summary",
@@ -70,7 +71,9 @@ func summarizeDataset(cmd *cobra.Command, args []string) {
 	if makeHtml {
 		htmlFilename := dataframe.Name + "_report.html"
 		summary.SummaryHtml(summaryFile, htmlFilename)
-		utils.OpenBrowser(htmlFilename)
+		if !nobrowser {
+			utils.OpenBrowser(htmlFilename)
+		}
 	} else {
 		outputFile := getOutputFile()
 		utils.SerializeStruct(summaryFile, outputFile)
@@ -86,5 +89,6 @@ func init() {
 	setPrepfileFlag(summaryCmd)
 	summaryCmd.Flags().StringVarP(&summaryOutput, "output", "o", "Summaryfile.toml", "Output name for Summaryfile")
 	summaryCmd.Flags().BoolVarP(&makeHtml, "html", "t", false, "Generate HTML file")
+	summaryCmd.Flags().BoolVarP(&nobrowser, "no-browser", "b", false, "Do not launch the browser")
 	summaryCmd.Flags().StringArrayVar(&excludedColumns, "exclude", excludedColumns, "Exclude columns from summary")
 }
