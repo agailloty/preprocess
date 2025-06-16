@@ -7,6 +7,7 @@ import (
 	"github.com/agailloty/preprocess/common"
 	"github.com/agailloty/preprocess/dataset"
 	"github.com/agailloty/preprocess/summary"
+	"github.com/agailloty/preprocess/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -39,6 +40,9 @@ func computeDiff(cmd *cobra.Command, args []string) {
 		DecimalSeparator: decimalSeparator})
 	diff := summary.GenerateDiffSummary(&source, &target)
 	summary.DiffHtml(diff, "htmldiff.html")
+	if !nobrowser {
+		utils.OpenBrowser("htmldiff.html")
+	}
 	elapsed := time.Since(start)
 	log.Printf("Finished preprocessing in : %s\n", elapsed)
 }
