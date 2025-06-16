@@ -16,6 +16,7 @@ type DiffSummary struct {
 func GenerateDiffSummary(source *dataset.DataFrame, target *dataset.DataFrame) DiffSummary {
 	dfDiff := ComputeDiffs(source, target)
 	targetSummary := GetSummaryFile(*target, []string{})
+	sourceSummary := GetSummaryFile(*source, []string{})
 	var colSummaries []ColumnSummary
 
 	for _, diffColumn := range dfDiff.AddedColumns {
@@ -28,7 +29,7 @@ func GenerateDiffSummary(source *dataset.DataFrame, target *dataset.DataFrame) D
 	}
 
 	for _, diffColumn := range dfDiff.RemovedColumns {
-		for _, colSummary := range targetSummary.Columns {
+		for _, colSummary := range sourceSummary.Columns {
 			if diffColumn.GetName() == colSummary.Name && diffColumn.GetType() == colSummary.Type {
 				colSummary.IsDeleted = true
 				colSummaries = append(colSummaries, colSummary)
