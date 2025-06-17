@@ -46,15 +46,25 @@ func ComputeDiffs(baseDf *dataset.DataFrame, newDf *dataset.DataFrame) DatasetDi
 	var identicalColumns []dataset.DataSetColumn
 	for _, column := range newDf.Columns {
 		baseCol := baseDf.GetColumn(column)
-		if baseCol != nil && isColumnDifferent(baseCol, column) {
+		if baseCol == nil {
+			baseCol = newDf.GetColumn(column)
+		}
+		if baseCol.GetType() == "string" && isColumnDifferent(baseCol, column) {
 			newDfColumn, ok := column.(*dataset.String)
 			if ok {
 				baseDfColumn, _ := baseCol.(*dataset.String)
 				alteredColumn := AlteredColumn{SourceColumn: baseDfColumn, StringColumnDiff: getStringColumnDiff(baseDfColumn, newDfColumn)}
 				alteredColumns = append(alteredColumns, alteredColumn)
 			}
-		} else if baseCol != nil && !isColumnDifferent(baseCol, column) {
+		} else if baseCol.GetType() == "string" && !isColumnDifferent(baseCol, column) {
 			identicalColumns = append(identicalColumns, baseCol)
+		} else {
+			if isColumnDifferent(baseCol, column) {
+				alteredColumn := AlteredColumn{SourceColumn: baseCol}
+				alteredColumns = append(alteredColumns, alteredColumn)
+			} else if !isColumnDifferent(baseCol, column) {
+				identicalColumns = append(identicalColumns, baseCol)
+			}
 		}
 	}
 
