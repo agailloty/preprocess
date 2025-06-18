@@ -173,6 +173,34 @@ var diffTemplate string = `
       border-radius: 6px;
     }
 
+    .legend {
+      margin-bottom: 2rem;
+      padding: 1rem;
+      background-color: #ffffff;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+
+    .legend-item {
+      display: inline-block;
+      margin-right: 2rem;
+      padding: 0.4rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+
+    .legend-added {
+      background-color: #d4edda;
+    }
+
+    .legend-deleted {
+      background-color: #f8d7da;
+    }
+
+    .legend-altered {
+      background-color: #fff3cd;
+    }
+
     table {
       border-collapse: collapse;
       width: 100%;
@@ -220,15 +248,15 @@ var diffTemplate string = `
     }
 
     .deleted {
-      background-color: #f8d7da; /* rouge clair */
+      background-color: #f8d7da;
     }
 
     .added {
-      background-color: #d4edda; /* vert clair */
+      background-color: #d4edda;
     }
 
     .altered {
-      background-color: #fff3cd; /* jaune moutarde clair */
+      background-color: #fff3cd;
     }
   </style>
 </head>
@@ -236,18 +264,51 @@ var diffTemplate string = `
 
   <h1>CSV Diff Summary Report</h1>
 
-  <div class="summary-box">
-    <h2>Dataset Overview</h2>
-    <p><strong>Filename:</strong> {{.Data.Filename}}</p>
-    <p><strong>Encoding:</strong> {{.Data.Encoding}}</p>
-    <p><strong>CSV Separator:</strong> {{.Data.CsvSeparator}}</p>
-    <p><strong>Decimal Separator:</strong> {{.Data.DecimalSeparator}}</p>
-    <p><strong>Total Rows:</strong> {{.DataSummary.RowCount}}</p>
-    <p><strong>Total Columns:</strong> {{.DataSummary.ColumnCount}}</p>
-    <p><strong>Numeric Columns:</strong> {{.DataSummary.NumericColumns}}</p>
-    <p><strong>String Columns:</strong> {{.DataSummary.StringColumns}}</p>
+  <!-- Legend Section -->
+  <div class="legend">
+    <strong>Legend:</strong>
+    <span class="legend-item legend-added">✅ Added</span>
+    <span class="legend-item legend-altered">🟨 Modified</span>
+    <span class="legend-item legend-deleted">❌ Deleted</span>
   </div>
 
+  <!-- Dataset Difference Summary -->
+  <div class="summary-box">
+    <h2>Dataset Differences</h2>
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th>Source</th>
+          <th>Target</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Total Rows</strong></td>
+          <td>{{.SourceDataSummary.RowCount}}</td>
+          <td>{{.TargetDataSummary.RowCount}}</td>
+        </tr>
+        <tr>
+          <td><strong>Total Columns</strong></td>
+          <td>{{.SourceDataSummary.ColumnCount}}</td>
+          <td>{{.TargetDataSummary.ColumnCount}}</td>
+        </tr>
+        <tr>
+          <td><strong>Numeric Columns</strong></td>
+          <td>{{.SourceDataSummary.NumericColumns}}</td>
+          <td>{{.TargetDataSummary.NumericColumns}}</td>
+        </tr>
+        <tr>
+          <td><strong>String Columns</strong></td>
+          <td>{{.SourceDataSummary.StringColumns}}</td>
+          <td>{{.TargetDataSummary.StringColumns}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Numeric Column Diff -->
   <div class="section">
     <h2>Numeric Columns</h2>
     <table>
@@ -280,6 +341,7 @@ var diffTemplate string = `
     </table>
   </div>
 
+  <!-- Categorical Column Diff -->
   <div class="section">
     <h2>Categorical Columns</h2>
     <div class="string-columns">

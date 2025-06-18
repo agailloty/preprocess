@@ -1,14 +1,13 @@
 package summary
 
 import (
-	"github.com/agailloty/preprocess/common"
 	"github.com/agailloty/preprocess/dataset"
 )
 
 type DiffSummary struct {
-	Data        common.DataSpecs `toml:"data"`
-	DataSummary DatasetSummary   `toml:"data_summary"`
-	Columns     []ColumnSummary  `toml:"columns"`
+	SourceDataSummary DatasetSummary  `toml:"source_data_summary"`
+	TargetDataSummary DatasetSummary  `toml:"target_data_summary"`
+	Columns           []ColumnSummary `toml:"columns"`
 }
 
 // This function aims to produce a diff summary of two datasets
@@ -73,6 +72,8 @@ func GenerateDiffSummary(source *dataset.DataFrame, target *dataset.DataFrame) D
 		}
 	}
 
-	return DiffSummary{Data: target.DataSpecs, DataSummary: targetSummary.DataSummary, Columns: colSummaries}
+	return DiffSummary{SourceDataSummary: sourceSummary.DataSummary,
+		TargetDataSummary: targetSummary.DataSummary,
+		Columns:           colSummaries}
 
 }
