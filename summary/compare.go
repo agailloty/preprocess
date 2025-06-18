@@ -96,5 +96,4 @@ func isColumnDifferent(source dataset.DataSetColumn, target dataset.DataSetColum
 	}
 
 	return false
-
 }

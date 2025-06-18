@@ -21,7 +21,11 @@ func GenerateDiffSummary(source *dataset.DataFrame, target *dataset.DataFrame) D
 
 	for _, diffColumn := range dfDiff.AddedColumns {
 		for _, colSummary := range targetSummary.Columns {
-			if diffColumn.GetName() == colSummary.Name && diffColumn.GetType() == colSummary.Type {
+			columnType := diffColumn.GetType()
+			if columnType == "int" || columnType == "float" {
+				columnType = "numeric"
+			}
+			if diffColumn.GetName() == colSummary.Name && columnType == colSummary.Type {
 				colSummary.IsAdded = true
 				colSummaries = append(colSummaries, colSummary)
 			}
@@ -30,7 +34,11 @@ func GenerateDiffSummary(source *dataset.DataFrame, target *dataset.DataFrame) D
 
 	for _, diffColumn := range dfDiff.RemovedColumns {
 		for _, colSummary := range sourceSummary.Columns {
-			if diffColumn.GetName() == colSummary.Name && diffColumn.GetType() == colSummary.Type {
+			columnType := diffColumn.GetType()
+			if columnType == "int" || columnType == "float" {
+				columnType = "numeric"
+			}
+			if diffColumn.GetName() == colSummary.Name && columnType == colSummary.Type {
 				colSummary.IsDeleted = true
 				colSummaries = append(colSummaries, colSummary)
 			}
@@ -39,7 +47,11 @@ func GenerateDiffSummary(source *dataset.DataFrame, target *dataset.DataFrame) D
 
 	for _, diffColumn := range dfDiff.AlteredColumns {
 		for _, colSummary := range targetSummary.Columns {
-			if diffColumn.SourceColumn.GetName() == colSummary.Name && diffColumn.SourceColumn.GetType() == colSummary.Type {
+			columnType := diffColumn.SourceColumn.GetType()
+			if columnType == "int" || columnType == "float" {
+				columnType = "numeric"
+			}
+			if diffColumn.SourceColumn.GetName() == colSummary.Name && columnType == colSummary.Type {
 				colSummary.IsAltered = true
 				colSummary.AddedStringValues = diffColumn.StringColumnDiff.AddedValues
 				colSummary.RemovedStringValues = diffColumn.StringColumnDiff.RemovedValues
