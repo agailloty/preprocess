@@ -255,6 +255,23 @@ var diffTemplate string = `
     .two-col > div {
       flex: 1;
     }
+        tr.altered {
+    background-color: #fff8dc;
+  }
+
+  .altered-old {
+    background-color: #fef3c7;
+    padding: 2px 4px;
+    border-radius: 4px;
+    display: inline-block;
+  }
+
+  .altered-new {
+    background-color: #e0f2fe;
+    padding: 2px 4px;
+    border-radius: 4px;
+    display: inline-block;
+  }
   </style>
 </head>
 <body>
@@ -308,12 +325,54 @@ var diffTemplate string = `
       {{if eq .Type "numeric"}}
       <tr class="{{if .IsDeleted}}deleted{{else if .IsAdded}}added{{else if .IsAltered}}altered{{end}}">
         <td>{{.Name}}</td>
-        <td>{{.RowCount}}</td>
-        <td>{{.Missing}}</td>
-        <td>{{printf "%.2f" .Mean}}</td>
-        <td>{{printf "%.2f" .Median}}</td>
-        <td>{{printf "%.2f" .Min}}</td>
-        <td>{{printf "%.2f" .Max}}</td>
+        <td>
+          {{if .IsAltered}}
+            <div class="altered-old">{{.OldStats.RowCount}}</div>
+            <div class="altered-new">{{.NewStats.RowCount}}</div>
+          {{else}}
+            {{.RowCount}}
+          {{end}}
+        </td>
+        <td>
+          {{if .IsAltered}}
+            <div class="altered-old">{{.OldStats.Missing}}</div>
+            <div class="altered-new">{{.NewStats.Missing}}</div>
+          {{else}}
+            {{.Missing}}
+          {{end}}
+        </td>
+        <td>
+          {{if .IsAltered}}
+            <div class="altered-old">{{printf "%.2f" .OldStats.Mean}}</div>
+            <div class="altered-new">{{printf "%.2f" .NewStats.Mean}}</div>
+          {{else}}
+            {{printf "%.2f" .Mean}}
+          {{end}}
+        </td>
+        <td>
+          {{if .IsAltered}}
+            <div class="altered-old">{{printf "%.2f" .OldStats.Median}}</div>
+            <div class="altered-new">{{printf "%.2f" .NewStats.Median}}</div>
+          {{else}}
+            {{printf "%.2f" .Median}}
+          {{end}}
+        </td>
+        <td>
+          {{if .IsAltered}}
+            <div class="altered-old">{{printf "%.2f" .OldStats.Min}}</div>
+            <div class="altered-new">{{printf "%.2f" .NewStats.Min}}</div>
+          {{else}}
+            {{printf "%.2f" .Min}}
+          {{end}}
+        </td>
+        <td>
+          {{if .IsAltered}}
+            <div class="altered-old">{{printf "%.2f" .OldStats.Max}}</div>
+            <div class="altered-new">{{printf "%.2f" .NewStats.Max}}</div>
+          {{else}}
+            {{printf "%.2f" .Max}}
+          {{end}}
+        </td>
       </tr>
       {{end}}
       {{end}}
