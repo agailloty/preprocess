@@ -6,14 +6,14 @@ import (
 )
 
 func ScaleWithZscore(column dataset.DataSetColumn, df *dataset.DataFrame) {
-	scaleNumericColumn(column, df, ComputeZScore)
+	ScaleNumericColumn(column, df, ComputeZScore)
 }
 
 func ScaleWithMinMax(column dataset.DataSetColumn, df *dataset.DataFrame) {
-	scaleNumericColumn(column, df, ComputeMinMaxScore)
+	ScaleNumericColumn(column, df, ComputeMinMaxScore)
 }
 
-func scaleNumericColumn(column dataset.DataSetColumn, df *dataset.DataFrame, scaleFunc scaleFunc) {
+func ScaleNumericColumn(column dataset.DataSetColumn, df *dataset.DataFrame, scaleFunc ScaleFunc) {
 	switch v := column.(type) {
 	case *dataset.Integer:
 		// Convert into to float64

@@ -1,6 +1,6 @@
 package statistics
 
-type scaleFunc func(x float64, mu float64, sigma float64) float64
+type ScaleFunc func(x float64, mu float64, sigma float64) float64
 
 func ComputeZScore(x float64, mu float64, sigma float64) float64 {
 	if sigma == 0 {

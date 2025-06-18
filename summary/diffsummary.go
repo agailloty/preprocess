@@ -62,7 +62,11 @@ func GenerateDiffSummary(source *dataset.DataFrame, target *dataset.DataFrame) D
 
 	for _, diffColumn := range dfDiff.IdenticalColumns {
 		for _, colSummary := range targetSummary.Columns {
-			if diffColumn.GetName() == colSummary.Name && diffColumn.GetType() == colSummary.Type {
+			columnType := diffColumn.GetType()
+			if columnType == "int" || columnType == "float" {
+				columnType = "numeric"
+			}
+			if diffColumn.GetName() == colSummary.Name && columnType == colSummary.Type {
 				colSummary.IsIdentical = true
 				colSummaries = append(colSummaries, colSummary)
 			}

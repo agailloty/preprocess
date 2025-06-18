@@ -5,6 +5,7 @@ import (
 
 	"github.com/agailloty/preprocess/config"
 	"github.com/agailloty/preprocess/dataset"
+	"github.com/agailloty/preprocess/statistics"
 	"github.com/agailloty/preprocess/utils"
 )
 
@@ -48,6 +49,12 @@ func parseOperations(ops []config.PreprocessOp, df *dataset.DataFrame, col datas
 				continue
 			}
 			operationRunners = append(operationRunners, parseGroup(op, df, strCol))
+		}
+
+		if op.Op == OP_SCALE {
+			if col.GetType() == "int" || col.GetType() == "float" {
+				operationRunners = append(operationRunners, parseScale(op, df, col))
+			}
 		}
 	}
 
@@ -149,4 +156,20 @@ func parseGroup(op config.PreprocessOp, df *dataset.DataFrame, col *dataset.Stri
 	}
 
 	return parsedOps
+}
+
+func parseScale(op config.PreprocessOp, df *dataset.DataFrame, col dataset.DataSetColumn) scaleOperation {
+	var scaleFunc statistics.ScaleFunc
+	if op.Method == METHOD_SCALE_MINMAX {
+		scaleFunc = statistics.ComputeMinMaxScore
+	} else {
+		scaleFunc = statistics.ComputeZScore
+	}
+	parsedOp := scaleOperation{
+		df:        df,
+		col:       col,
+		scaleFunc: scaleFunc,
+	}
+
+	return parsedOp
 }
