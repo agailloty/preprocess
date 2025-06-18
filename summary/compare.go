@@ -47,7 +47,7 @@ func ComputeDiffs(baseDf *dataset.DataFrame, newDf *dataset.DataFrame) DatasetDi
 	for _, column := range newDf.Columns {
 		baseCol := baseDf.GetColumn(column)
 		if baseCol == nil {
-			baseCol = newDf.GetColumn(column)
+			continue
 		}
 		if baseCol.GetType() == "string" && isColumnDifferent(baseCol, column) {
 			newDfColumn, ok := column.(*dataset.String)
