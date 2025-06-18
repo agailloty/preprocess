@@ -34,4 +34,16 @@ type ColumnSummary struct {
 	Median  float64 `toml:"median,omitempty"`
 	Max     float64 `toml:"max,omitempty"`
 	Missing int     `toml:"missing"`
+
+	OldStats *NumericStats
+	NewStats *NumericStats
+}
+
+type NumericStats struct {
+	RowCount int
+	Missing  int
+	Mean     float64
+	Median   float64
+	Min      float64
+	Max      float64
 }

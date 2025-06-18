@@ -37,6 +37,8 @@ func DiffHtml(diff DiffSummary, filename string) {
 			a, _ := json.Marshal(v)
 			return template.JS(a)
 		},
+		"len": func(x []string) int { return len(x) },
+		"sub": func(a, b int) int { return a - b },
 	}).Parse(diffTemplate))
 
 	f, err := os.Create(filename)
@@ -46,5 +48,4 @@ func DiffHtml(diff DiffSummary, filename string) {
 	defer f.Close()
 
 	tmpl.Execute(f, diff)
-
 }

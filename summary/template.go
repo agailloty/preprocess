@@ -165,40 +165,12 @@ var diffTemplate string = `
       color: #333;
     }
 
-    .summary-box {
+    .summary-box, .legend-box {
       background-color: #ffffff;
       border: 1px solid #ddd;
       padding: 1rem;
       margin-bottom: 2rem;
       border-radius: 6px;
-    }
-
-    .legend {
-      margin-bottom: 2rem;
-      padding: 1rem;
-      background-color: #ffffff;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-    }
-
-    .legend-item {
-      display: inline-block;
-      margin-right: 2rem;
-      padding: 0.4rem 0.6rem;
-      border-radius: 4px;
-      font-size: 0.9rem;
-    }
-
-    .legend-added {
-      background-color: #d4edda;
-    }
-
-    .legend-deleted {
-      background-color: #f8d7da;
-    }
-
-    .legend-altered {
-      background-color: #fff3cd;
     }
 
     table {
@@ -247,16 +219,41 @@ var diffTemplate string = `
       margin-bottom: 2rem;
     }
 
-    .deleted {
-      background-color: #f8d7da;
+    .deleted { background-color: #f8d7da; }
+    .added { background-color: #d4edda; }
+    .altered-old { background-color: #fef3c7; }
+    .altered-new { background-color: #e0f2fe; }
+
+    .legend-box ul {
+      list-style: none;
+      padding-left: 0;
     }
 
-    .added {
-      background-color: #d4edda;
+    .legend-box li {
+      display: inline-block;
+      margin-right: 1rem;
     }
 
-    .altered {
-      background-color: #fff3cd;
+    .legend-box span {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      margin-right: 5px;
+      vertical-align: middle;
+    }
+
+    .color-added { background-color: #d4edda; }
+    .color-deleted { background-color: #f8d7da; }
+    .color-altered-old { background-color: #fef3c7; }
+    .color-altered-new { background-color: #e0f2fe; }
+
+    .two-col {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .two-col > div {
+      flex: 1;
     }
   </style>
 </head>
@@ -264,98 +261,109 @@ var diffTemplate string = `
 
   <h1>CSV Diff Summary Report</h1>
 
-  <!-- Legend Section -->
-  <div class="legend">
-    <strong>Legend:</strong>
-    <span class="legend-item legend-added">✅ Added</span>
-    <span class="legend-item legend-altered">🟨 Modified</span>
-    <span class="legend-item legend-deleted">❌ Deleted</span>
+  <div class="legend-box">
+    <h2>Legend</h2>
+    <ul>
+      <li><span class="color-added"></span> Added</li>
+      <li><span class="color-deleted"></span> Deleted</li>
+      <li><span class="color-altered-old"></span> Altered (Before)</li>
+      <li><span class="color-altered-new"></span> Altered (After)</li>
+    </ul>
   </div>
 
-  <!-- Dataset Difference Summary -->
-  <div class="summary-box">
-    <h2>Dataset Differences</h2>
-    <table>
-      <thead>
-        <tr>
-          <th></th>
-          <th>Source</th>
-          <th>Target</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>Total Rows</strong></td>
-          <td>{{.SourceDataSummary.RowCount}}</td>
-          <td>{{.TargetDataSummary.RowCount}}</td>
-        </tr>
-        <tr>
-          <td><strong>Total Columns</strong></td>
-          <td>{{.SourceDataSummary.ColumnCount}}</td>
-          <td>{{.TargetDataSummary.ColumnCount}}</td>
-        </tr>
-        <tr>
-          <td><strong>Numeric Columns</strong></td>
-          <td>{{.SourceDataSummary.NumericColumns}}</td>
-          <td>{{.TargetDataSummary.NumericColumns}}</td>
-        </tr>
-        <tr>
-          <td><strong>String Columns</strong></td>
-          <td>{{.SourceDataSummary.StringColumns}}</td>
-          <td>{{.TargetDataSummary.StringColumns}}</td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="two-col">
+    <div class="summary-box">
+      <h2>Source Dataset</h2>
+      <p><strong>Rows:</strong> {{.SourceDataSummary.RowCount}}</p>
+      <p><strong>Columns:</strong> {{.SourceDataSummary.ColumnCount}}</p>
+      <p><strong>Numeric Columns:</strong> {{.SourceDataSummary.NumericColumns}}</p>
+      <p><strong>String Columns:</strong> {{.SourceDataSummary.StringColumns}}</p>
+    </div>
+
+    <div class="summary-box">
+      <h2>Target Dataset</h2>
+      <p><strong>Rows:</strong> {{.TargetDataSummary.RowCount}}</p>
+      <p><strong>Columns:</strong> {{.TargetDataSummary.ColumnCount}}</p>
+      <p><strong>Numeric Columns:</strong> {{.TargetDataSummary.NumericColumns}}</p>
+      <p><strong>String Columns:</strong> {{.TargetDataSummary.StringColumns}}</p>
+    </div>
   </div>
 
-  <!-- Numeric Column Diff -->
-  <div class="section">
-    <h2>Numeric Columns</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Rows</th>
-          <th>Missing</th>
-          <th>Mean</th>
-          <th>Median</th>
-          <th>Min</th>
-          <th>Max</th>
-        </tr>
-      </thead>
-      <tbody>
-        {{range .Columns}}
-        {{if eq .Type "numeric"}}
-        <tr class="{{if .IsDeleted}}deleted{{else if .IsAdded}}added{{else if .IsAltered}}altered{{end}}">
-          <td>{{.Name}}</td>
-          <td>{{.RowCount}}</td>
-          <td>{{.Missing}}</td>
-          <td>{{printf "%.2f" .Mean}}</td>
-          <td>{{printf "%.2f" .Median}}</td>
-          <td>{{printf "%.2f" .Min}}</td>
-          <td>{{printf "%.2f" .Max}}</td>
-        </tr>
-        {{end}}
-        {{end}}
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Categorical Column Diff -->
-  <div class="section">
-    <h2>Categorical Columns</h2>
-    <div class="string-columns">
+<div class="section">
+  <h2>Numeric Columns</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Rows</th>
+        <th>Missing</th>
+        <th>Mean</th>
+        <th>Median</th>
+        <th>Min</th>
+        <th>Max</th>
+      </tr>
+    </thead>
+    <tbody>
       {{range .Columns}}
-      {{if eq .Type "string"}}
-      <div class="string-card {{if .IsDeleted}}deleted{{else if .IsAdded}}added{{else if .IsAltered}}altered{{end}}">
-        <h3>{{.Name}}</h3>
-        <p><strong>Unique Values:</strong> {{.UniqueValueCount}}</p>
+      {{if eq .Type "numeric"}}
+      <tr class="{{if .IsDeleted}}deleted{{else if .IsAdded}}added{{else if .IsAltered}}altered{{end}}">
+        <td>{{.Name}}</td>
+        <td>{{.RowCount}}</td>
+        <td>{{.Missing}}</td>
+        <td>{{printf "%.2f" .Mean}}</td>
+        <td>{{printf "%.2f" .Median}}</td>
+        <td>{{printf "%.2f" .Min}}</td>
+        <td>{{printf "%.2f" .Max}}</td>
+      </tr>
+      {{end}}
+      {{end}}
+    </tbody>
+  </table>
+</div>
+<div class="section">
+  <h2>Categorical Columns</h2>
+  <div class="string-columns">
+    {{range .Columns}}
+    {{if eq .Type "string"}}
+    <div class="string-card
+      {{if .IsDeleted}}deleted{{else if .IsAdded}}added{{else if .IsAltered}}altered{{end}}">
+      <h3>{{.Name}}</h3>
+      <p><strong>Unique Values:</strong> {{.UniqueValueCount}}</p>
 
+      {{if gt .UniqueValueCount 100}}
+        {{if .AddedStringValues}}
+        <p><strong>Most Frequent Added Values:</strong></p>
+        <ul>
+          {{range $index, $val := .AddedStringValues}}
+            {{if lt $index 10}}<li>+ {{ $val }}</li>{{end}}
+          {{end}}
+          {{if gt (len .AddedStringValues) 10}}
+          <li>...and {{sub (len .AddedStringValues) 10}} more</li>
+          {{end}}
+        </ul>
+        {{end}}
+
+        {{if .RemovedStringValues}}
+        <p><strong>Most Frequent Removed Values:</strong></p>
+        <ul>
+          {{range $index, $val := .RemovedStringValues}}
+            {{if lt $index 10}}<li>- {{ $val }}</li>{{end}}
+          {{end}}
+          {{if gt (len .RemovedStringValues) 10}}
+          <li>...and {{sub (len .RemovedStringValues) 10}} more</li>
+          {{end}}
+        </ul>
+        {{end}}
+
+        <p><em>Too many unique values to show full summary</em></p>
+      {{else}}
         {{if .AddedStringValues}}
         <p><strong>Added Values:</strong></p>
         <ul>
-          {{range .AddedStringValues}}
-          <li>+ {{.}}</li>
+          {{range $val := .AddedStringValues}}
+            {{range .UniqueValuesSummary}}
+              {{if eq .Key $val}}<li>+ {{.Key}} ({{.Count}})</li>{{end}}
+            {{end}}
           {{end}}
         </ul>
         {{end}}
@@ -363,8 +371,10 @@ var diffTemplate string = `
         {{if .RemovedStringValues}}
         <p><strong>Removed Values:</strong></p>
         <ul>
-          {{range .RemovedStringValues}}
-          <li>- {{.}}</li>
+          {{range $val := .RemovedStringValues}}
+            {{range .UniqueValuesSummary}}
+              {{if eq .Key $val}}<li>- {{.Key}} ({{.Count}})</li>{{end}}
+            {{end}}
           {{end}}
         </ul>
         {{end}}
@@ -379,12 +389,13 @@ var diffTemplate string = `
         {{else}}
         <p><em>No modalities available</em></p>
         {{end}}
-      </div>
       {{end}}
-      {{end}}
-    </div>
-  </div>
 
+    </div>
+    {{end}}
+    {{end}}
+  </div>
+</div>
 </body>
 </html>
 `

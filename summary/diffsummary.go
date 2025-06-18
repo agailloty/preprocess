@@ -54,6 +54,8 @@ func GenerateDiffSummary(source *dataset.DataFrame, target *dataset.DataFrame) D
 				colSummary.IsAltered = true
 				colSummary.AddedStringValues = diffColumn.StringColumnDiff.AddedValues
 				colSummary.RemovedStringValues = diffColumn.StringColumnDiff.RemovedValues
+				colSummary.OldStats = sourceSummary.extractNumericColumStats(colSummary.Name, columnType)
+				colSummary.NewStats = targetSummary.extractNumericColumStats(colSummary.Name, columnType)
 				colSummaries = append(colSummaries, colSummary)
 			}
 		}
@@ -76,4 +78,22 @@ func GenerateDiffSummary(source *dataset.DataFrame, target *dataset.DataFrame) D
 		TargetDataSummary: targetSummary.DataSummary,
 		Columns:           colSummaries}
 
+}
+
+func (s *SummaryFile) extractNumericColumStats(colName string, colType string) *NumericStats {
+	var numericSummary NumericStats
+	for _, col := range s.Columns {
+		if col.Name == colName && col.Type == colType {
+			numericSummary = NumericStats{
+				RowCount: col.RowCount,
+				Missing:  col.Missing,
+				Mean:     col.Mean,
+				Median:   col.Median,
+				Min:      col.Min,
+				Max:      col.Max,
+			}
+			break
+		}
+	}
+	return &numericSummary
 }
