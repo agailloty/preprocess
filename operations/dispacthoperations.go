@@ -8,7 +8,7 @@ import (
 	"github.com/agailloty/preprocess/utils"
 )
 
-func DispatchOperations(prepfile *config.Prepfile) {
+func DispatchOperations(prepfile *config.Prepfile) dataset.DataFrame {
 	df := dataset.ReadDataFrame(prepfile.Data)
 	log.Printf("Successfully read dataset %s \n", prepfile.Data.Filename)
 
@@ -90,6 +90,8 @@ func DispatchOperations(prepfile *config.Prepfile) {
 	ExportCsv(df, prepfile.PostProcess.FileName)
 
 	operationStats.logOperationStats()
+
+	return df
 }
 
 func findColumnConfig(columns []config.ColumnConfig, name string) (found bool, result config.ColumnConfig) {

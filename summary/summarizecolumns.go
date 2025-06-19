@@ -22,7 +22,7 @@ func GetSummaryFile(df dataset.DataFrame, excluded []string) SummaryFile {
 	for _, col := range excluded {
 		df.DeleteColumnByName(col)
 	}
-	colSummaries := make([]ColumnSummary, df.ColumnsCount)
+	colSummaries := make([]ColumnSummary, len(df.Columns))
 	for i, col := range df.Columns {
 		if utils.Contains(excluded, col.GetName()) {
 			continue
