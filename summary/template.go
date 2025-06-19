@@ -323,7 +323,7 @@ var diffTemplate string = `
     <tbody>
       {{range .Columns}}
       {{if eq .Type "numeric"}}
-      <tr class="{{if .IsDeleted}}deleted{{else if .IsAdded}}added{{else if .IsAltered}}altered{{end}}">
+      <tr class="{{if .IsDeleted}}deleted{{else if .IsAdded}}added{{else if .IsAltered}}.altered-old{{end}}">
         <td>{{.Name}}</td>
         <td>
           {{if .IsAltered}}
@@ -380,49 +380,19 @@ var diffTemplate string = `
   </table>
 </div>
 <div class="section">
-  <h2>Categorical Columns</h2>
-  <div class="string-columns">
-    {{range .Columns}}
-    {{if eq .Type "string"}}
-    <div class="string-card
-      {{if .IsDeleted}}deleted{{else if .IsAdded}}added{{else if .IsAltered}}altered{{end}}">
-      <h3>{{.Name}}</h3>
-      <p><strong>Unique Values:</strong> {{.UniqueValueCount}}</p>
+    <h2>Categorical Columns</h2>
+    <div class="string-columns">
+      {{range .Columns}}
+      {{if eq .Type "string"}}
+      <div class="string-card {{if .IsDeleted}}deleted{{else if .IsAdded}}added{{else if .IsAltered}}altered-old{{end}}">
+        <h3>{{.Name}}</h3>
+        <p><strong>Unique Values:</strong> {{.UniqueValueCount}}</p>
 
-      {{if gt .UniqueValueCount 100}}
-        {{if .AddedStringValues}}
-        <p><strong>Most Frequent Added Values:</strong></p>
-        <ul>
-          {{range $index, $val := .AddedStringValues}}
-            {{if lt $index 10}}<li>+ {{ $val }}</li>{{end}}
-          {{end}}
-          {{if gt (len .AddedStringValues) 10}}
-          <li>...and {{sub (len .AddedStringValues) 10}} more</li>
-          {{end}}
-        </ul>
-        {{end}}
-
-        {{if .RemovedStringValues}}
-        <p><strong>Most Frequent Removed Values:</strong></p>
-        <ul>
-          {{range $index, $val := .RemovedStringValues}}
-            {{if lt $index 10}}<li>- {{ $val }}</li>{{end}}
-          {{end}}
-          {{if gt (len .RemovedStringValues) 10}}
-          <li>...and {{sub (len .RemovedStringValues) 10}} more</li>
-          {{end}}
-        </ul>
-        {{end}}
-
-        <p><em>Too many unique values to show full summary</em></p>
-      {{else}}
         {{if .AddedStringValues}}
         <p><strong>Added Values:</strong></p>
         <ul>
-          {{range $val := .AddedStringValues}}
-            {{range .UniqueValuesSummary}}
-              {{if eq .Key $val}}<li>+ {{.Key}} ({{.Count}})</li>{{end}}
-            {{end}}
+          {{range .AddedStringValues}}
+          <li>+ {{.}}</li>
           {{end}}
         </ul>
         {{end}}
@@ -430,10 +400,8 @@ var diffTemplate string = `
         {{if .RemovedStringValues}}
         <p><strong>Removed Values:</strong></p>
         <ul>
-          {{range $val := .RemovedStringValues}}
-            {{range .UniqueValuesSummary}}
-              {{if eq .Key $val}}<li>- {{.Key}} ({{.Count}})</li>{{end}}
-            {{end}}
+          {{range .RemovedStringValues}}
+          <li>- {{.}}</li>
           {{end}}
         </ul>
         {{end}}
@@ -448,13 +416,12 @@ var diffTemplate string = `
         {{else}}
         <p><em>No modalities available</em></p>
         {{end}}
+      </div>
       {{end}}
-
+      {{end}}
     </div>
-    {{end}}
-    {{end}}
   </div>
-</div>
+
 </body>
 </html>
 `
