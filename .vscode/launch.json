@@ -48,6 +48,30 @@
         "mode": "debug",
         "program": "${workspaceFolder}/main.go",
         "args": ["init", "--data", "barometre-du-numerique-2024.csv", "--sep", ";"]
+      },
+      {
+        "name": "diff",
+        "type": "go",
+        "request": "launch",
+        "mode": "debug",
+        "program": "${workspaceFolder}/main.go",
+        "args": ["diff", "--source", "\fifa_players.csv", "--target", ".\fifa_dummy_nums.csv", "--sep", ","]
+      },
+      {
+        "name": "diff(dummy)",
+        "type": "go",
+        "request": "launch",
+        "mode": "debug",
+        "program": "${workspaceFolder}/main.go",
+        "args": ["diff", "--source", "fifa_dummy_nums.csv", "--target", "fifa_dummy_nums_up.csv", "--sep", ","]
+      },
+      {
+        "name": "run diff",
+        "type": "go",
+        "request": "launch",
+        "mode": "debug",
+        "program": "${workspaceFolder}/main.go",
+        "args": ["run", "--show-diff"]
       }
     ]
   }

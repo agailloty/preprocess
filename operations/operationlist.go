@@ -6,4 +6,5 @@ const (
 	OP_CLEAN      = "clean"
 	OP_DISCRETIZE = "discretize"
 	OP_DUMMY      = "dummy"
+	OP_GROUP      = "group"
 )

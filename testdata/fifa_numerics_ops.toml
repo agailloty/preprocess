@@ -1,0 +1,24 @@
+[data]
+filename = '.\fifa_players.csv'
+csv_separator = ','
+decimal_separator = '.'
+encoding = 'utf-8'
+
+[preprocess.numerics]
+exclude_columns = ["age", "height_cm"]
+
+[[preprocess.numerics.operations]]
+op = "fillna"
+method = "mean"
+
+[[preprocess.numerics.operations]]
+op = "scale"
+method = "zscore"
+
+[postprocess]
+format = 'csv'
+[postprocess.dataset_split]
+method = "train_test_split"
+split_names = ["train", "test"]
+random_seed = 85698
+train_test_split_ratio = 0.8

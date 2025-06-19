@@ -1,10 +1,13 @@
 package utils
 
 import (
+	"fmt"
 	"log"
 	"maps"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"runtime"
 	"slices"
 	"strings"
 
@@ -73,6 +76,24 @@ func Contains[T comparable](slice []T, val T) bool {
 	return false
 }
 
+func GetDiff(source, target []dataset.Nullable[string]) (plus, minus []string) {
+	uniqueSource := ExtractUniqueValues(source)
+	uniqueTarget := ExtractUniqueValues(target)
+
+	for _, val := range uniqueTarget {
+		if !Contains(uniqueSource, val) {
+			plus = append(plus, val.Key)
+		}
+	}
+
+	for _, val := range uniqueSource {
+		if !Contains(uniqueTarget, val) {
+			minus = append(minus, val.Key)
+		}
+	}
+	return
+}
+
 func ExtractUniqueValues(data []dataset.Nullable[string]) []common.ValueKeyCount {
 	summary := make(map[string]common.ValueKeyCount)
 	for _, value := range data {
@@ -89,4 +110,25 @@ func ExtractUniqueValues(data []dataset.Nullable[string]) []common.ValueKeyCount
 	unique := slices.Collect(maps.Values(summary))
 
 	return unique
+}
+
+func OpenBrowser(url string) error {
+	var cmd string
+	var args []string
+
+	switch runtime.GOOS {
+	case "linux":
+		cmd = "xdg-open"
+		args = []string{url}
+	case "windows":
+		cmd = "rundll32"
+		args = []string{"url.dll,FileProtocolHandler", url}
+	case "darwin":
+		cmd = "open"
+		args = []string{url}
+	default:
+		return fmt.Errorf("système d'exploitation non supporté")
+	}
+
+	return exec.Command(cmd, args...).Start()
 }

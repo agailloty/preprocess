@@ -5,19 +5,48 @@ import (
 
 	"github.com/agailloty/preprocess/config"
 	"github.com/agailloty/preprocess/dataset"
+	"github.com/agailloty/preprocess/utils"
 )
 
-func DispatchOperations(prepfile *config.Prepfile) {
+func DispatchOperations(prepfile *config.Prepfile) dataset.DataFrame {
 	df := dataset.ReadDataFrame(prepfile.Data)
 	log.Printf("Successfully read dataset %s \n", prepfile.Data.Filename)
 
+	operationRunners := []operationRunner{}
+
+	operationStats := summarizeOperations(prepfile, &df)
+
 	if prepfile.Preprocess.NumericOperations != nil {
 		excluded := prepfile.Preprocess.NumericOperations.ExcludeCols
-		dispatchDatasetNumericOperations(&df, prepfile.Preprocess.NumericOperations.Operations, excluded)
+		var rawOperations []config.PreprocessOp
+		if prepfile.Preprocess.NumericOperations.Operations != nil {
+			rawOperations = *prepfile.Preprocess.NumericOperations.Operations
+		}
+
+		for _, col := range df.Columns {
+			if !utils.Contains(excluded, col.GetName()) && col.GetType() == "int" || col.GetType() == "float" {
+				parsedOperations := parseOperations(rawOperations, &df, col)
+				operationRunners = append(operationRunners, parsedOperations...)
+			}
+		}
+
+		//dispatchDatasetNumericOperations(&df, prepfile.Preprocess.NumericOperations.Operations, excluded)
 	}
 
 	if prepfile.Preprocess.TextOperations != nil {
-		applyOperationsOnTextColumns(&df, prepfile.Preprocess.TextOperations.Operations)
+		//applyOperationsOnTextColumns(&df, prepfile.Preprocess.TextOperations.Operations)
+		excluded := prepfile.Preprocess.TextOperations.ExcludeCols
+		var rawOperations []config.PreprocessOp
+		if prepfile.Preprocess.TextOperations.Operations != nil {
+			rawOperations = *prepfile.Preprocess.TextOperations.Operations
+		}
+
+		for _, col := range df.Columns {
+			if !utils.Contains(excluded, col.GetName()) && col.GetType() == "string" {
+				parsedOperations := parseOperations(rawOperations, &df, col)
+				operationRunners = append(operationRunners, parsedOperations...)
+			}
+		}
 	}
 
 	for _, col := range df.Columns {
@@ -25,14 +54,25 @@ func DispatchOperations(prepfile *config.Prepfile) {
 		found, columnConfig := findColumnConfig(prepfile.Preprocess.Columns, col.GetName())
 		if found {
 			preprocessOps := columnConfig.Operations
-			if col.GetType() == "int" || col.GetType() == "float" {
-				dispatchColumnNumericOperations(&df, col, preprocessOps, []string{})
-			} else if col.GetType() == "string" {
-				applyTextOperationsOnColumn(&df, preprocessOps, col)
+			if preprocessOps != nil {
+				if col.GetType() == "int" || col.GetType() == "float" {
+					//dispatchColumnNumericOperations(&df, col, preprocessOps, []string{})
+					parsedOperations := parseOperations(*preprocessOps, &df, col)
+					operationRunners = append(operationRunners, parsedOperations...)
+				} else if col.GetType() == "string" {
+					//applyTextOperationsOnColumn(&df, preprocessOps, col)
+					parsedOperations := parseOperations(*preprocessOps, &df, col)
+					operationRunners = append(operationRunners, parsedOperations...)
+				}
+			}
+
+			if columnConfig.NewName != "" {
+				operationRunners = append(operationRunners, parseRenameColumn(columnConfig, &df, &col))
 			}
 		}
-		RenameColumn(col, prepfile.Preprocess.Columns)
 	}
+
+	runAllOperations(operationRunners)
 
 	if prepfile.PostProcess.DropColumns != nil {
 		for _, columnToDelete := range *prepfile.PostProcess.DropColumns {
@@ -49,6 +89,9 @@ func DispatchOperations(prepfile *config.Prepfile) {
 	}
 	ExportCsv(df, prepfile.PostProcess.FileName)
 
+	operationStats.logOperationStats()
+
+	return df
 }
 
 func findColumnConfig(columns []config.ColumnConfig, name string) (found bool, result config.ColumnConfig) {
