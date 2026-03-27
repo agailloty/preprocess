@@ -4,7 +4,7 @@ set -e
 
 REPO_OWNER="agailloty" 
 REPO_NAME="preprocess"
-VERSION="0.1.0"
+VERSION="0.1.1"
 BINARY_NAME="preprocess"
 INSTALL_DIR="$HOME/.local/bin"
 

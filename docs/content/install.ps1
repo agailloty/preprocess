@@ -2,7 +2,7 @@ $ErrorActionPreference = "Stop"
 
 $RepoOwner = "agailloty"
 $RepoName = "preprocess"
-$Version = "0.1.0"
+$Version = "0.1.1"
 $BinaryName = "preprocess.exe"
 $InstallDir = "$env:USERPROFILE\preprocess"
 

@@ -14,7 +14,7 @@ info = "**Open Source** MIT Licensed."
     mobile = "gradient-mobile.webp"
 
   [hero.badge]
-  text = "v0.1.0"
+  text = "v0.1.1"
   color = "primary"
   pill = false
   soft = true
